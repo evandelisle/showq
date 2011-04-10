@@ -1,0 +1,8 @@
+Changes
+
+version 0.6
+
+Bug fix - save and load MIDI port to use
+Add - Any System Exculsive MIDI data
+Using GtkBuilder instead of Glade
+

@@ -1,0 +1,15 @@
+#
+gtk-builder-convert --root editcue showq.glade editcue.ui
+gtk-builder-convert --root edit_midi_vbox showq.glade editmidi.ui
+gtk-builder-convert --root edit_fade_vbox showq.glade editfade.ui
+gtk-builder-convert --root edit_faders_vbox showq.glade efaders.ui
+gtk-builder-convert --root edit_patch_vbox showq.glade epatch.ui
+gtk-builder-convert --root edit_wave_vbox showq.glade editwave.ui
+gtk-builder-convert --root edit_group_box showq.glade editgroup.ui
+gtk-builder-convert --root app showq.glade app.ui
+gtk-builder-convert --root Preferences showq.glade pref.ui
+gtk-builder-convert --root Properties showq.glade prop.ui
+gtk-builder-convert --root renumber showq.glade renumber.ui
+gtk-builder-convert --root about showq.glade about.ui
+gtk-builder-convert --root PopupMenu showq.glade popupmenu.ui
+gtk-builder-convert --root Patch showq.glade patch.ui

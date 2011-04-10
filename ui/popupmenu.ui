@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--Generated with glade3 3.4.5 on Sun Jun 14 11:09:12 2009 -->
+<interface>
+  <object class="GtkUIManager" id="uimanager1">
+    <child>
+      <object class="GtkActionGroup" id="actiongroup1">
+        <child>
+          <object class="GtkAction" id="menuitem1">
+            <property name="stock_id" translatable="yes">gtk-edit</property>
+            <property name="name">menuitem1</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="menuitem2">
+            <property name="stock_id" translatable="yes">gtk-media-stop</property>
+            <property name="name">menuitem2</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="menuitem3">
+            <property name="stock_id" translatable="yes">gtk-media-pause</property>
+            <property name="name">menuitem3</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="menuitem4">
+            <property name="name">menuitem4</property>
+            <property name="label" translatable="yes">Sneak out</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <ui>
+      <popup name="PopupMenu">
+        <menuitem action="menuitem1"/>
+        <menuitem action="menuitem2"/>
+        <menuitem action="menuitem3"/>
+        <menuitem action="menuitem4"/>
+      </popup>
+    </ui>
+  </object>
+  <object class="GtkMenu" constructor="uimanager1" id="PopupMenu">
+    <property name="visible">True</property>
+  </object>
+</interface>

@@ -1,0 +1,32 @@
+TODO
+
+The next release
+
++ Add a group cue.
+- Global pause and restart
++ Pause and start cue
+- Lock editting option
++ Hotkeys to trigger cues.
+- MIDI input to trigger cues, using MSC or MIDI note event.
+- Add Cut/Copy/Paste of cues.
+- Add drag and drop of sound files to create cues with some sort of default.
+- Bug fixes
++ Right click on cue to perform an action - edit, sneak out, stop, pause
++ Insert a cue, not just append
+- Audio output patch
++ Move away from Gconf
+
+To be done at some point
+
++ Open recent list.
+- Printing of cue list.
+- Build deb and rpm packages.
+- Write a manual.
+- Start Jack if it is not currently running
+- Improved audio fades
+- Import audio directly from a CD and place audio in a playlist
+- Add MIDI machine control to the MIDI cues.
+
+- Configurable shortcuts
+- Apply volume changes to a currently playing sound cue while editing it
+- Some defaults for levels and patching

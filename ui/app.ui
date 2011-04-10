@@ -1,0 +1,393 @@
+<?xml version="1.0"?>
+<!--Generated with glade3 3.4.5 on Sun Jun 14 11:09:12 2009 -->
+<interface>
+  <object class="GtkUIManager" id="uimanager1">
+    <child>
+      <object class="GtkActionGroup" id="actiongroup1">
+        <child>
+          <object class="GtkAction" id="item14">
+            <property name="name">item14</property>
+            <property name="label" translatable="yes">_File</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_new">
+            <property name="stock_id" translatable="yes">gtk-new</property>
+            <property name="name">m_new</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_open">
+            <property name="stock_id">gtk-open</property>
+            <property name="name">m_open</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_save">
+            <property name="stock_id">gtk-save</property>
+            <property name="name">m_save</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_saveas">
+            <property name="stock_id">gtk-save-as</property>
+            <property name="name">m_saveas</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_quit">
+            <property name="stock_id" translatable="yes">gtk-quit</property>
+            <property name="name">m_quit</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="item15">
+            <property name="name">item15</property>
+            <property name="label" translatable="yes">_Edit</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="item4">
+            <property name="name">item4</property>
+            <property name="label" translatable="yes">New Cue</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_new_midi_cue">
+            <property name="name">m_new_midi_cue</property>
+            <property name="label" translatable="yes">MIDI cue</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_new_group_cue">
+            <property name="name">m_new_group_cue</property>
+            <property name="label" translatable="yes">Group cue</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_new_wave_cue">
+            <property name="name">m_new_wave_cue</property>
+            <property name="label" translatable="yes">Wave cue</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_new_stop_cue">
+            <property name="name">m_new_stop_cue</property>
+            <property name="label" translatable="yes">Stop cue</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_new_start_cue">
+            <property name="name">m_new_start_cue</property>
+            <property name="label" translatable="yes">Start cue</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_new_pause_cue">
+            <property name="name">m_new_pause_cue</property>
+            <property name="label" translatable="yes">Pause cue</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_new_fade_cue">
+            <property name="name">m_new_fade_cue</property>
+            <property name="label" translatable="yes">Fade cue</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_edit_cue">
+            <property name="name">m_edit_cue</property>
+            <property name="label" translatable="yes">Edit Cue</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_renumber">
+            <property name="name">m_renumber</property>
+            <property name="label" translatable="yes">Renumber</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_cut_cue">
+            <property name="name">m_cut_cue</property>
+            <property name="label" translatable="yes">Cut</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToggleAction" id="m_lock">
+            <property name="name">m_lock</property>
+            <property name="label" translatable="yes">Lock</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_patch">
+            <property name="name">m_patch</property>
+            <property name="label" translatable="yes">Patch</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_properties">
+            <property name="stock_id">gtk-properties</property>
+            <property name="name">m_properties</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_preferences">
+            <property name="stock_id">gtk-preferences</property>
+            <property name="name">m_preferences</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="cue1">
+            <property name="name">cue1</property>
+            <property name="label" translatable="yes">_Cue</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_go">
+            <property name="stock_id">gtk-media-play</property>
+            <property name="name">m_go</property>
+            <property name="label" translatable="yes">Go</property>
+          </object>
+          <accelerator key="space" modifiers=""/>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_previous">
+            <property name="stock_id">gtk-media-previous</property>
+            <property name="name">m_previous</property>
+            <property name="label" translatable="yes">Previous</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_next">
+            <property name="stock_id">gtk-media-next</property>
+            <property name="name">m_next</property>
+            <property name="label" translatable="yes">Next</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_load">
+            <property name="name">m_load</property>
+            <property name="label" translatable="yes">Load</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_all_stop">
+            <property name="name">m_all_stop</property>
+            <property name="label" translatable="yes">All Stop</property>
+          </object>
+          <accelerator key="Escape" modifiers=""/>
+        </child>
+        <child>
+          <object class="GtkAction" id="item13">
+            <property name="name">item13</property>
+            <property name="label" translatable="yes">_View</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToggleAction" id="m_view_1">
+            <property name="active">True</property>
+            <property name="name">m_view_1</property>
+            <property name="label" translatable="yes">Cue number</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToggleAction" id="m_view_2">
+            <property name="active">True</property>
+            <property name="name">m_view_2</property>
+            <property name="label" translatable="yes">Description</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToggleAction" id="m_view_3">
+            <property name="active">True</property>
+            <property name="name">m_view_3</property>
+            <property name="label" translatable="yes">Wait</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToggleAction" id="m_view_4">
+            <property name="active">True</property>
+            <property name="name">m_view_4</property>
+            <property name="label" translatable="yes">Type</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToggleAction" id="m_view_5">
+            <property name="active">True</property>
+            <property name="name">m_view_5</property>
+            <property name="label" translatable="yes">Elapsed time</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToggleAction" id="m_view_6">
+            <property name="active">True</property>
+            <property name="name">m_view_6</property>
+            <property name="label" translatable="yes">Auto continue</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="item12">
+            <property name="name">item12</property>
+            <property name="label" translatable="yes">_Help</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="m_about">
+            <property name="stock_id">gtk-about</property>
+            <property name="name">m_about</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <ui>
+      <menubar name="menubar1">
+        <menu action="item14">
+          <menuitem action="m_new"/>
+          <menuitem action="m_open"/>
+          <separator/>
+          <menuitem action="m_save"/>
+          <menuitem action="m_saveas"/>
+          <separator/>
+          <menuitem action="m_quit"/>
+        </menu>
+        <menu action="item15">
+          <menu action="item4">
+            <menuitem action="m_new_midi_cue"/>
+            <menuitem action="m_new_group_cue"/>
+            <menuitem action="m_new_wave_cue"/>
+            <menuitem action="m_new_stop_cue"/>
+            <menuitem action="m_new_start_cue"/>
+            <menuitem action="m_new_pause_cue"/>
+            <menuitem action="m_new_fade_cue"/>
+          </menu>
+          <menuitem action="m_edit_cue"/>
+          <menuitem action="m_renumber"/>
+          <menuitem action="m_cut_cue"/>
+          <separator/>
+          <menuitem action="m_lock"/>
+          <separator/>
+          <menuitem action="m_patch"/>
+          <menuitem action="m_properties"/>
+          <separator/>
+          <menuitem action="m_preferences"/>
+        </menu>
+        <menu action="cue1">
+          <menuitem action="m_go"/>
+          <menuitem action="m_previous"/>
+          <menuitem action="m_next"/>
+          <separator/>
+          <menuitem action="m_load"/>
+          <separator/>
+          <menuitem action="m_all_stop"/>
+        </menu>
+        <menu action="item13">
+          <menuitem action="m_view_1"/>
+          <menuitem action="m_view_2"/>
+          <menuitem action="m_view_3"/>
+          <menuitem action="m_view_4"/>
+          <menuitem action="m_view_5"/>
+          <menuitem action="m_view_6"/>
+        </menu>
+        <menu action="item12">
+          <menuitem action="m_about"/>
+        </menu>
+      </menubar>
+    </ui>
+  </object>
+  <object class="GtkWindow" id="app">
+    <child>
+      <object class="GtkVBox" id="vbox48">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkMenuBar" constructor="uimanager1" id="menubar1">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolbar" id="toolbar1">
+            <property name="visible">True</property>
+            <property name="toolbar_style">GTK_TOOLBAR_BOTH</property>
+            <child>
+              <object class="GtkToolButton" id="tb_new">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">New File</property>
+                <property name="stock_id">gtk-new</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="tb_open">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Open File</property>
+                <property name="stock_id">gtk-open</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="tb_save">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Save File</property>
+                <property name="stock_id">gtk-save</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="tb_allstop">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Stop all cues</property>
+                <property name="stock_id">gtk-stop</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="scrolledwindow1">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <property name="shadow_type">GTK_SHADOW_IN</property>
+            <child>
+              <object class="GtkTreeView" id="ap_treeview">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="reorderable">True</property>
+                <property name="enable_search">False</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkStatusbar" id="appbar1">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
