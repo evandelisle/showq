@@ -93,6 +93,9 @@ int main(int argc, char *argv[])
 	delete app;
     }
     catch (Gtk::BuilderError) {
+        Gtk::MessageDialog d(_("Show Q could not open the GTK Builder file."), false, Gtk::MESSAGE_ERROR);
+        d.set_secondary_text(_("(re)Install the program to fix this file not found error."));
+        d.run();
         return 1;
     }
     catch (Audio::NoAudio) {
@@ -105,6 +108,9 @@ int main(int argc, char *argv[])
         std::cerr << e.what();
     }
     catch (...) {
+        Gtk::MessageDialog d(_("Show Q encountered an unknown-error."), false, Gtk::MESSAGE_ERROR);
+        d.set_secondary_text(_("Please report this error to the developers of the program."));
+        d.run();
         return 1;
     }
 
