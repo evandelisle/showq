@@ -27,7 +27,7 @@ def build(bld):
         target       = 'showq',
         includes     = '.',
         uselib       = 'GTKMM GTHREAD XMLPP ALSA JACK SNDFILE VORBISFILE SAMPLERATE',
-        cxxflags      = ['-O2', '-Wall', '-DVERSIONSTRING=\"0.5.0\"',
+        cxxflags      = ['-g','-O2', '-Wall', '-DVERSIONSTRING=\"0.5.0\"',
         '-DGETTEXT_PACKAGE=\"showq\"',
         '-DPROGRAMNAME_LOCALEDIR=\"${PREFIX}/share/locale/\"']
     )

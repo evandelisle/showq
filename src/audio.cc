@@ -448,7 +448,7 @@ int Audio::audio_callback0(jack_nframes_t nframes) throw()
 	    for (size_t j = 0; j < fa->on.size(); ++j) {
 		if (fa->on[j]) {
 		    deltas[j] = (l->vol[j] - fa->vol[j]) / fa->nframes;
-		    fade_len[j] = fa->nframes > n ? n : fa->nframes;
+		    fade_len[j] = (unsigned int)fa->nframes > n ? n : fa->nframes;
 		}
 	    }
             fa->nframes -= n;

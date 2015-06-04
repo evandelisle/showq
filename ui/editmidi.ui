@@ -103,31 +103,31 @@
     </columns>
     <data>
       <row>
-        <col id="0">Note on</col>
+        <col id="0" translatable="yes">Note on</col>
       </row>
       <row>
-        <col id="0">Note off</col>
+        <col id="0" translatable="yes">Note off</col>
       </row>
       <row>
-        <col id="0">Program change</col>
+        <col id="0" translatable="yes">Program change</col>
       </row>
       <row>
-        <col id="0">Controller change</col>
+        <col id="0" translatable="yes">Controller change</col>
       </row>
       <row>
-        <col id="0">Polyphonic aftertouch</col>
+        <col id="0" translatable="yes">Polyphonic aftertouch</col>
       </row>
       <row>
-        <col id="0">Channel aftertouch</col>
+        <col id="0" translatable="yes">Channel aftertouch</col>
       </row>
       <row>
-        <col id="0">Pitch bend change</col>
+        <col id="0" translatable="yes">Pitch bend change</col>
       </row>
       <row>
-        <col id="0">MIDI Show Control</col>
+        <col id="0" translatable="yes">MIDI Show Control</col>
       </row>
       <row>
-        <col id="0">MIDI SysEx</col>
+        <col id="0" translatable="yes">MIDI SysEx</col>
       </row>
     </data>
   </object>
@@ -137,28 +137,28 @@
     </columns>
     <data>
       <row>
-        <col id="0">1</col>
+        <col id="0" translatable="yes">1</col>
       </row>
       <row>
-        <col id="0">2</col>
+        <col id="0" translatable="yes">2</col>
       </row>
       <row>
-        <col id="0">3</col>
+        <col id="0" translatable="yes">3</col>
       </row>
       <row>
-        <col id="0">4</col>
+        <col id="0" translatable="yes">4</col>
       </row>
       <row>
-        <col id="0">5</col>
+        <col id="0" translatable="yes">5</col>
       </row>
       <row>
-        <col id="0">6</col>
+        <col id="0" translatable="yes">6</col>
       </row>
       <row>
-        <col id="0">7</col>
+        <col id="0" translatable="yes">7</col>
       </row>
       <row>
-        <col id="0">8</col>
+        <col id="0" translatable="yes">8</col>
       </row>
     </data>
   </object>
@@ -168,172 +168,172 @@
     </columns>
     <data>
       <row>
-        <col id="0">General lighting</col>
+        <col id="0" translatable="yes">General lighting</col>
       </row>
       <row>
-        <col id="0">Moving lights</col>
+        <col id="0" translatable="yes">Moving lights</col>
       </row>
       <row>
-        <col id="0">Colour changers</col>
+        <col id="0" translatable="yes">Colour changers</col>
       </row>
       <row>
-        <col id="0">Strobes</col>
+        <col id="0" translatable="yes">Strobes</col>
       </row>
       <row>
-        <col id="0">Lasers</col>
+        <col id="0" translatable="yes">Lasers</col>
       </row>
       <row>
-        <col id="0">Chasers</col>
+        <col id="0" translatable="yes">Chasers</col>
       </row>
       <row>
-        <col id="0">General sound</col>
+        <col id="0" translatable="yes">General sound</col>
       </row>
       <row>
-        <col id="0">Music</col>
+        <col id="0" translatable="yes">Music</col>
       </row>
       <row>
-        <col id="0">CD players</col>
+        <col id="0" translatable="yes">CD players</col>
       </row>
       <row>
-        <col id="0">EPROM play-back</col>
+        <col id="0" translatable="yes">EPROM play-back</col>
       </row>
       <row>
-        <col id="0">Audio tape machines</col>
+        <col id="0" translatable="yes">Audio tape machines</col>
       </row>
       <row>
-        <col id="0">Intercoms</col>
+        <col id="0" translatable="yes">Intercoms</col>
       </row>
       <row>
-        <col id="0">Amplifiers</col>
+        <col id="0" translatable="yes">Amplifiers</col>
       </row>
       <row>
-        <col id="0">Audio effects devices</col>
+        <col id="0" translatable="yes">Audio effects devices</col>
       </row>
       <row>
-        <col id="0">Equalisers</col>
+        <col id="0" translatable="yes">Equalisers</col>
       </row>
       <row>
-        <col id="0">General machinery</col>
+        <col id="0" translatable="yes">General machinery</col>
       </row>
       <row>
-        <col id="0">Rigging</col>
+        <col id="0" translatable="yes">Rigging</col>
       </row>
       <row>
-        <col id="0">Flys</col>
+        <col id="0" translatable="yes">Flys</col>
       </row>
       <row>
-        <col id="0">Lifts</col>
+        <col id="0" translatable="yes">Lifts</col>
       </row>
       <row>
-        <col id="0">Turntables</col>
+        <col id="0" translatable="yes">Turntables</col>
       </row>
       <row>
-        <col id="0">Trusses</col>
+        <col id="0" translatable="yes">Trusses</col>
       </row>
       <row>
-        <col id="0">Robots</col>
+        <col id="0" translatable="yes">Robots</col>
       </row>
       <row>
-        <col id="0">Animation</col>
+        <col id="0" translatable="yes">Animation</col>
       </row>
       <row>
-        <col id="0">Floats</col>
+        <col id="0" translatable="yes">Floats</col>
       </row>
       <row>
-        <col id="0">Breakaways</col>
+        <col id="0" translatable="yes">Breakaways</col>
       </row>
       <row>
-        <col id="0">Barges</col>
+        <col id="0" translatable="yes">Barges</col>
       </row>
       <row>
-        <col id="0">General video</col>
+        <col id="0" translatable="yes">General video</col>
       </row>
       <row>
-        <col id="0">Video tape machines</col>
+        <col id="0" translatable="yes">Video tape machines</col>
       </row>
       <row>
-        <col id="0">Video cassette machine</col>
+        <col id="0" translatable="yes">Video cassette machine</col>
       </row>
       <row>
-        <col id="0">Video disc players</col>
+        <col id="0" translatable="yes">Video disc players</col>
       </row>
       <row>
-        <col id="0">Video switchers</col>
+        <col id="0" translatable="yes">Video switchers</col>
       </row>
       <row>
-        <col id="0">Video effects</col>
+        <col id="0" translatable="yes">Video effects</col>
       </row>
       <row>
-        <col id="0">Video character generators</col>
+        <col id="0" translatable="yes">Video character generators</col>
       </row>
       <row>
-        <col id="0">Video still stores</col>
+        <col id="0" translatable="yes">Video still stores</col>
       </row>
       <row>
-        <col id="0">Video monitors</col>
+        <col id="0" translatable="yes">Video monitors</col>
       </row>
       <row>
-        <col id="0">General projection</col>
+        <col id="0" translatable="yes">General projection</col>
       </row>
       <row>
-        <col id="0">Film projectors</col>
+        <col id="0" translatable="yes">Film projectors</col>
       </row>
       <row>
-        <col id="0">Slide projectors</col>
+        <col id="0" translatable="yes">Slide projectors</col>
       </row>
       <row>
-        <col id="0">Video projectors</col>
+        <col id="0" translatable="yes">Video projectors</col>
       </row>
       <row>
-        <col id="0">Dissolvers</col>
+        <col id="0" translatable="yes">Dissolvers</col>
       </row>
       <row>
-        <col id="0">Shutter controls</col>
+        <col id="0" translatable="yes">Shutter controls</col>
       </row>
       <row>
-        <col id="0">General process control</col>
+        <col id="0" translatable="yes">General process control</col>
       </row>
       <row>
-        <col id="0">Hydraulic oil</col>
+        <col id="0" translatable="yes">Hydraulic oil</col>
       </row>
       <row>
-        <col id="0">Water</col>
+        <col id="0" translatable="yes">Water</col>
       </row>
       <row>
-        <col id="0">Carbon dioxide</col>
+        <col id="0" translatable="yes">Carbon dioxide</col>
       </row>
       <row>
-        <col id="0">Compressed air</col>
+        <col id="0" translatable="yes">Compressed air</col>
       </row>
       <row>
-        <col id="0">Natural gas</col>
+        <col id="0" translatable="yes">Natural gas</col>
       </row>
       <row>
-        <col id="0">Fog</col>
+        <col id="0" translatable="yes">Fog</col>
       </row>
       <row>
-        <col id="0">Smoke</col>
+        <col id="0" translatable="yes">Smoke</col>
       </row>
       <row>
-        <col id="0">Cracked haze</col>
+        <col id="0" translatable="yes">Cracked haze</col>
       </row>
       <row>
-        <col id="0">General pyrotechnics</col>
+        <col id="0" translatable="yes">General pyrotechnics</col>
       </row>
       <row>
-        <col id="0">Fireworks</col>
+        <col id="0" translatable="yes">Fireworks</col>
       </row>
       <row>
-        <col id="0">Explosions</col>
+        <col id="0" translatable="yes">Explosions</col>
       </row>
       <row>
-        <col id="0">Flame</col>
+        <col id="0" translatable="yes">Flame</col>
       </row>
       <row>
-        <col id="0">Smoke pots</col>
+        <col id="0" translatable="yes">Smoke pots</col>
       </row>
       <row>
-        <col id="0">All devices</col>
+        <col id="0" translatable="yes">All devices</col>
       </row>
     </data>
   </object>
@@ -343,82 +343,82 @@
     </columns>
     <data>
       <row>
-        <col id="0">GO</col>
+        <col id="0" translatable="yes">GO</col>
       </row>
       <row>
-        <col id="0">STOP</col>
+        <col id="0" translatable="yes">STOP</col>
       </row>
       <row>
-        <col id="0">RESUME</col>
+        <col id="0" translatable="yes">RESUME</col>
       </row>
       <row>
-        <col id="0">TIMED GO</col>
+        <col id="0" translatable="yes">TIMED GO</col>
       </row>
       <row>
-        <col id="0">LOAD</col>
+        <col id="0" translatable="yes">LOAD</col>
       </row>
       <row>
-        <col id="0">SET</col>
+        <col id="0" translatable="yes">SET</col>
       </row>
       <row>
-        <col id="0">FIRE</col>
+        <col id="0" translatable="yes">FIRE</col>
       </row>
       <row>
-        <col id="0">ALL OFF</col>
+        <col id="0" translatable="yes">ALL OFF</col>
       </row>
       <row>
-        <col id="0">RESTORE</col>
+        <col id="0" translatable="yes">RESTORE</col>
       </row>
       <row>
-        <col id="0">RESET</col>
+        <col id="0" translatable="yes">RESET</col>
       </row>
       <row>
-        <col id="0">GO OFF</col>
+        <col id="0" translatable="yes">GO OFF</col>
       </row>
       <row>
-        <col id="0">GO/JAM CLOCK</col>
+        <col id="0" translatable="yes">GO/JAM CLOCK</col>
       </row>
       <row>
-        <col id="0">STANDBY +</col>
+        <col id="0" translatable="yes">STANDBY +</col>
       </row>
       <row>
-        <col id="0">STANDBY -</col>
+        <col id="0" translatable="yes">STANDBY -</col>
       </row>
       <row>
-        <col id="0">SEQUENCE +</col>
+        <col id="0" translatable="yes">SEQUENCE +</col>
       </row>
       <row>
-        <col id="0">SEQUENCE -</col>
+        <col id="0" translatable="yes">SEQUENCE -</col>
       </row>
       <row>
-        <col id="0">START CLOCK</col>
+        <col id="0" translatable="yes">START CLOCK</col>
       </row>
       <row>
-        <col id="0">STOP CLOCK</col>
+        <col id="0" translatable="yes">STOP CLOCK</col>
       </row>
       <row>
-        <col id="0">ZERO CLOCK</col>
+        <col id="0" translatable="yes">ZERO CLOCK</col>
       </row>
       <row>
-        <col id="0">SET CLOCK</col>
+        <col id="0" translatable="yes">SET CLOCK</col>
       </row>
       <row>
-        <col id="0">MTC CHASE ON</col>
+        <col id="0" translatable="yes">MTC CHASE ON</col>
       </row>
       <row>
-        <col id="0">MTC CHASE OFF</col>
+        <col id="0" translatable="yes">MTC CHASE OFF</col>
       </row>
       <row>
-        <col id="0">OPEN CUE LIST</col>
+        <col id="0" translatable="yes">OPEN CUE LIST</col>
       </row>
       <row>
-        <col id="0">CLOSE CUE LIST</col>
+        <col id="0" translatable="yes">CLOSE CUE LIST</col>
       </row>
       <row>
-        <col id="0">OPEN CUE PATH</col>
+        <col id="0" translatable="yes">OPEN CUE PATH</col>
       </row>
       <row>
-        <col id="0">CLOSE CUE PATH</col>
+        <col id="0" translatable="yes">CLOSE CUE PATH</col>
       </row>
     </data>
   </object>

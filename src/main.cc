@@ -57,9 +57,9 @@ int main(int argc, char *argv[])
     if (!Glib::thread_supported()) Glib::thread_init();
 
     for (const char **p = glade_list; *p; ++p) {
-	if (Glib::file_test(*p + std::string("app.ui"), Glib::FILE_TEST_EXISTS)) {
-	    showq_ui = *p;
-	}
+      if (Glib::file_test(*p + std::string("app.ui"), Glib::FILE_TEST_EXISTS)) {
+      showq_ui = *p;
+      }
     }
 
     try {
@@ -71,26 +71,32 @@ int main(int argc, char *argv[])
     Glib::RefPtr <Gtk::Builder> refXml;
 
     try {
-	audio = new Audio;
-	refXml = Gtk::Builder::create_from_file(showq_ui+"app.ui");
-	refXml->get_widget_derived("app", app);
-	if (app) {
-	    try {
-		bool load_last = keyfile.get_boolean("main", "LoadLast");
-		if (load_last) {
-		    Glib::ustring file = keyfile.get_string("main", "LastFile");
-		    if (file != "") {
-		        app->do_load(file);
-		    }
-		}
-	    }
-	    catch (...) {
-	    }
-	    Gtk::AboutDialog::set_url_hook(sigc::ptr_fun(&on_activate_url_link));
-	    kit.run(*app);
-	}
-	delete audio;
-	delete app;
+      audio = new Audio;
+      refXml = Gtk::Builder::create_from_file(showq_ui+"app.ui");
+      refXml->get_widget_derived("app", app);
+      if (app) {
+          try {
+            bool load_last = keyfile.get_boolean("main", "LoadLast");
+            if (load_last) {
+                Glib::ustring file = keyfile.get_string("main", "LastFile");
+                if (file != "") {
+                    app->do_load(file);
+                }
+            }
+          }
+          catch (...) {
+          }
+          Gtk::AboutDialog::set_url_hook(sigc::ptr_fun(&on_activate_url_link));
+          kit.run(*app);
+      }
+      else
+      {
+        Gtk::MessageDialog d(_("Show Q could not find `app` in app.ui XML file."), false, Gtk::MESSAGE_ERROR);
+        d.set_secondary_text(_("(re)installing may fix this issue"));
+        d.run();
+      }
+      delete audio;
+      delete app;
     }
     catch (Gtk::BuilderError) {
         Gtk::MessageDialog d(_("Show Q could not open the GTK Builder file."), false, Gtk::MESSAGE_ERROR);
@@ -102,7 +108,7 @@ int main(int argc, char *argv[])
         Gtk::MessageDialog d(_("Show Q could not connect to JACK."), false, Gtk::MESSAGE_ERROR);
         d.set_secondary_text(_("(re)start JACK and try again"));
         d.run();
-	return 1;
+      return 1;
     }
     catch (std::exception & e) {
         std::cerr << e.what();

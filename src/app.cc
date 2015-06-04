@@ -61,7 +61,8 @@ MIDIengine::MIDIengine()
 {
     m_seq = oseq; // for now
 
-    int ret;
+    int ret = 0;
+    ret = ret;
     snd_seq_port_info_t* port_info;
 
     snd_seq_port_info_alloca(&port_info);
@@ -113,10 +114,13 @@ void MIDIengine::midi_main()
     while (g_atomic_int_get(&running)) {
 	int ret = poll(pfds, nfds, 1000);
 	ret = snd_seq_poll_descriptors_revents(m_seq, pfds, nfds, revents);
+  ret = ret;
+
 	for (int i = 0; i < nfds; ++i) {
 	    if (revents[i] > 0) {
 		snd_seq_event_t* ev;
 		int err = snd_seq_event_input(m_seq, &ev);
+    err = err;
 
 		switch (ev->type) {
 		case SND_SEQ_EVENT_PORT_START:
