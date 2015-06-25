@@ -653,6 +653,10 @@ void App::do_load(Glib::ustring filename)
         pRM->add_item(Glib::filename_to_uri(filename));
     }
     catch (...) {
+	    //Gtk::MessageDialog dialog(" App:do_load() error?", false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK_CANCEL, true);
+  	  //dialog.run();
+      std::cout << "App::do_load() error" << std::endl;
+      return;
     }
 }
 

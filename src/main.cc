@@ -113,6 +113,12 @@ int main(int argc, char *argv[])
     catch (std::exception & e) {
         std::cerr << e.what();
     }
+    /*
+    catch ( Jack::JackTemporaryException &e )
+    {
+      // Jack2 can throw errors, which we don't want to show the
+      // catch all handler for
+    }*/
     catch (...) {
         Gtk::MessageDialog d(_("Show Q encountered an unknown-error."), false, Gtk::MESSAGE_ERROR);
         d.set_secondary_text(_("Please report this error to the developers of the program."));

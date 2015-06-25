@@ -545,6 +545,8 @@ void OpenParser::on_start_element(const Glib::ustring &name, const AttributeList
 
 void OpenParser::on_end_element(const Glib::ustring &name)
 {
+   std::cerr << __PRETTY_FUNCTION__ << " " << name << std::endl;
+
     if (m_cues.size() == 0) {
 	if (name == "note")
 	    app->note = m_text;
@@ -557,13 +559,19 @@ void OpenParser::on_end_element(const Glib::ustring &name)
 	m_iters.pop_back();
 	return;
     }
+    
+    std::cerr << name << m_text << " keyval: " << cue->keyval << " state: " << cue->state << std::endl;
 
     if (name == "cue_id") cue->cue_id = m_text;
     if (name == "text") cue->text = m_text;
     if (name == "note") cue->note = m_text;
     if (name == "delay") cue->delay = atof(m_text.c_str());
     if (name == "autocontinue" && m_text == "true") cue->autocont = true;
-    if (name == "Hotkey") Gtk::AccelGroup::parse(m_text, cue->keyval, cue->state);
+    if (name == "Hotkey" ) {
+      unsigned int tmp = 0;
+      Gdk::ModifierType mod = (Gdk::ModifierType)0;
+      Gtk::AccelGroup::parse("<MainWindow>/File/Open", tmp, mod );
+    }
 
     boost::shared_ptr<Wave_Cue> pw = boost::dynamic_pointer_cast<Wave_Cue>(cue);
     if (pw) {
