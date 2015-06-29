@@ -545,7 +545,7 @@ void OpenParser::on_start_element(const Glib::ustring &name, const AttributeList
 
 void OpenParser::on_end_element(const Glib::ustring &name)
 {
-   std::cerr << __PRETTY_FUNCTION__ << " " << name << std::endl;
+   //std::cerr << __PRETTY_FUNCTION__ << " " << name << std::endl;
 
     if (m_cues.size() == 0) {
 	if (name == "note")
@@ -560,7 +560,6 @@ void OpenParser::on_end_element(const Glib::ustring &name)
 	return;
     }
     
-    std::cerr << name << m_text << " keyval: " << cue->keyval << " state: " << cue->state << std::endl;
 
     if (name == "cue_id") cue->cue_id = m_text;
     if (name == "text") cue->text = m_text;
@@ -568,9 +567,15 @@ void OpenParser::on_end_element(const Glib::ustring &name)
     if (name == "delay") cue->delay = atof(m_text.c_str());
     if (name == "autocontinue" && m_text == "true") cue->autocont = true;
     if (name == "Hotkey" ) {
-      unsigned int tmp = 0;
-      Gdk::ModifierType mod = (Gdk::ModifierType)0;
-      Gtk::AccelGroup::parse("<MainWindow>/File/Open", tmp, mod );
+      // m_text contains lots of whitespace - origin of whitespace unknown
+      // hack fix for now - reverse search trough the string, separating
+      // the good ending, and removing the un-wanted leading whitespace.
+      
+      // this works for simple on letter keybindings - no mod keys
+      size_t ws = m_text.rfind(' ')+1;
+      std::string key = m_text.substr( ws, m_text.size() - ws );
+      //std::cerr << "string lenght " << ws << " content: " << key << std::endl; 
+      Gtk::AccelGroup::parse( key, cue->keyval, cue->state );
     }
 
     boost::shared_ptr<Wave_Cue> pw = boost::dynamic_pointer_cast<Wave_Cue>(cue);
