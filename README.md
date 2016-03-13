@@ -2,21 +2,6 @@ Show Q
 ------
 ShowQ is audio / MIDI trigger software for theatre productions.
 
-```
-The official homepage of ShowQ is no longer available, so I've mirrored
-the source code here.
-
-Although I am the developer of OpenAV - please note that this
-is not an OpenAV project.
-  Thanks, -Harry <harryhaaren@gmail.com>
-```
-
-
-
-About
------
-Welcome to the first public release of Show Q. The purpose of Show Q is to
-play back audio and trigger MIDI events for theatre productions.
 
 Requirements
 ------------
@@ -66,7 +51,7 @@ program.
 
 Ideas, questions, patches and bug reports
 -----------------------------------------
-See http://developer.berlios.de/projects/showq/
+http://www.github.com/evandelisle/showq
 
 --
 Errol van-de-l'Isle
