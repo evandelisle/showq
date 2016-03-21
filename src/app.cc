@@ -61,8 +61,6 @@ MIDIengine::MIDIengine()
 {
     m_seq = oseq; // for now
 
-    int ret = 0;
-    ret = ret;
     snd_seq_port_info_t* port_info;
 
     snd_seq_port_info_alloca(&port_info);
@@ -73,8 +71,8 @@ MIDIengine::MIDIengine()
     snd_seq_port_info_set_port(port_info, 100);
     snd_seq_port_info_set_type(port_info, SND_SEQ_PORT_TYPE_APPLICATION);
 
-    ret = snd_seq_create_port(m_seq, port_info);
-    ret = snd_seq_connect_from(m_seq,
+    snd_seq_create_port(m_seq, port_info);
+    snd_seq_connect_from(m_seq,
 	snd_seq_port_info_get_port(port_info),
 	SND_SEQ_CLIENT_SYSTEM,
 	SND_SEQ_PORT_SYSTEM_ANNOUNCE);
@@ -112,15 +110,13 @@ void MIDIengine::midi_main()
     snd_seq_poll_descriptors(m_seq, pfds, nfds, POLLIN);
 
     while (g_atomic_int_get(&running)) {
-	int ret = poll(pfds, nfds, 1000);
-	ret = snd_seq_poll_descriptors_revents(m_seq, pfds, nfds, revents);
-  ret = ret;
+	poll(pfds, nfds, 1000);
+	snd_seq_poll_descriptors_revents(m_seq, pfds, nfds, revents);
 
 	for (int i = 0; i < nfds; ++i) {
 	    if (revents[i] > 0) {
 		snd_seq_event_t* ev;
-		int err = snd_seq_event_input(m_seq, &ev);
-    err = err;
+		snd_seq_event_input(m_seq, &ev);
 
 		switch (ev->type) {
 		case SND_SEQ_EVENT_PORT_START:
@@ -968,7 +964,7 @@ void App::on_go_activate()
     catch (...) {
     }
 
-    if (iter) iter++;
+    if (iter) ++iter;
     if (!iter) {
         Gtk::TreeModel::Path p = Gtk::TreeModel::Path(siter);
 	if (p.get_depth() > 1 && p.up()) {

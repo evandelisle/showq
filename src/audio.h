@@ -52,11 +52,12 @@ struct patch_ {
 
 class AudioFile {
 public:
-    AudioFile(const char *);
+    explicit AudioFile(const char *);
     ~AudioFile();
     class fade_ {
     public:
-        fade_() : status(Play) {}
+        fade_() : status(Play), nframes(0), tframes(0),
+          stop_on_complete(false), pause_on_complete(false) {}
 
 	void play() { status = Play; }
 	void pause() { status = Pause; }

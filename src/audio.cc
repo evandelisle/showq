@@ -38,7 +38,8 @@ static int samplerate;
 
 AudioFile::AudioFile(const char *f)
     : status(Pause), eof(false), eob(false), fades(new Fades),
-    cur_frame(0), srate(0), do_seek(false), read_frame(0), num_channels(0)
+    cur_frame(0), srate(0), do_seek(false), seek_pos(0.0),
+    read_frame(0), num_channels(0)
 {
     sfinfo.format = 0;
     codec = NoCodec;
@@ -107,11 +108,9 @@ size_t AudioFile::sf_read(float *** vbuf, size_t n)
 	ibuf[c] = &cb_buf[(32000 / rbs.size()) * c];
     }
 
-    float *s, *d;
-
     for (size_t c = 0; c < rbs.size(); ++c) {
-	d = ibuf[c];
-	s = &cb_rbuf[c];
+	float *d = ibuf[c];
+	float *s = &cb_rbuf[c];
 	for (size_t j = 0; j < i; ++j) {
 	    *d++ = *s;
 	    s += rbs.size();
@@ -297,7 +296,7 @@ void Audio::setup_ports()
     const char **oports
 	= jack_get_ports(client, 0, 0, JackPortIsInput);
 
-    for (int i = 0; oports[i] && i < 8; ++i) {
+    for (int i = 0; i < 8 && oports[i]; ++i) {
 	std::cerr << jack_port_name(ports[i]) << " # " << oports[i] << '\n';
 	jack_connect(client, jack_port_name(ports[i]), oports[i]);
     }

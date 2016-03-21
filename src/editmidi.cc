@@ -208,7 +208,7 @@ void EditCueMidi::set(boost::shared_ptr<Cue> & q)
     boost::shared_ptr<MIDI_Cue> pm = boost::dynamic_pointer_cast<MIDI_Cue>(q);
 
     std::vector<MIDI_Cue::msg>::const_iterator k = pm->msgs.begin();
-    for (; k != pm->msgs.end(); k++) {
+    for (; k != pm->msgs.end(); ++k) {
 	Gtk::TreeModel::Row row = *(m_refTreeModel->append());
 	row[m_Columns.m_text] = get_line(k->midi_data);
 	row[m_Columns.m_port] = k->port;

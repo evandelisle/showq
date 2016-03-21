@@ -65,7 +65,7 @@ private:
 
 class RunningCue {
 public:
-    RunningCue() : update_icon(true) {}
+    RunningCue() : cue_id_no(0), update_icon(true) {}
     void Pause() {if (fade) fade->pause(); else if (af) af->pause(); update_icon = true;}
     void Continue() {if (fade) fade->play(); else if (af) af->play(); update_icon = true;}
     void Stop() {if (fade) fade->stop(); else if (af) af->stop();}
@@ -80,7 +80,7 @@ public:
 
 class WaitingCue {
 public:
-    WaitingCue() : done(false), active(true), update_icon(false) {}
+    WaitingCue() : cue_id_no(0), done(false), active(true), update_icon(false) {}
     void Pause() {ptime.assign_current_time(); active = false; update_icon = true;}
     void Continue() {Glib::TimeVal e = ptime - start; start += e; end += e; active = true; update_icon = true;}
     void Stop() {done = true;}

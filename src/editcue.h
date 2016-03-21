@@ -41,7 +41,7 @@ private:
 class EditCueBase : public sigc::trackable {
 public:
     EditCueBase();
-    EditCueBase(Gtk::Notebook *) {}
+    explicit EditCueBase(Gtk::Notebook *) {}
     virtual ~EditCueBase();
     virtual void get(boost::shared_ptr<Cue> & p) = 0;
     virtual void set(boost::shared_ptr<Cue> & p) = 0;
@@ -50,7 +50,7 @@ public:
 class EditCueFade : public EditCueBase {
 public:
     EditCueFade();
-    EditCueFade(Gtk::Notebook *);
+    explicit EditCueFade(Gtk::Notebook *);
     virtual ~EditCueFade();
     virtual void get(boost::shared_ptr<Cue> & p);
     virtual void set(boost::shared_ptr<Cue> & p);
@@ -71,7 +71,7 @@ private:
 
 class EditCueWave : public EditCueBase {
 public:
-    EditCueWave(Gtk::Notebook *);
+    explicit EditCueWave(Gtk::Notebook *);
     virtual ~EditCueWave();
     virtual void get(boost::shared_ptr<Cue> & p);
     virtual void set(boost::shared_ptr<Cue> & p);
@@ -105,7 +105,7 @@ private:
 
 class EditCueMidi : public EditCueBase {
 public:
-    EditCueMidi(Gtk::Notebook *);
+    explicit EditCueMidi(Gtk::Notebook *);
     virtual ~EditCueMidi();
     virtual void get(boost::shared_ptr<Cue> & p);
     virtual void set(boost::shared_ptr<Cue> & p);
@@ -142,7 +142,7 @@ private:
 
 class EditCueStop : public EditCueBase {
 public:
-    EditCueStop(Gtk::Notebook *);
+    explicit EditCueStop(Gtk::Notebook *);
     virtual ~EditCueStop();
     virtual void get(boost::shared_ptr<Cue> & p);
     virtual void set(boost::shared_ptr<Cue> & p);
@@ -151,7 +151,7 @@ private:
 
 class EditCuePause : public EditCueBase {
 public:
-    EditCuePause(Gtk::Notebook *);
+    explicit EditCuePause(Gtk::Notebook *);
     virtual ~EditCuePause();
     virtual void get(boost::shared_ptr<Cue> & p);
     virtual void set(boost::shared_ptr<Cue> & p);
@@ -160,7 +160,7 @@ private:
 
 class EditCueStart : public EditCueBase {
 public:
-    EditCueStart(Gtk::Notebook *);
+    explicit EditCueStart(Gtk::Notebook *);
     virtual ~EditCueStart();
     virtual void get(boost::shared_ptr<Cue> & p);
     virtual void set(boost::shared_ptr<Cue> & p);
@@ -169,7 +169,7 @@ private:
 
 class EditCueGroup : public EditCueBase {
 public:
-    EditCueGroup(Gtk::Notebook *);
+    explicit EditCueGroup(Gtk::Notebook *);
     virtual ~EditCueGroup();
     virtual void get(boost::shared_ptr<Cue> & p);
     virtual void set(boost::shared_ptr<Cue> & p);

@@ -32,7 +32,7 @@
 
 class Cue {
 public:
-    Cue() : delay(0.0), autocont(false), target(0), keyval(0) {}
+    Cue() : cue_id_no(0), delay(0.0), autocont(false), target(0), keyval(0) {}
     virtual ~Cue() {}
 
     enum {Base, MIDI, Wave, Stop, Fade, Group, Pause, Start};

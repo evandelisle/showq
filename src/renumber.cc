@@ -22,7 +22,8 @@
 #include "main.h"
 
 Renumber::Renumber(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder>& refXml)
-    : Gtk::Dialog(cobject), m_refXml(refXml)
+    : Gtk::Dialog(cobject), step(0.0), cue_no(0.0), skip_autocont(false),
+    m_refXml(refXml)
 {
 }
 
