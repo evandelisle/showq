@@ -28,6 +28,7 @@ def build(bld):
         includes     = '.',
         uselib       = 'GTKMM GTHREAD XMLPP ALSA JACK SNDFILE VORBISFILE SAMPLERATE',
         cxxflags      = ['-g','-O2', '-Wall', '-DVERSIONSTRING=\"0.5.0\"',
+        '-std=c++11',
         '-DGETTEXT_PACKAGE=\"showq\"',
         '-DPROGRAMNAME_LOCALEDIR=\"${PREFIX}/share/locale/\"']
     )
