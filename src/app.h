@@ -178,7 +178,7 @@ public:
     Gtk::TreeModel::iterator insert_cue(boost::shared_ptr<Cue> & q);
     Gtk::TreeModel::iterator insert_cue(Gtk::TreeModel::iterator i, boost::shared_ptr<Cue> & q);
 
-    void do_load(Glib::ustring filename);
+    void do_load(const Glib::ustring & filename);
     Gtk::TreeModel::iterator go_cue(Gtk::TreeModel::iterator iter, bool run_all = false);
 
     MIDIengine * midi_engine;
@@ -276,31 +276,6 @@ private:
 
     Gdk::ModifierType state;
     guint keyval;
-};
-
-class OpenParser : public xmlpp::SaxParser {
-public:
-protected:
-    virtual void on_start_element(const Glib::ustring &name, const AttributeList &attributes);
-    virtual void on_end_element(const Glib::ustring &name);
-    virtual void on_cdata_block(const Glib::ustring &text);
-    virtual void on_comment (const Glib::ustring &text);
-    virtual void on_characters(const Glib::ustring& characters);
-    virtual void on_internal_subset(
-	const Glib::ustring &name, const Glib::ustring &publicId,
-	const Glib::ustring &systemId);
-    virtual void on_start_document();
-    virtual void on_end_document();
-    virtual void on_warning(const Glib::ustring& text);
-    virtual void on_error(const Glib::ustring& text);
-    virtual void on_fatal_error(const Glib::ustring& text);
-private:
-    int port;
-    int midi_port;
-    Glib::ustring m_text;
-
-    std::vector<boost::shared_ptr<Cue> > m_cues;
-    std::vector<Gtk::TreeModel::iterator> m_iters;
 };
 
 extern App * app;

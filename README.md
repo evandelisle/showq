@@ -7,6 +7,7 @@ Requirements
 ------------
 The software requirements for build and runtime are as follows:
 
+    - C++11 compiler
     - python (required for build only for waf)
         http://www.python.org/
     - gtkmm

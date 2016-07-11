@@ -44,10 +44,10 @@ public:
     virtual bool validate() { return true;}
     std::string validate_reason() { return v_reason;}
 
-    std::string cue_id;
+    std::string cue_id;  // Visable cue number or string eg 1, 2a or 3.4
     std::string text;
     std::string note;
-    long cue_id_no;
+    long cue_id_no;      // Unique cue identifier
     double delay;
     bool autocont;
 
@@ -127,7 +127,12 @@ public:
 
 class FadeStop_Cue : public Cue {
 public:
-    FadeStop_Cue() : stop_on_complete(false), pause_on_complete(false), fade_time(0.0) {}
+    FadeStop_Cue()
+      : stop_on_complete(false), pause_on_complete(false), fade_time(0.0)
+    {
+      tvol.resize(8);
+      on.resize(8);
+    }
 
     virtual std::string cue_type_text() { return "Fade"; }
     virtual int cue_type() { return Fade; }

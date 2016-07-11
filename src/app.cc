@@ -629,33 +629,6 @@ void App::on_new_activate()
     }
 }
 
-void App::do_load(Glib::ustring filename)
-{
-    try {
-        // Clear previous
-        file = filename;
-        title.clear();
-        note.clear();
-        m_refTreeModel->clear();
-        next_id = 1;
-
-        OpenParser parser;
-        parser.set_substitute_entities(true);
-        parser.parse_file(file);
-        // Show what we have loaded
-        set_title(title + " - Show Q");
-
-        Glib::RefPtr<Gtk::RecentManager> pRM = Gtk::RecentManager::get_default();
-        pRM->add_item(Glib::filename_to_uri(filename));
-    }
-    catch (...) {
-	    //Gtk::MessageDialog dialog(" App:do_load() error?", false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK_CANCEL, true);
-  	  //dialog.run();
-      std::cout << "App::do_load() error" << std::endl;
-      return;
-    }
-}
-
 void App::on_open_activate()
 {
     if (title.size() != 0 ||
