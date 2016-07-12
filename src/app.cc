@@ -1354,36 +1354,41 @@ bool CueTreeView::on_button_press_event(GdkEventButton *event)
     return return_value;
 }
 
-void CueTreeView::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& context,
-        int x, int y, const Gtk::SelectionData& selection_data, guint info, guint time)
+void CueTreeView::on_drag_data_received(
+  const Glib::RefPtr<Gdk::DragContext>& context,
+  int x, int y, const Gtk::SelectionData& selection_data,
+  guint info, guint time)
 {
-    TreeView::on_drag_data_received(context, x, y, selection_data, info, time);
+  TreeView::on_drag_data_received(context, x, y, selection_data, info, time);
 
-    std::list<std::string> uris = selection_data.get_uris();
+  std::vector<std::string> uris = selection_data.get_uris();
 
-    if (uris.size() == 0) return;
+  if (uris.empty()) return;
 
-    Gtk::TreeModel::Path path;
-    Gtk::TreeViewDropPosition pos;
+  Gtk::TreeModel::Path path;
+  Gtk::TreeViewDropPosition pos;
 
-    get_dest_row_at_pos(x, y, path, pos);
-    Gtk::TreeModel::iterator iter = app->m_refTreeModel->get_iter(path);
+  get_dest_row_at_pos(x, y, path, pos);
+  Gtk::TreeModel::iterator iter = app->m_refTreeModel->get_iter(path);
 
-    if (pos == Gtk::TREE_VIEW_DROP_AFTER) ++iter;
+  if (pos == Gtk::TREE_VIEW_DROP_AFTER) ++iter;
 
-    for (std::list<std::string>::iterator i = uris.begin(); i != uris.end(); ++i) {
-        AudioFile af((Glib::filename_from_uri(*i)).c_str());
-        if (af.get_codec() == NoCodec) continue;
-        boost::shared_ptr<Cue> cue = boost::shared_ptr<Wave_Cue>(new Wave_Cue);
-        boost::shared_ptr<Wave_Cue> q = boost::dynamic_pointer_cast<Wave_Cue>(cue);
-        q->file = Glib::filename_from_uri(*i);
-        q->text = *i;
-        iter = app->insert_cue(iter, cue);
-        ++iter;
-    }
+  bool success = false;
 
-    if (uris.size() > 0)
-        context->drag_finish(true, false, time);
+  for (auto & i : uris) {
+    AudioFile af((Glib::filename_from_uri(i)).c_str());
+    if (af.get_codec() == NoCodec) continue;
+
+    success = true;
+    boost::shared_ptr<Cue> cue = boost::shared_ptr<Wave_Cue>(new Wave_Cue);
+    boost::shared_ptr<Wave_Cue> q = boost::dynamic_pointer_cast<Wave_Cue>(cue);
+    q->file = Glib::filename_from_uri(i);
+    q->text = Glib::filename_to_utf8(Glib::path_get_basename(q->file));
+    iter = app->insert_cue(iter, cue);
+    ++iter;
+  }
+
+  context->drag_finish(success, false, time);
 }
 
 void CueTreeView::on_edit()
