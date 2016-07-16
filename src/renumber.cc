@@ -1,6 +1,6 @@
 /*
  * Show Q
- * Copyright (c) 2007-2008 Errol van-de-l'Isle
+ * Copyright (c) 2007-2008 Errol van de l'Isle
  *
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by
@@ -21,43 +21,43 @@
 #include "renumber.h"
 #include "main.h"
 
-Renumber::Renumber(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder>& refXml)
-    : Gtk::Dialog(cobject), step(0.0), cue_no(0.0), skip_autocont(false),
+Renumber::Renumber(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml)
+  : Gtk::Dialog(cobject), step(0.0), cue_no(0.0), skip_autocont(false),
     m_refXml(refXml)
 {
 }
 
-std::auto_ptr<Renumber> Renumber::create()
+std::unique_ptr<Renumber> Renumber::create()
 {
-    Renumber * dialog;
-    Glib::RefPtr <Gtk::Builder> refXml
-	= Gtk::Builder::create_from_file(showq_ui+"renumber.ui");
-    refXml->get_widget_derived("renumber", dialog);
-    return std::auto_ptr<Renumber>(dialog);
+  Renumber *dialog;
+  Glib::RefPtr <Gtk::Builder> refXml
+    = Gtk::Builder::create_from_file(showq_ui + "renumber.ui");
+  refXml->get_widget_derived("renumber", dialog);
+  return std::unique_ptr<Renumber>(dialog);
 }
 
 void Renumber::on_response(int r)
 {
-    switch (r) {
-    case 0:
-        return;
-    case Gtk::RESPONSE_OK:
-    	Gtk::SpinButton * p_start;
-    	m_refXml->get_widget("re_start", p_start);
-    	cue_no = p_start->get_value();
+  switch (r) {
+  case 0:
+    return;
+  case Gtk::RESPONSE_OK:
+    Gtk::SpinButton *p_start;
+    m_refXml->get_widget("re_start", p_start);
+    cue_no = p_start->get_value();
 
-    	Gtk::SpinButton * p_step;
-    	m_refXml->get_widget("re_step", p_step);
-    	step = p_step->get_value();
+    Gtk::SpinButton *p_step;
+    m_refXml->get_widget("re_step", p_step);
+    step = p_step->get_value();
 
-    	Gtk::CheckButton * p_skipac;
-    	m_refXml->get_widget("re_skip_acont", p_skipac);
-    	skip_autocont = p_skipac->get_active();
-    	m_signal_ok.emit();
-	break;
-    default:
-	break;
-    }
-    hide();
+    Gtk::CheckButton *p_skipac;
+    m_refXml->get_widget("re_skip_acont", p_skipac);
+    skip_autocont = p_skipac->get_active();
+    m_signal_ok.emit();
+    break;
+  default:
+    break;
+  }
+  hide();
 }
 

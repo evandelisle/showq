@@ -1,6 +1,6 @@
 /*
  * Show Q
- * Copyright (c) 2007-2008 Errol van-de-l'Isle
+ * Copyright (c) 2007-2008 Errol van de l'Isle
  *
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by
@@ -38,124 +38,145 @@
 #include <glibmm.h>
 
 #include <samplerate.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <libxml++/libxml++.h>
+#pragma GCC diagnostic pop
 
 enum {
-    Play, Pause, Stop, Done
+  Play, Pause, Stop, Done
 };
 enum {NoCodec, SndFile, OggVorbis};
 
 struct patch_ {
-    unsigned int src;
-    unsigned int dest;
+  unsigned int src;
+  unsigned int dest;
 };
 
 class AudioFile {
 public:
-    explicit AudioFile(const char *);
-    ~AudioFile();
-    class fade_ {
-    public:
-        fade_() : status(Play), nframes(0), tframes(0),
-          stop_on_complete(false), pause_on_complete(false) {}
+  explicit AudioFile(const char *);
+  ~AudioFile();
+  class fade_ {
+  public:
+    fade_() : nframes(0), tframes(0), status(Play),
+      stop_on_complete(false), pause_on_complete(false) {}
 
-	void play() { status = Play; }
-	void pause() { status = Pause; }
-	void stop() { status = Stop; }
-	std::vector<float> vol;
-	std::vector<bool> on;
-	long nframes;
-	long tframes;
-	int status;
-	bool stop_on_complete;
-	bool pause_on_complete;
-    };
-    size_t read_cb();
-    size_t sf_read(float *** vbuf, size_t n);
-
-    std::string get_info_str();
-    double total_time();
-
-    void play() { status = Play; }
-    void pause() { status = Pause; }
-    void stop();
-    void seek(double);
-    double get_pos();
-    void add_fade(boost::shared_ptr<fade_> f);
-    int get_codec() { return codec;};
-
-    int status;
-    bool eof;
-    bool eob;
-
-    typedef std::list<boost::shared_ptr<fade_> > Fades;
-    SerializedRCUManager<Fades> fades;
-    std::vector<SRC_STATE *> src;
-    Glib::Mutex buffer_lock;
-    std::vector<jack_ringbuffer_t *> rbs;
+    void play()
+    {
+      status = Play;
+    }
+    void pause()
+    {
+      status = Pause;
+    }
+    void stop()
+    {
+      status = Stop;
+    }
     std::vector<float> vol;
-    std::vector<patch_> patch;
+    std::vector<bool> on;
+    long nframes;
+    long tframes;
+    int status;
+    bool stop_on_complete;
+    bool pause_on_complete;
+  };
+  size_t read_cb();
+  size_t sf_read(float *** vbuf, size_t n);
 
-    size_t cur_frame;
+  std::string get_info_str();
+  double total_time();
+
+  void play()
+  {
+    status = Play;
+  }
+  void pause()
+  {
+    status = Pause;
+  }
+  void stop();
+  void seek(double);
+  double get_pos();
+  void add_fade(boost::shared_ptr<fade_> f);
+  int get_codec()
+  {
+    return codec;
+  };
+
+  int status;
+  bool eof;
+  bool eob;
+
+  typedef std::list<boost::shared_ptr<fade_> > Fades;
+  SerializedRCUManager<Fades> fades;
+  std::vector<SRC_STATE *> src;
+  Glib::Mutex buffer_lock;
+  std::vector<jack_ringbuffer_t *> rbs;
+  std::vector<float> vol;
+  std::vector<patch_> patch;
+
+  size_t cur_frame;
 private:
-    int srate;
-    int codec;
-    OggVorbis_File vf;
-    vorbis_info * vi;
-    SNDFILE *sf;
-    SF_INFO sfinfo;
+  int srate;
+  int codec;
+  OggVorbis_File vf;
+  vorbis_info *vi;
+  SNDFILE *sf;
+  SF_INFO sfinfo;
 
-    bool do_seek;
-    double seek_pos;
-    double mTotalTime;
-    size_t read_frame;
-    int num_channels;
+  bool do_seek;
+  double seek_pos;
+  double mTotalTime;
+  size_t read_frame;
+  int num_channels;
 };
 
 class Audio {
 public:
-    Audio();
-    ~Audio();
+  Audio();
+  ~Audio();
 
-    class NoAudio {};
+  class NoAudio {};
 
-    void add_af(boost::shared_ptr<AudioFile>);
-    void do_disc_thread();
+  void add_af(boost::shared_ptr<AudioFile>);
+  void do_disc_thread();
 
-    int port_set_name(int port, const Glib::ustring & name);
-    void disconnect_all();
-    int connect(int port, const Glib::ustring & name);
+  int port_set_name(int port, const Glib::ustring &name);
+  void disconnect_all();
+  int connect(int port, const Glib::ustring &name);
 
-    float get_cpu_load();
-    long get_sample_rate();
+  float get_cpu_load();
+  long get_sample_rate();
 
-    void serialize(xmlpp::Element * el);
+  void serialize(xmlpp::Element *el);
 
-    Glib::Dispatcher signal_jack_disconnect;
+  Glib::Dispatcher signal_jack_disconnect;
 
-    long m_samplerate;
+  long m_samplerate;
 protected:
 private:
-    void setup_ports();
-    static void sdown_callback(void *arg) throw();
-    static int srate_callback(jack_nframes_t nframes, void *arg) throw();
-    static int audio_callback(jack_nframes_t nframes, void *ar) throw();
-    int audio_callback0(jack_nframes_t nframes) throw();
-    void disc_thread();
+  void setup_ports();
+  static void sdown_callback(void *arg) throw();
+  static int srate_callback(jack_nframes_t nframes, void *arg) throw();
+  static int audio_callback(jack_nframes_t nframes, void *ar) throw();
+  int audio_callback0(jack_nframes_t nframes) throw();
+  void disc_thread();
 
-    Glib::Mutex disc_thread_lock;
-    Glib::Cond disc_thread_cond;
+  Glib::Mutex disc_thread_lock;
+  Glib::Cond disc_thread_cond;
 
-    Glib::Thread *disc_thread_p;
-    gint running;
+  Glib::Thread *disc_thread_p;
+  gint running;
 
-    jack_client_t *client;
-    jack_port_t *ports[8];
+  jack_client_t *client;
+  jack_port_t *ports[8];
 
-    typedef std::list< boost::shared_ptr<AudioFile> > Afs;
-    SerializedRCUManager<Afs> afs;
+  typedef std::list< boost::shared_ptr<AudioFile> > Afs;
+  SerializedRCUManager<Afs> afs;
 };
 
-extern Audio * audio;
+extern Audio *audio;
 
 #endif

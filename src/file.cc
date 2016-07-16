@@ -1,6 +1,6 @@
 /*
  * Show Q
- * Copyright (c) 2007-2008 Errol van-de-l'Isle
+ * Copyright (c) 2007-2008 Errol van de l'Isle
  *
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by
@@ -19,7 +19,10 @@
  */
 
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <libxml++/libxml++.h>
+#pragma GCC diagnostic pop
 #include <alsa/asoundlib.h>
 
 #include "app.h"

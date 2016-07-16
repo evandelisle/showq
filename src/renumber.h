@@ -1,6 +1,6 @@
 /*
  * Show Q
- * Copyright (c) 2007-2008 Errol van-de-l'Isle
+ * Copyright (c) 2007-2008 Errol van de l'Isle
  *
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by
@@ -26,21 +26,24 @@
 
 class Renumber : public Gtk::Dialog {
 public:
-    Renumber(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder>& refXml);
-    virtual ~Renumber() {}
+  Renumber(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml);
+  virtual ~Renumber() {}
 
-    static std::auto_ptr<Renumber> create();
+  static std::unique_ptr<Renumber> create();
 
-    double step;
-    double cue_no;
-    bool skip_autocont;
+  double step;
+  double cue_no;
+  bool skip_autocont;
 
-    sigc::signal<void> signal_ok() {return m_signal_ok;}
+  sigc::signal<void> signal_ok()
+  {
+    return m_signal_ok;
+  }
 private:
-    virtual void on_response(int);
+  virtual void on_response(int);
 
-    sigc::signal<void> m_signal_ok;
-    Glib::RefPtr<Gtk::Builder> m_refXml;
+  sigc::signal<void> m_signal_ok;
+  Glib::RefPtr<Gtk::Builder> m_refXml;
 };
 
 #endif /* RENUMBER_H__ */
