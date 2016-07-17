@@ -121,7 +121,7 @@ void App::do_save()
 void App::do_save_cues(Gtk::TreeModel::Children children, xmlpp::Element * cuelist)
 {
   for (Gtk::TreeModel::iterator iter = children.begin(); iter != children.end(); ++iter){
-    boost::shared_ptr<Cue> cue = (*iter)[m_refTreeModel->Col.cue];
+    std::shared_ptr<Cue> cue = (*iter)[m_refTreeModel->Col.cue];
 
     xmlpp::Element *cel = cuelist->add_child("cue");
 
@@ -309,14 +309,14 @@ private:
   void audio_patch(const xmlpp::Node * node);
   void midi_patch(const xmlpp::Element *node);
   void note(const xmlpp::Element *node);
-  void common_cue_items(const xmlpp::Element *el, boost::shared_ptr<Cue> cue);
-  void midi(const xmlpp::Element *el, boost::shared_ptr<MIDI_Cue> cue);
-  void fade(const xmlpp::Element *el, boost::shared_ptr<FadeStop_Cue> cue);
-  void wave(const xmlpp::Element *el, boost::shared_ptr<Wave_Cue> cue);
-  void stop(const xmlpp::Element *el, boost::shared_ptr<Stop_Cue> cue);
-  void pause(const xmlpp::Element *el, boost::shared_ptr<Pause_Cue> cue);
-  void start(const xmlpp::Element *el, boost::shared_ptr<Start_Cue> cue);
-  void group(const xmlpp::Element *el, boost::shared_ptr<Group_Cue> cue);
+  void common_cue_items(const xmlpp::Element *el, std::shared_ptr<Cue> cue);
+  void midi(const xmlpp::Element *el, std::shared_ptr<MIDI_Cue> cue);
+  void fade(const xmlpp::Element *el, std::shared_ptr<FadeStop_Cue> cue);
+  void wave(const xmlpp::Element *el, std::shared_ptr<Wave_Cue> cue);
+  void stop(const xmlpp::Element *el, std::shared_ptr<Stop_Cue> cue);
+  void pause(const xmlpp::Element *el, std::shared_ptr<Pause_Cue> cue);
+  void start(const xmlpp::Element *el, std::shared_ptr<Start_Cue> cue);
+  void group(const xmlpp::Element *el, std::shared_ptr<Group_Cue> cue);
   void cue_list(const xmlpp::Node *node);
 
   std::vector<Gtk::TreeModel::iterator> m_iters;
@@ -394,7 +394,7 @@ void Deserialize::note(const xmlpp::Element *node)
   app->note = child_text_node->get_content();
 }
 
-void Deserialize::common_cue_items(const xmlpp::Element *el, boost::shared_ptr<Cue> cue)
+void Deserialize::common_cue_items(const xmlpp::Element *el, std::shared_ptr<Cue> cue)
 {
   for (const auto & child_node : el->get_children()) {
     const auto & child_element = dynamic_cast<const xmlpp::Element *>(child_node);
@@ -432,7 +432,7 @@ void Deserialize::common_cue_items(const xmlpp::Element *el, boost::shared_ptr<C
   }
 }
 
-void Deserialize::midi(const xmlpp::Element *el, boost::shared_ptr<MIDI_Cue> cue)
+void Deserialize::midi(const xmlpp::Element *el, std::shared_ptr<MIDI_Cue> cue)
 {
   for (const auto & child_node : el->get_children()) {
     const auto & child_element = dynamic_cast<const xmlpp::Element *>(child_node);
@@ -454,7 +454,7 @@ void Deserialize::midi(const xmlpp::Element *el, boost::shared_ptr<MIDI_Cue> cue
   }
 }
 
-void Deserialize::fade(const xmlpp::Element *el, boost::shared_ptr<FadeStop_Cue> cue)
+void Deserialize::fade(const xmlpp::Element *el, std::shared_ptr<FadeStop_Cue> cue)
 {
   const auto fade_node = el->get_first_child("Fade");
   if (!fade_node)
@@ -502,7 +502,7 @@ void Deserialize::fade(const xmlpp::Element *el, boost::shared_ptr<FadeStop_Cue>
   }
 }
 
-void Deserialize::wave(const xmlpp::Element *el, boost::shared_ptr<Wave_Cue> cue)
+void Deserialize::wave(const xmlpp::Element *el, std::shared_ptr<Wave_Cue> cue)
 {
   const auto wave_node = el->get_first_child("Wave");
   if (!wave_node)
@@ -544,7 +544,7 @@ void Deserialize::wave(const xmlpp::Element *el, boost::shared_ptr<Wave_Cue> cue
   }
 }
 
-void Deserialize::stop(const xmlpp::Element *el, boost::shared_ptr<Stop_Cue> cue)
+void Deserialize::stop(const xmlpp::Element *el, std::shared_ptr<Stop_Cue> cue)
 {
   const auto node = el->get_first_child("Stop");
   if (!node)
@@ -556,7 +556,7 @@ void Deserialize::stop(const xmlpp::Element *el, boost::shared_ptr<Stop_Cue> cue
   }
 }
 
-void Deserialize::pause(const xmlpp::Element *el, boost::shared_ptr<Pause_Cue> cue)
+void Deserialize::pause(const xmlpp::Element *el, std::shared_ptr<Pause_Cue> cue)
 {
   const auto node = el->get_first_child("Pause");
   if (!node)
@@ -568,7 +568,7 @@ void Deserialize::pause(const xmlpp::Element *el, boost::shared_ptr<Pause_Cue> c
   }
 }
 
-void Deserialize::start(const xmlpp::Element *el, boost::shared_ptr<Start_Cue> cue)
+void Deserialize::start(const xmlpp::Element *el, std::shared_ptr<Start_Cue> cue)
 {
   const auto node = el->get_first_child("Start");
   if (!node)
@@ -580,7 +580,7 @@ void Deserialize::start(const xmlpp::Element *el, boost::shared_ptr<Start_Cue> c
   }
 }
 
-void Deserialize::group(const xmlpp::Element *el, boost::shared_ptr<Group_Cue> cue)
+void Deserialize::group(const xmlpp::Element *el, std::shared_ptr<Group_Cue> cue)
 {
   const auto node = el->get_first_child("Group");
   if (!node)
@@ -604,28 +604,28 @@ void Deserialize::cue_list(const xmlpp::Node *node)
     if (type.empty() || id.empty())
       continue;
 
-    boost::shared_ptr<Cue> cue;
+    std::shared_ptr<Cue> cue;
     if (type== "MIDI") {
-      cue = boost::shared_ptr<MIDI_Cue>(new MIDI_Cue);
-      midi(cue_element, boost::reinterpret_pointer_cast<MIDI_Cue>(cue));
+      cue = std::shared_ptr<MIDI_Cue>(new MIDI_Cue);
+      midi(cue_element, std::static_pointer_cast<MIDI_Cue>(cue));
     } else if (type == "Wave") {
-      cue = boost::shared_ptr<Wave_Cue>(new Wave_Cue);
-      wave(cue_element, boost::reinterpret_pointer_cast<Wave_Cue>(cue));
+      cue = std::shared_ptr<Wave_Cue>(new Wave_Cue);
+      wave(cue_element, std::static_pointer_cast<Wave_Cue>(cue));
     } else if (type == "Stop") {
-      cue = boost::shared_ptr<Stop_Cue>(new Stop_Cue);
-      stop(cue_element, boost::reinterpret_pointer_cast<Stop_Cue>(cue));
+      cue = std::shared_ptr<Stop_Cue>(new Stop_Cue);
+      stop(cue_element, std::static_pointer_cast<Stop_Cue>(cue));
     } else if (type == "Fade") {
-      cue = boost::shared_ptr<FadeStop_Cue>(new FadeStop_Cue);
-      fade(cue_element, boost::reinterpret_pointer_cast<FadeStop_Cue>(cue));
+      cue = std::shared_ptr<FadeStop_Cue>(new FadeStop_Cue);
+      fade(cue_element, std::static_pointer_cast<FadeStop_Cue>(cue));
     } else if (type == "Group") {
-      cue = boost::shared_ptr<Group_Cue>(new Group_Cue);
-      group(cue_element, boost::reinterpret_pointer_cast<Group_Cue>(cue));
+      cue = std::shared_ptr<Group_Cue>(new Group_Cue);
+      group(cue_element, std::static_pointer_cast<Group_Cue>(cue));
     } else if (type == "Pause") {
-      cue = boost::shared_ptr<Pause_Cue>(new Pause_Cue);
-      pause(cue_element, boost::reinterpret_pointer_cast<Pause_Cue>(cue));
+      cue = std::shared_ptr<Pause_Cue>(new Pause_Cue);
+      pause(cue_element, std::static_pointer_cast<Pause_Cue>(cue));
     } else if (type == "Start") {
-      cue = boost::shared_ptr<Start_Cue>(new Start_Cue);
-      start(cue_element, boost::reinterpret_pointer_cast<Start_Cue>(cue));
+      cue = std::shared_ptr<Start_Cue>(new Start_Cue);
+      start(cue_element, std::static_pointer_cast<Start_Cue>(cue));
     }
 
     cue->cue_id_no = g_ascii_strtoll(id.c_str(), nullptr, 10);

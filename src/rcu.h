@@ -20,7 +20,7 @@
 #ifndef __pbd_rcu_h__
 #define __pbd_rcu_h__
 
-#include "boost/shared_ptr.hpp"
+#include "memory"
 #include "glibmm/thread.h"
  
 #include <list> 
@@ -31,19 +31,19 @@ class RCUManager
   public:
  
 	RCUManager (T* new_rcu_value) {
-		x.m_rcu_value = new boost::shared_ptr<T> (new_rcu_value);
+		x.m_rcu_value = new std::shared_ptr<T> (new_rcu_value);
 	}
  
 	virtual ~RCUManager() { delete x.m_rcu_value; }
  
-        boost::shared_ptr<T> reader () const { return *((boost::shared_ptr<T> *) g_atomic_pointer_get (&x.gptr)); }
+        std::shared_ptr<T> reader () const { return *((std::shared_ptr<T> *) g_atomic_pointer_get (&x.gptr)); }
  
-	virtual boost::shared_ptr<T> write_copy () = 0;
-	virtual bool update (boost::shared_ptr<T> new_value) = 0;
+	virtual std::shared_ptr<T> write_copy () = 0;
+	virtual bool update (std::shared_ptr<T> new_value) = 0;
 
   protected:
 	union {
-	    boost::shared_ptr<T>* m_rcu_value;
+	    std::shared_ptr<T>* m_rcu_value;
 	    mutable volatile gpointer gptr;
 	} x;
 };
@@ -60,13 +60,13 @@ public:
  
 	}
  
-	boost::shared_ptr<T> write_copy ()
+	std::shared_ptr<T> write_copy ()
 	{
 		m_lock.lock();
 
 		// clean out any dead wood
 
-		typename std::list<boost::shared_ptr<T> >::iterator i;
+		typename std::list<std::shared_ptr<T> >::iterator i;
 
 		for (i = m_dead_wood.begin(); i != m_dead_wood.end(); ) {
 			if ((*i).use_count() == 1) {
@@ -80,17 +80,17 @@ public:
 
 		current_write_old = RCUManager<T>::x.m_rcu_value;
 		
-		boost::shared_ptr<T> new_copy (new T(**current_write_old));
+		std::shared_ptr<T> new_copy (new T(**current_write_old));
 
 		return new_copy;
 	}
  
-	bool update (boost::shared_ptr<T> new_value)
+	bool update (std::shared_ptr<T> new_value)
 	{
 		// we hold the lock at this point effectively blocking
 		// other writers.
 
-		boost::shared_ptr<T>* new_spp = new boost::shared_ptr<T> (new_value);
+		std::shared_ptr<T>* new_spp = new std::shared_ptr<T> (new_value);
 
 		// update, checking that nobody beat us to it
 
@@ -123,8 +123,8 @@ public:
  
 private:
 	Glib::Mutex			 m_lock;
-	boost::shared_ptr<T>*            current_write_old;
-	std::list<boost::shared_ptr<T> > m_dead_wood;
+	std::shared_ptr<T>*            current_write_old;
+	std::list<std::shared_ptr<T> > m_dead_wood;
 };
  
 template<class T>
@@ -151,15 +151,15 @@ public:
  
 	}
  
-	// or operator boost::shared_ptr<T> ();
-	boost::shared_ptr<T> get_copy() { return m_copy; }
+	// or operator std::shared_ptr<T> ();
+	std::shared_ptr<T> get_copy() { return m_copy; }
  
 private:
  
 	RCUManager<T>& m_manager;
  
 	// preferably this holds a pointer to T
-	boost::shared_ptr<T> m_copy;
+	std::shared_ptr<T> m_copy;
 };
 
 #endif /* __pbd_rcu_h__ */

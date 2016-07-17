@@ -1,6 +1,6 @@
 /*
  * Show Q
- * Copyright (c) 2007-2008 Errol van-de-l'Isle
+ * Copyright (c) 2007-2008 Errol van de l'Isle
  *
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by
@@ -32,11 +32,11 @@ EditCueStop::~EditCueStop()
 {
 }
 
-void EditCueStop::set(boost::shared_ptr<Cue> &)
+void EditCueStop::set(std::shared_ptr<Cue> &)
 {
 }
 
-void EditCueStop::get(boost::shared_ptr<Cue> &)
+void EditCueStop::get(std::shared_ptr<Cue> &)
 {
 }
 
@@ -50,11 +50,11 @@ EditCuePause::~EditCuePause()
 {
 }
 
-void EditCuePause::set(boost::shared_ptr<Cue> &)
+void EditCuePause::set(std::shared_ptr<Cue> &)
 {
 }
 
-void EditCuePause::get(boost::shared_ptr<Cue> &)
+void EditCuePause::get(std::shared_ptr<Cue> &)
 {
 }
 
@@ -68,10 +68,10 @@ EditCueStart::~EditCueStart()
 {
 }
 
-void EditCueStart::set(boost::shared_ptr<Cue> &)
+void EditCueStart::set(std::shared_ptr<Cue> &)
 {
 }
 
-void EditCueStart::get(boost::shared_ptr<Cue> &)
+void EditCueStart::get(std::shared_ptr<Cue> &)
 {
 }

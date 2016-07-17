@@ -95,8 +95,8 @@ public:
 
   long cue_id_no;
   Gtk::TreeRowReference r_cue;
-  boost::shared_ptr<AudioFile> af;
-  boost::shared_ptr<AudioFile::fade_> fade;
+  std::shared_ptr<AudioFile> af;
+  std::shared_ptr<AudioFile::fade_> fade;
   bool update_icon;
 };
 
@@ -149,7 +149,7 @@ public:
       add(qelapsed_percent);
     }
 
-    Gtk::TreeModelColumn<boost::shared_ptr<Cue> > cue;
+    Gtk::TreeModelColumn<std::shared_ptr<Cue> > cue;
     Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > pos_img;
     Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > image;
     Gtk::TreeModelColumn<Glib::ustring> delay;
@@ -231,11 +231,11 @@ public:
   {
     on_edit_cue_activate();
   }
-  Gtk::TreeModel::iterator replace_cue(boost::shared_ptr<Cue> &q, Gtk::TreeRowReference &r);
-  Gtk::TreeModel::iterator append_cue(boost::shared_ptr<Cue> &q);
-  Gtk::TreeModel::iterator append_cue(boost::shared_ptr<Cue> &q, Gtk::TreeModel::iterator i);
-  Gtk::TreeModel::iterator insert_cue(boost::shared_ptr<Cue> &q);
-  Gtk::TreeModel::iterator insert_cue(Gtk::TreeModel::iterator i, boost::shared_ptr<Cue> &q);
+  Gtk::TreeModel::iterator replace_cue(std::shared_ptr<Cue> &q, Gtk::TreeRowReference &r);
+  Gtk::TreeModel::iterator append_cue(std::shared_ptr<Cue> &q);
+  Gtk::TreeModel::iterator append_cue(std::shared_ptr<Cue> &q, Gtk::TreeModel::iterator i);
+  Gtk::TreeModel::iterator insert_cue(std::shared_ptr<Cue> &q);
+  Gtk::TreeModel::iterator insert_cue(Gtk::TreeModel::iterator i, std::shared_ptr<Cue> &q);
 
   void do_load(const Glib::ustring &filename);
   Gtk::TreeModel::iterator go_cue(Gtk::TreeModel::iterator iter, bool run_all = false);
@@ -297,7 +297,7 @@ public:
 
   CueTreeView *m_treeview;
 
-  std::list <boost::shared_ptr<EditCue > > p_edit;
+  std::list <std::shared_ptr<EditCue > > p_edit;
 
   Glib::RefPtr<Gtk::Builder> m_refXml;
 private:

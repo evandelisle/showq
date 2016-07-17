@@ -1,4 +1,7 @@
 /*
+ * Show Q
+ * Copyright (c) 2007-2008 Errol van de l'Isle
+ *
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by
  *      the Free Software Foundation; either version 2 of the License, or
@@ -19,43 +22,43 @@
 #include "app.h"
 #include "main.h"
 
-EditCueGroup::EditCueGroup(Gtk::Notebook * p)
+EditCueGroup::EditCueGroup(Gtk::Notebook *p)
 {
-    refXml = Gtk::Builder::create_from_file(showq_ui+"editgroup.ui");
+  refXml = Gtk::Builder::create_from_file(showq_ui + "editgroup.ui");
 
-    Gtk::Widget *vbox;
-    refXml->get_widget("edit_group_box", vbox);
+  Gtk::Widget *vbox;
+  refXml->get_widget("edit_group_box", vbox);
 
-    p->append_page(*vbox, "Group mode");
+  p->append_page(*vbox, "Group mode");
 }
 
 EditCueGroup::~EditCueGroup()
 {
 }
 
-void EditCueGroup::set(boost::shared_ptr<Cue> & q)
+void EditCueGroup::set(std::shared_ptr<Cue> &q)
 {
-    boost::shared_ptr<Group_Cue> pg = boost::dynamic_pointer_cast<Group_Cue>(q);
+  std::shared_ptr<Group_Cue> pg = std::dynamic_pointer_cast<Group_Cue>(q);
 
-    Gtk::RadioButton *button = 0;
-    switch (pg->mode) {
-    case 0:
-        refXml->get_widget("ed_grp_all", button);
-        break;
-    case 1:
-        refXml->get_widget("ed_grp_first", button);
-        break;
-    }
-    if (button) button->set_active();
+  Gtk::RadioButton *button = 0;
+  switch (pg->mode) {
+  case 0:
+    refXml->get_widget("ed_grp_all", button);
+    break;
+  case 1:
+    refXml->get_widget("ed_grp_first", button);
+    break;
+  }
+  if (button) button->set_active();
 }
 
-void EditCueGroup::get(boost::shared_ptr<Cue> & q)
+void EditCueGroup::get(std::shared_ptr<Cue> &q)
 {
-    boost::shared_ptr<Group_Cue> pg = boost::dynamic_pointer_cast<Group_Cue>(q);
+  std::shared_ptr<Group_Cue> pg = std::dynamic_pointer_cast<Group_Cue>(q);
 
-    Gtk::RadioButton *button;
-    refXml->get_widget("ed_grp_all", button);
-    if (button->get_active()) pg->mode = 0;
-    refXml->get_widget("ed_grp_first", button);
-    if (button->get_active()) pg->mode = 1;
+  Gtk::RadioButton *button;
+  refXml->get_widget("ed_grp_all", button);
+  if (button->get_active()) pg->mode = 0;
+  refXml->get_widget("ed_grp_first", button);
+  if (button->get_active()) pg->mode = 1;
 }

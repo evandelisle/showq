@@ -28,7 +28,6 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <libxml++/libxml++.h>
 #pragma GCC diagnostic pop
-#include <boost/shared_ptr.hpp>
 #include <gtkmm.h>
 
 #include "audio.h"

@@ -43,8 +43,8 @@ public:
     EditCueBase();
     explicit EditCueBase(Gtk::Notebook *) {}
     virtual ~EditCueBase();
-    virtual void get(boost::shared_ptr<Cue> & p) = 0;
-    virtual void set(boost::shared_ptr<Cue> & p) = 0;
+    virtual void get(std::shared_ptr<Cue> & p) = 0;
+    virtual void set(std::shared_ptr<Cue> & p) = 0;
 };
 
 class EditCueFade : public EditCueBase {
@@ -52,8 +52,8 @@ public:
     EditCueFade();
     explicit EditCueFade(Gtk::Notebook *);
     virtual ~EditCueFade();
-    virtual void get(boost::shared_ptr<Cue> & p);
-    virtual void set(boost::shared_ptr<Cue> & p);
+    virtual void get(std::shared_ptr<Cue> & p);
+    virtual void set(std::shared_ptr<Cue> & p);
 private:
     void wave_on_toggle(int fader);
 
@@ -73,8 +73,8 @@ class EditCueWave : public EditCueBase {
 public:
     explicit EditCueWave(Gtk::Notebook *);
     virtual ~EditCueWave();
-    virtual void get(boost::shared_ptr<Cue> & p);
-    virtual void set(boost::shared_ptr<Cue> & p);
+    virtual void get(std::shared_ptr<Cue> & p);
+    virtual void set(std::shared_ptr<Cue> & p);
 private:
     bool dis_update();
     void wave_on_file_activate();
@@ -96,7 +96,7 @@ private:
     Gtk::HScale * m_wave_tslide;
 
     std::vector<Fader *> m_wave_faders;
-    boost::shared_ptr<AudioFile> m_af;
+    std::shared_ptr<AudioFile> m_af;
 
     Glib::RefPtr<Gtk::Builder> refXML_wave;
     Glib::RefPtr<Gtk::Builder> refXML_patch;
@@ -107,8 +107,8 @@ class EditCueMidi : public EditCueBase {
 public:
     explicit EditCueMidi(Gtk::Notebook *);
     virtual ~EditCueMidi();
-    virtual void get(boost::shared_ptr<Cue> & p);
-    virtual void set(boost::shared_ptr<Cue> & p);
+    virtual void get(std::shared_ptr<Cue> & p);
+    virtual void set(std::shared_ptr<Cue> & p);
 private:
     void on_add_clicked();
     void on_delete_clicked();
@@ -144,8 +144,8 @@ class EditCueStop : public EditCueBase {
 public:
     explicit EditCueStop(Gtk::Notebook *);
     virtual ~EditCueStop();
-    virtual void get(boost::shared_ptr<Cue> & p);
-    virtual void set(boost::shared_ptr<Cue> & p);
+    virtual void get(std::shared_ptr<Cue> & p);
+    virtual void set(std::shared_ptr<Cue> & p);
 private:
 };
 
@@ -153,8 +153,8 @@ class EditCuePause : public EditCueBase {
 public:
     explicit EditCuePause(Gtk::Notebook *);
     virtual ~EditCuePause();
-    virtual void get(boost::shared_ptr<Cue> & p);
-    virtual void set(boost::shared_ptr<Cue> & p);
+    virtual void get(std::shared_ptr<Cue> & p);
+    virtual void set(std::shared_ptr<Cue> & p);
 private:
 };
 
@@ -162,8 +162,8 @@ class EditCueStart : public EditCueBase {
 public:
     explicit EditCueStart(Gtk::Notebook *);
     virtual ~EditCueStart();
-    virtual void get(boost::shared_ptr<Cue> & p);
-    virtual void set(boost::shared_ptr<Cue> & p);
+    virtual void get(std::shared_ptr<Cue> & p);
+    virtual void set(std::shared_ptr<Cue> & p);
 private:
 };
 
@@ -171,8 +171,8 @@ class EditCueGroup : public EditCueBase {
 public:
     explicit EditCueGroup(Gtk::Notebook *);
     virtual ~EditCueGroup();
-    virtual void get(boost::shared_ptr<Cue> & p);
-    virtual void set(boost::shared_ptr<Cue> & p);
+    virtual void get(std::shared_ptr<Cue> & p);
+    virtual void set(std::shared_ptr<Cue> & p);
 private:
     Glib::RefPtr<Gtk::Builder> refXml;
 };
@@ -183,7 +183,7 @@ public:
     virtual ~EditCue();
 
     static EditCue * show(int type);
-    static void show(boost::shared_ptr<Cue> q, Gtk::TreeRowReference & r);
+    static void show(std::shared_ptr<Cue> q, Gtk::TreeRowReference & r);
     static void show_on_hide();
 
 protected:
@@ -211,13 +211,13 @@ private:
     Gtk::TreeRowReference m_path;
     long cue_id_no;
     long target;
-//    boost::shared_ptr<Cue> m_cue;
+//    std::shared_ptr<Cue> m_cue;
     int m_type;
 
     guint keyval;
     Gdk::ModifierType state;
 
-    boost::shared_ptr<EditCueBase> m_tabs;
+    std::shared_ptr<EditCueBase> m_tabs;
 };
 
 #endif

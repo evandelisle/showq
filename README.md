@@ -24,8 +24,6 @@ The software requirements for build and runtime are as follows:
         http://www.vorbis.com/
     - samplerate
         http://www.mega-nerd.com/SRC/
-    - libboost (headers required for build only)
-        www.boost.org
 
 Installation
 ------------
@@ -55,4 +53,4 @@ Ideas, questions, patches and bug reports
 http://www.github.com/evandelisle/showq
 
 --
-Errol van-de-l'Isle
+Errol van de l'Isle

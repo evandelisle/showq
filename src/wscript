@@ -8,7 +8,6 @@ def set_options(opt):
 
 def configure(conf):
     conf.check_tool('compiler_cxx')
-    conf.check(header_name='boost/shared_ptr.hpp')
     conf.check_cfg(package='gtkmm-2.4', args='--cflags --libs', uselib_store='GTKMM')
     conf.check_cfg(package='gthread-2.0', args='--cflags --libs', uselib_store='GTHREAD')
     conf.check_cfg(package='libxml++-2.6', args='--cflags --libs', uselib_store='XMLPP')

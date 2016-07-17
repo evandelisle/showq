@@ -24,7 +24,7 @@
 #include "rcu.h"
 
 #include <list>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <alsa/asoundlib.h>
 #include <jack/jack.h>
@@ -99,7 +99,7 @@ public:
   void stop();
   void seek(double);
   double get_pos();
-  void add_fade(boost::shared_ptr<fade_> f);
+  void add_fade(std::shared_ptr<fade_> f);
   int get_codec()
   {
     return codec;
@@ -109,7 +109,7 @@ public:
   bool eof;
   bool eob;
 
-  typedef std::list<boost::shared_ptr<fade_> > Fades;
+  typedef std::list<std::shared_ptr<fade_> > Fades;
   SerializedRCUManager<Fades> fades;
   std::vector<SRC_STATE *> src;
   Glib::Mutex buffer_lock;
@@ -140,7 +140,7 @@ public:
 
   class NoAudio {};
 
-  void add_af(boost::shared_ptr<AudioFile>);
+  void add_af(std::shared_ptr<AudioFile>);
   void do_disc_thread();
 
   int port_set_name(int port, const Glib::ustring &name);
@@ -173,7 +173,7 @@ private:
   jack_client_t *client;
   jack_port_t *ports[8];
 
-  typedef std::list< boost::shared_ptr<AudioFile> > Afs;
+  typedef std::list<std::shared_ptr<AudioFile> > Afs;
   SerializedRCUManager<Afs> afs;
 };
 

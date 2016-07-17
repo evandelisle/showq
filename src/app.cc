@@ -400,7 +400,7 @@ App::~App()
 void App::cell_data_func_type(Gtk::CellRenderer *cell, const Gtk::TreeModel::iterator &iter)
 {
   Gtk::CellRendererText &renderer = dynamic_cast<Gtk::CellRendererText &>(*cell);
-  boost::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
+  std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
   renderer.property_text() = q->cue_type_text();
 }
 
@@ -425,28 +425,28 @@ void App::cell_data_func_elapsed(Gtk::CellRenderer *cell, const Gtk::TreeModel::
 void App::cell_data_func_text(Gtk::CellRenderer *cell, const Gtk::TreeModel::iterator &iter)
 {
   Gtk::CellRendererText &renderer = dynamic_cast<Gtk::CellRendererText &>(*cell);
-  boost::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
+  std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
   renderer.property_text() = q->text;
 }
 
 void App::cell_data_func_cue(Gtk::CellRenderer *cell, const Gtk::TreeModel::iterator &iter)
 {
   Gtk::CellRendererText &renderer = dynamic_cast<Gtk::CellRendererText &>(*cell);
-  boost::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
+  std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
   renderer.property_text() = q->cue_id;
 }
 
 void App::cell_data_func_autoc(Gtk::CellRenderer *cell, const Gtk::TreeModel::iterator &iter)
 {
   Gtk::CellRendererToggle &renderer = dynamic_cast<Gtk::CellRendererToggle &>(*cell);
-  boost::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
+  std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
   renderer.set_active(q->autocont);
 }
 
 void App::cell_cue(const Glib::ustring &path, const Glib::ustring &text)
 {
   Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter(path);
-  boost::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
+  std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
   q->cue_id = text;
   enable_hotkeys();
 }
@@ -454,7 +454,7 @@ void App::cell_cue(const Glib::ustring &path, const Glib::ustring &text)
 void App::cell_text(const Glib::ustring &path, const Glib::ustring &text)
 {
   Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter(path);
-  boost::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
+  std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
   q->text = text;
   enable_hotkeys();
 }
@@ -462,7 +462,7 @@ void App::cell_text(const Glib::ustring &path, const Glib::ustring &text)
 void App::cell_autoc(const Glib::ustring &path)
 {
   Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter(path);
-  boost::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
+  std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
   q->autocont ^= true;
 }
 
@@ -499,7 +499,7 @@ bool App::on_key_press_event(GdkEventKey *event)
 
 bool App::check_key(const Gtk::TreeModel::iterator &iter)
 {
-  boost::shared_ptr<Cue> q  = (*iter)[m_refTreeModel->Col.cue];
+  std::shared_ptr<Cue> q  = (*iter)[m_refTreeModel->Col.cue];
   if (q->keyval == keyval && q->state == state)
     go_cue(iter);
 
@@ -723,7 +723,7 @@ void App::renumber()
   Gtk::TreeModel::iterator iter = children.begin();
 
   for (; iter != children.end(); ++iter) {
-    boost::shared_ptr<Cue> cue = (*iter)[m_refTreeModel->Col.cue];
+    std::shared_ptr<Cue> cue = (*iter)[m_refTreeModel->Col.cue];
 
     if (skip_autocont && prev_autocont) {
       cue->cue_id = "";
@@ -764,7 +764,7 @@ void App::on_cut_cue_activate()
   if (iter) {
     // TODO Should have an undo function
     std::ostringstream s;
-    boost::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
+    std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
     s << "Delete sound cue " << q->cue_id << " ?";
     Gtk::MessageDialog dialog(s.str(),
                               false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK_CANCEL, true);
@@ -774,7 +774,7 @@ void App::on_cut_cue_activate()
   }
 }
 
-Gtk::TreeModel::iterator App::replace_cue(boost::shared_ptr<Cue> &q, Gtk::TreeRowReference &r)
+Gtk::TreeModel::iterator App::replace_cue(std::shared_ptr<Cue> &q, Gtk::TreeRowReference &r)
 {
   Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter(r.get_path());
   Gtk::TreeModel::Row row = *iter;
@@ -786,7 +786,7 @@ Gtk::TreeModel::iterator App::replace_cue(boost::shared_ptr<Cue> &q, Gtk::TreeRo
   return iter;
 }
 
-Gtk::TreeModel::iterator App::append_cue(boost::shared_ptr<Cue> &q)
+Gtk::TreeModel::iterator App::append_cue(std::shared_ptr<Cue> &q)
 {
   Gtk::TreeModel::iterator iter = m_refTreeModel->append();
   Gtk::TreeModel::Row row = *iter;
@@ -800,7 +800,7 @@ Gtk::TreeModel::iterator App::append_cue(boost::shared_ptr<Cue> &q)
   return iter;
 }
 
-Gtk::TreeModel::iterator App::append_cue(boost::shared_ptr<Cue> &q, Gtk::TreeModel::iterator i)
+Gtk::TreeModel::iterator App::append_cue(std::shared_ptr<Cue> &q, Gtk::TreeModel::iterator i)
 {
   Gtk::TreeModel::iterator iter = m_refTreeModel->append(i->children());
   Gtk::TreeModel::Row row = *iter;
@@ -814,7 +814,7 @@ Gtk::TreeModel::iterator App::append_cue(boost::shared_ptr<Cue> &q, Gtk::TreeMod
   return iter;
 }
 
-Gtk::TreeModel::iterator App::insert_cue(boost::shared_ptr<Cue> &q)
+Gtk::TreeModel::iterator App::insert_cue(std::shared_ptr<Cue> &q)
 {
   Gtk::TreeModel::iterator i = m_treeview->get_selection()->get_selected();
   Gtk::TreeModel::iterator iter
@@ -830,7 +830,7 @@ Gtk::TreeModel::iterator App::insert_cue(boost::shared_ptr<Cue> &q)
   return iter;
 }
 
-Gtk::TreeModel::iterator App::insert_cue(Gtk::TreeModel::iterator i, boost::shared_ptr<Cue> &q)
+Gtk::TreeModel::iterator App::insert_cue(Gtk::TreeModel::iterator i, std::shared_ptr<Cue> &q)
 {
   Gtk::TreeModel::iterator iter
     = (i) ? m_refTreeModel->insert(i) : m_refTreeModel->append();
@@ -849,7 +849,7 @@ void App::on_pause()
 {
   Gtk::TreeModel::iterator iter = m_treeview->get_selection()->get_selected();
   if (!iter) return;
-  boost::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
+  std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
 
   std::list<WaitingCue>::iterator i = waiting_cue.begin();
   for (; i != waiting_cue.end(); ++i)
@@ -870,7 +870,7 @@ void App::on_stop()
 {
   Gtk::TreeModel::iterator iter = m_treeview->get_selection()->get_selected();
   if (!iter) return;
-  boost::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
+  std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
 
   std::list<WaitingCue>::iterator i = waiting_cue.begin();
   for (; i != waiting_cue.end(); ++i)
@@ -891,7 +891,7 @@ void App::on_sneak_out()
 {
   Gtk::TreeModel::iterator iter = m_treeview->get_selection()->get_selected();
   if (!iter) return;
-  boost::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
+  std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
 
   std::list<WaitingCue>::iterator i = waiting_cue.begin();
   for (; i != waiting_cue.end(); ++i)
@@ -903,8 +903,8 @@ void App::on_sneak_out()
   std::list<RunningCue>::iterator j = running_cue.begin();
   for (; j != running_cue.end(); ++j)
     if (j->cue_id_no == q->cue_id_no) {
-      boost::shared_ptr<AudioFile::fade_> fade =
-        boost::shared_ptr<AudioFile::fade_>(new AudioFile::fade_);
+      std::shared_ptr<AudioFile::fade_> fade =
+        std::shared_ptr<AudioFile::fade_>(new AudioFile::fade_);
       fade->vol = std::vector<float>(8, 0.0);
       fade->on = std::vector<bool>(8, true);
       fade->stop_on_complete = true;
@@ -973,7 +973,7 @@ Gtk::TreeModel::iterator App::go_cue(Gtk::TreeModel::iterator iter, bool run_all
   cur_time.assign_current_time();
 
   for (; iter ; ++iter) {
-    boost::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
+    std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
 
     // Check that the cue is not running already
     std::list<WaitingCue>::iterator i = waiting_cue.begin();
@@ -1008,7 +1008,7 @@ Gtk::TreeModel::iterator App::go_cue(Gtk::TreeModel::iterator iter, bool run_all
       Gtk::TreeModel::Children children = iter->children();
       Gtk::TreeModel::iterator citer = children.begin();
       if (citer) {
-        boost::shared_ptr<Group_Cue> pg = boost::dynamic_pointer_cast<Group_Cue>(q);
+        std::shared_ptr<Group_Cue> pg = std::dynamic_pointer_cast<Group_Cue>(q);
         citer = go_cue(citer, (pg->mode == 0) ? true : false);
         if (citer) iter = citer;
       }
@@ -1045,11 +1045,11 @@ bool App::wait_timeout()
     Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter(j->get_path());
     if (!iter) continue;
 
-    boost::shared_ptr<Cue> cue = (*iter)[m_refTreeModel->Col.cue];
+    std::shared_ptr<Cue> cue = (*iter)[m_refTreeModel->Col.cue];
     Gtk::TreeModel::Children children = iter->children();
     Gtk::TreeModel::iterator citer = children.begin();
     if (citer) {
-      boost::shared_ptr<Group_Cue> pg = boost::dynamic_pointer_cast<Group_Cue>(cue);
+      std::shared_ptr<Group_Cue> pg = std::dynamic_pointer_cast<Group_Cue>(cue);
       citer = go_cue(citer, (pg->mode == 0) ? true : false);
       if (citer) iter = citer;
     }
@@ -1106,8 +1106,8 @@ bool Wave_Cue::run(Gtk::TreeModel::iterator r)
 {
   RunningCue rq;
 
-  boost::shared_ptr<AudioFile> af
-    = boost::shared_ptr<AudioFile>(new AudioFile(file.c_str()));
+  std::shared_ptr<AudioFile> af
+    = std::shared_ptr<AudioFile>(new AudioFile(file.c_str()));
 
   af->play();
   if (start_time > 0.00001)
@@ -1160,7 +1160,7 @@ bool FadeStop_Cue::run(Gtk::TreeModel::iterator r)
 
       rq.cue_id_no = cue_id_no;
       rq.r_cue = Gtk::TreeRowReference(app->m_refTreeModel, Gtk::TreePath(r));
-      rq.fade = boost::shared_ptr<AudioFile::fade_>(new AudioFile::fade_);
+      rq.fade = std::shared_ptr<AudioFile::fade_>(new AudioFile::fade_);
       rq.fade->vol = tvol;
       rq.fade->on = on;
       rq.fade->stop_on_complete = stop_on_complete;
@@ -1376,8 +1376,8 @@ void CueTreeView::on_drag_data_received(
     if (af.get_codec() == NoCodec) continue;
 
     success = true;
-    boost::shared_ptr<Cue> cue = boost::shared_ptr<Wave_Cue>(new Wave_Cue);
-    boost::shared_ptr<Wave_Cue> q = boost::dynamic_pointer_cast<Wave_Cue>(cue);
+    std::shared_ptr<Cue> cue = std::shared_ptr<Wave_Cue>(new Wave_Cue);
+    std::shared_ptr<Wave_Cue> q = std::dynamic_pointer_cast<Wave_Cue>(cue);
     q->file = Glib::filename_from_uri(i);
     q->text = Glib::filename_to_utf8(Glib::path_get_basename(q->file));
     iter = app->insert_cue(iter, cue);
@@ -1422,7 +1422,7 @@ Gtk::TreeModel::iterator CueTreeStore::get_iter_from_id(long id)
 
 bool CueTreeStore::is_id(const TreeModel::iterator &i)
 {
-  boost::shared_ptr<Cue> q = (*i)[Col.cue];
+  std::shared_ptr<Cue> q = (*i)[Col.cue];
   if (m_id == q->cue_id_no) {
     m_id_iter = i;
     return true;
@@ -1447,7 +1447,7 @@ bool CueTreeStore::row_drop_possible_vfunc(const Gtk::TreeModel::Path &dest,
   } else {
     iterator iter = (const_cast<CueTreeStore *>(this))->get_iter(dest_parent);
     if (iter) {
-      boost::shared_ptr<Cue> q = (*iter)[Col.cue];
+      std::shared_ptr<Cue> q = (*iter)[Col.cue];
       return (q->cue_type() == Cue::Group);
     }
   }
