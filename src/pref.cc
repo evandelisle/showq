@@ -18,7 +18,6 @@
  *      MA 02110-1301, USA.
  */
 
-#include <iostream>
 #include <string>
 #include "app.h"
 #include "pref.h"
@@ -27,9 +26,9 @@
 Properties::Properties(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml)
   : Gtk::Dialog(cobject), m_refXml(refXml)
 {
-  Gtk::Entry *name = 0;
+  Gtk::Entry *name = nullptr;
   m_refXml->get_widget("prop_name", name);
-  Gtk::TextView *note = 0;
+  Gtk::TextView *note = nullptr;
   m_refXml->get_widget("prop_note", note);
 
   old_name = app->title;
@@ -41,15 +40,14 @@ Properties::Properties(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder>
 
 void Properties::on_response(int r)
 {
-  Gtk::Entry *name = 0;
-  Gtk::TextView *note = 0;
+  Gtk::Entry *name = nullptr;
+  Gtk::TextView *note = nullptr;
 
   switch (r) {
   case 0:
     return;
   case Gtk::RESPONSE_CANCEL:
     app->title = old_name;
-    app->set_title(old_note + " - Show Q");
     app->note = old_note;
     break;
   case Gtk::RESPONSE_APPLY:
@@ -58,8 +56,6 @@ void Properties::on_response(int r)
     m_refXml->get_widget("prop_note", note);
 
     app->title = name->get_text();
-    app->set_title(app->title + " - Show Q");
-
     app->note = note->get_buffer()->get_text();
 
     if (r == Gtk::RESPONSE_APPLY) return;

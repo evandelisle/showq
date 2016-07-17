@@ -114,6 +114,8 @@ void App::do_save()
   do_save_cues(children, cuelist);
 
   xml.write_to_file_formatted(file);
+
+  set_title("ShowQ : " + Glib::filename_to_utf8(file));
 }
 
 void App::do_save_cues(Gtk::TreeModel::Children children, xmlpp::Element * cuelist)
@@ -696,7 +698,7 @@ void App::do_load(const Glib::ustring & filename)
     }
 
     // Show what we have loaded
-    set_title(title + " - Show Q");
+    set_title("ShowQ : " + Glib::filename_to_utf8(file));
 
     Glib::RefPtr<Gtk::RecentManager> pRM = Gtk::RecentManager::get_default();
     pRM->add_item(Glib::filename_to_uri(filename));
