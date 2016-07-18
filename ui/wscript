@@ -10,12 +10,6 @@ def configure(conf):
     pass
 
 def build(bld):
-    bld.new_task_gen(
-        source='showq.glade',
-        rule='./gconvert',
-        cwd=bld.path.abspath()
-    )
-
     bld.install_files('${PREFIX}/share/showq/ui',
     ['editcue.ui',
     'editmidi.ui',
