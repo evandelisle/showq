@@ -1,79 +1,102 @@
-<?xml version="1.0"?>
-<!--Generated with glade3 3.4.5 on Sun Jun 14 11:09:12 2009 -->
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="2.24"/>
+  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkAdjustment" id="adjustment1">
     <property name="upper">1000</property>
-    <property name="lower">0</property>
-    <property name="page_increment">1</property>
     <property name="step_increment">0.10000000149</property>
-    <property name="page_size">1</property>
-    <property name="value">0</property>
+    <property name="page_increment">1</property>
   </object>
   <object class="GtkVBox" id="edit_fade_vbox">
     <property name="visible">True</property>
+    <property name="can_focus">False</property>
     <child>
       <object class="GtkHBox" id="hbox28">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <child>
           <object class="GtkLabel" id="label159">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">Fade time </property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="ed_fade_time">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="primary_icon_activatable">False</property>
+            <property name="secondary_icon_activatable">False</property>
+            <property name="primary_icon_sensitive">True</property>
+            <property name="secondary_icon_sensitive">True</property>
             <property name="adjustment">adjustment1</property>
             <property name="climb_rate">1</property>
             <property name="digits">3</property>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
       </object>
       <packing>
         <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
       </packing>
     </child>
     <child>
       <object class="GtkVBox" id="vbox6">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <child>
           <object class="GtkRadioButton" id="ed_fade_defaultcomplete">
+            <property name="label" translatable="yes">Default</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="label" translatable="yes">Default</property>
+            <property name="receives_default">False</property>
             <property name="active">True</property>
             <property name="draw_indicator">True</property>
           </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
         </child>
         <child>
           <object class="GtkRadioButton" id="ed_fade_stopcomplete">
+            <property name="label" translatable="yes">Stop on fade complete</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="label" translatable="yes">Stop on fade complete</property>
+            <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
             <property name="group">ed_fade_defaultcomplete</property>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
           <object class="GtkRadioButton" id="ed_fade_pausecomplete">
+            <property name="label" translatable="yes">Pause on fade complete</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="label" translatable="yes">Pause on fade complete</property>
+            <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
             <property name="group">ed_fade_defaultcomplete</property>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
         </child>
