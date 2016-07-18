@@ -32,9 +32,6 @@
 
 #include <sndfile.h>
 
-#include <vorbis/codec.h>
-#include <vorbis/vorbisfile.h>
-
 #include <glibmm.h>
 
 #include <samplerate.h>
@@ -46,7 +43,7 @@
 enum {
   Play, Pause, Stop, Done
 };
-enum {NoCodec, SndFile, OggVorbis};
+enum {NoCodec, SndFile};
 
 struct patch_ {
   unsigned int src;
@@ -121,8 +118,6 @@ public:
 private:
   int srate;
   int codec;
-  OggVorbis_File vf;
-  vorbis_info *vi;
   SNDFILE *sf;
   SF_INFO sfinfo;
 

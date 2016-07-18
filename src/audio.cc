@@ -18,10 +18,8 @@
  *      MA 02110-1301, USA.
  */
 
-#include <pthread.h>
 #include "audio.h"
 
-#include <sstream>
 #include <iostream>
 #include <vector>
 
@@ -43,21 +41,11 @@ AudioFile::AudioFile(const char *f)
 {
   sfinfo.format = 0;
   codec = NoCodec;
-  FILE *fp;
 
   if ((sf = sf_open(f, SFM_READ, &sfinfo))) {
     codec = SndFile;
     num_channels = sfinfo.channels;
     mTotalTime = double(sfinfo.frames) / sfinfo.samplerate;
-  } else if ((fp = fopen(f, "rb"))) {
-    if (ov_open(fp, &vf, 0, 0))
-      fclose(fp);
-    else {
-      codec = OggVorbis;
-      vi = ov_info(&vf, -1);
-      num_channels = vi->channels;
-      mTotalTime =  ov_time_total(&vf, -1);
-    }
   }
 
   if (codec == NoCodec) {
@@ -65,7 +53,7 @@ AudioFile::AudioFile(const char *f)
     eob = true;
     return;
   }
-  srate = (codec == OggVorbis) ? vi->rate : sfinfo.samplerate;
+  srate = sfinfo.samplerate;
 
   for (int i = 0; i < num_channels; ++i)
     rbs.push_back(jack_ringbuffer_create(samplesize * 192000));
@@ -93,7 +81,6 @@ AudioFile::~AudioFile()
       src_delete(src[i]);
 
   if (codec == SndFile && sf) sf_close(sf);
-  if (codec == OggVorbis) ov_clear(&vf);
 }
 
 size_t AudioFile::sf_read(float *** vbuf, size_t n)
@@ -129,9 +116,6 @@ size_t AudioFile::read_cb()
     case SndFile:
       sf_seek(sf, static_cast<long>(seek_pos * sfinfo.samplerate), SEEK_SET);
       break;
-    case OggVorbis:
-      ov_time_seek(&vf, seek_pos);
-      break;
     default:
       break;
     }
@@ -153,10 +137,7 @@ size_t AudioFile::read_cb()
   while (!eof && n > 100) {
     long j = 0;
     long want_read = long(floor(double(n) / factor));
-    if (codec == OggVorbis && (j = ov_read_float(&vf, &vbuf, want_read, 0)) <= 0) {
-      eof = true;
-      break;
-    }
+
     if (codec == SndFile && (j = sf_read(&vbuf, want_read)) == 0) {
       eof = true;
       break;
@@ -192,17 +173,14 @@ size_t AudioFile::read_cb()
 
 std::string AudioFile::get_info_str()
 {
-  std::ostringstream s;
   SF_FORMAT_INFO format_info;
   switch (codec) {
   case SndFile:
     format_info.format = sfinfo.format;
     sf_command(sf, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
-    s << format_info.name << " " << num_channels << " channels, samplerate "  << srate;
-    return s.str();
-  case OggVorbis:
-    s << "OggVorbis " << num_channels << " channels, samplerate " << srate ;
-    return s.str();
+
+    return Glib::ustring::compose("%1 %2 channels, samplerate %3",
+      format_info.name, num_channels, srate);
   default:
     return "";
   }

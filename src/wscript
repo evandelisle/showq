@@ -14,7 +14,6 @@ def configure(conf):
     conf.check_cfg(package='alsa', args='--cflags --libs', uselib_store='ALSA')
     conf.check_cfg(package='jack', args='--cflags --libs', uselib_store='JACK')
     conf.check_cfg(package='sndfile', args='--cflags --libs', uselib_store='SNDFILE')
-    conf.check_cfg(package='vorbisfile', args='--cflags --libs', uselib_store='VORBISFILE')
     conf.check_cfg(package='samplerate', args='--cflags --libs', uselib_store='SAMPLERATE')
 
 def build(bld):
@@ -25,7 +24,7 @@ def build(bld):
         'editgroup.cc', 'renumber.cc', 'utils.cc', 'file.cc', 'patch.cc'],
         target       = 'showq',
         includes     = '.',
-        uselib       = 'GTKMM GTHREAD XMLPP ALSA JACK SNDFILE VORBISFILE SAMPLERATE',
+        uselib       = 'GTKMM GTHREAD XMLPP ALSA JACK SNDFILE SAMPLERATE',
         cxxflags      = ['-g','-O2', '-Wall', '-DVERSIONSTRING=\"0.5.0\"',
         '-std=c++11',
         '-DGETTEXT_PACKAGE=\"showq\"',
