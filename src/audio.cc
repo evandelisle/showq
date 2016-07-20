@@ -28,14 +28,11 @@
 
 const int samplesize = sizeof(jack_default_audio_sample_t);
 
-static jack_default_audio_sample_t cb_rbuf[32000];
-static jack_default_audio_sample_t cb_buf[32000];
-static jack_default_audio_sample_t cb_rsbuf[32000 * 12];
-
 static int samplerate;
 
 AudioFile::AudioFile(const char *f)
   : status(Pause), eof(false), eob(false), fades(new Fades),
+    SRC_state(nullptr),
     cur_frame(0), srate(0), do_seek(false), seek_pos(0.0),
     read_frame(0), num_channels(0)
 {
@@ -59,13 +56,11 @@ AudioFile::AudioFile(const char *f)
     rbs.push_back(jack_ringbuffer_create(samplesize * 192000));
 
   if (srate != samplerate) {
-    for (int i = 0; i < num_channels; ++i) {
-      int error;
-      SRC_STATE *p = src_new(2, 1, &error);
-      if (!p)
-        std::cerr << "Error opening resampler\n";
-      src.push_back(p);
-    }
+    int error;
+    SRC_state = src_callback_new(src_callback, SRC_SINC_MEDIUM_QUALITY,
+                                 num_channels, &error, this);
+    if (!SRC_state)
+      std::cerr << "Error opening resampler\n";
   }
 }
 
@@ -76,37 +71,20 @@ AudioFile::~AudioFile()
     if (rbs[i])
       jack_ringbuffer_free(rbs[i]);
 
-  for (i = 0; i < src.size(); ++i)
-    if (src[i])
-      src_delete(src[i]);
+  if (SRC_state)
+    src_delete(SRC_state);
 
   if (codec == SndFile && sf) sf_close(sf);
 }
 
-size_t AudioFile::sf_read(float *** vbuf, size_t n)
+long AudioFile::src_callback(void *cb_data, float **data)
 {
-  static float *ibuf[16];
-  size_t i;
-  if (n > (32000 / rbs.size())) i = (32000 / rbs.size());
-  else i = n;
+  static float input_buffer[4096];
+  auto af = static_cast<AudioFile *>(cb_data);
+  *data = input_buffer;
 
-  i = sf_readf_float(sf, cb_rbuf, i);
-
-  for (size_t c = 0; c < rbs.size(); ++c) {
-    ibuf[c] = &cb_buf[(32000 / rbs.size()) * c];
-  }
-
-  for (size_t c = 0; c < rbs.size(); ++c) {
-    float *d = ibuf[c];
-    float *s = &cb_rbuf[c];
-    for (size_t j = 0; j < i; ++j) {
-      *d++ = *s;
-      s += rbs.size();
-    }
-  }
-
-  *vbuf = ibuf;
-  return i;
+  return sf_readf_float(af->sf, input_buffer,
+                        (sizeof(input_buffer) / sizeof(float)) / af->num_channels);
 }
 
 size_t AudioFile::read_cb()
@@ -129,46 +107,40 @@ size_t AudioFile::read_cb()
     cur_frame = size_t(seek_pos * samplerate);
   }
 
+  static float input_buffer[32000];
+  static float cb_buf[32000];
+
   if (eof) return 0;
-  size_t n = jack_ringbuffer_write_space(rbs[0]) / samplesize;
+  size_t RB_frames_space = jack_ringbuffer_write_space(rbs[0]) / samplesize;
   double factor = double(samplerate) / double(srate);
-  float **vbuf;
 
-  while (!eof && n > 100) {
-    long j = 0;
-    long want_read = long(floor(double(n) / factor));
+  size_t max_buffer_frames = (sizeof(input_buffer) / samplesize) / num_channels;
+  size_t n = RB_frames_space;
 
-    if (codec == SndFile && (j = sf_read(&vbuf, want_read)) == 0) {
+  while (!eof && n > 0) {
+    int read_length = std::min(n, max_buffer_frames);
+    int frames_read;
+
+    if (SRC_state) {
+      frames_read = src_callback_read(SRC_state, factor, read_length, input_buffer);
+    } else {
+      frames_read = sf_readf_float(sf, input_buffer, read_length);
+    }
+    n -= frames_read;
+    if (frames_read == 0) {
       eof = true;
       break;
     }
-
-    read_frame += j;
-
-    if (srate == samplerate) {
-      for (size_t c = 0; c < rbs.size(); ++c)
-        jack_ringbuffer_write(rbs[c], (const char *) vbuf[c], j * samplesize);
-      n -= j;
-    } else {
-      long d = 0;
-      for (size_t c = 0; c < rbs.size(); ++c) {
-        SRC_DATA s;
-        s.data_in = vbuf[c];
-        s.input_frames = j;
-        s.data_out = cb_rsbuf;
-        s.output_frames = 32000 * 12 * 2;
-        s.src_ratio = factor;
-        s.end_of_input = 0;
-
-        src_process(src[c], &s);
-        jack_ringbuffer_write(rbs[c], (const char *) cb_rsbuf, s.output_frames_gen * samplesize);
-        d = s.output_frames_gen;
+    for (int channel = 0; channel < num_channels; ++channel) {
+      for (size_t i = 0, j = channel; i < frames_read; ++i, j += num_channels) {
+        cb_buf[i] = input_buffer[j];
       }
-      n -= d;
+      jack_ringbuffer_write(rbs[channel], (char *)cb_buf,
+                            frames_read * samplesize);
     }
   }
 
-  return (1);
+  return 1;
 }
 
 std::string AudioFile::get_info_str()
@@ -180,7 +152,7 @@ std::string AudioFile::get_info_str()
     sf_command(sf, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
 
     return Glib::ustring::compose("%1 %2 channels, samplerate %3",
-      format_info.name, num_channels, srate);
+                                  format_info.name, num_channels, srate);
   default:
     return "";
   }
@@ -312,10 +284,15 @@ void Audio::do_disc_thread()
   }
 }
 
+// Note jack_port_set_name is deprecated, but the new solution is not
+// yet common enough to use
 int Audio::port_set_name(int port, const Glib::ustring &name)
 {
   if (!ports[port]) return -1;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   return jack_port_set_name(ports[port], name.c_str());
+#pragma GCC diagnostic pop
 }
 
 void Audio::disconnect_all()

@@ -79,9 +79,8 @@ public:
     bool stop_on_complete;
     bool pause_on_complete;
   };
-  size_t read_cb();
-  size_t sf_read(float *** vbuf, size_t n);
 
+  size_t read_cb();
   std::string get_info_str();
   double total_time();
 
@@ -108,13 +107,15 @@ public:
 
   typedef std::list<std::shared_ptr<fade_> > Fades;
   SerializedRCUManager<Fades> fades;
-  std::vector<SRC_STATE *> src;
+  SRC_STATE * SRC_state;
   Glib::Mutex buffer_lock;
   std::vector<jack_ringbuffer_t *> rbs;
   std::vector<float> vol;
   std::vector<patch_> patch;
 
   size_t cur_frame;
+
+  static long src_callback(void *cb_data, float **data);
 private:
   int srate;
   int codec;
