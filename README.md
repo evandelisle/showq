@@ -10,7 +10,7 @@ The software requirements for build and runtime are as follows:
     - C++11 compiler
     - python (required for build only for waf)
         http://www.python.org/
-    - gtkmm
+    - gtkmm-2.4
         http://www.gtkmm.org
     - libxml++
         http://libxmlplusplus.sourceforge.net/
@@ -20,8 +20,6 @@ The software requirements for build and runtime are as follows:
         http://www.alsa-project.org/
     - sndfile
         http://www.mega-nerd.com/libsndfile/
-    - vorbisfile
-        http://www.vorbis.com/
     - samplerate
         http://www.mega-nerd.com/SRC/
 
