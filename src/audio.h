@@ -23,6 +23,7 @@
 
 #include "rcu.h"
 
+#include <atomic>
 #include <list>
 #include <memory>
 
@@ -164,7 +165,7 @@ private:
   Glib::Cond disc_thread_cond;
 
   Glib::Thread *disc_thread_p;
-  gint running;
+  std::atomic<bool> running;
 
   jack_client_t *client;
   jack_port_t *ports[8];

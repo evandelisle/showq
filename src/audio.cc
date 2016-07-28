@@ -225,7 +225,7 @@ Audio::Audio()
   jack_on_shutdown(client, sdown_callback, this);
   jack_set_sample_rate_callback(client, srate_callback, this);
 
-  g_atomic_int_set(&running, 1);
+  running = true;
   disc_thread_p = Glib::Thread::create(sigc::mem_fun(*this, &Audio::disc_thread), true);
 
   jack_activate(client);
@@ -238,7 +238,7 @@ Audio::~Audio()
   jack_deactivate(client);
   jack_client_close(client);
 
-  g_atomic_int_set(&running, 0);
+  running = false;
   disc_thread_p->join();
 }
 
@@ -323,7 +323,7 @@ void Audio::disc_thread()
   Glib::Mutex::Lock lock(disc_thread_lock);
   Glib::TimeVal t;
 
-  while (g_atomic_int_get(&running)) {
+  while (running) {
     t.assign_current_time();
     t.add_milliseconds(500);
 

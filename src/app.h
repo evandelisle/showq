@@ -30,6 +30,7 @@
 #include <libxml++/libxml++.h>
 #pragma GCC diagnostic pop
 
+#include <atomic>
 #include <map>
 #include <vector>
 #include <alsa/asoundlib.h>
@@ -53,7 +54,7 @@ private:
 
   snd_seq_t *m_seq;
   int input_port;
-  gint running;
+  std::atomic<bool> running;
 
 // MSC data
   bool use_msc;

@@ -87,13 +87,13 @@ MIDIengine::MIDIengine()
   snd_seq_port_info_set_name(info, "input");
   snd_seq_create_port(m_seq, info);
 
-  g_atomic_int_set(&running, 1);
+  running = true;
   midi_thread_p = Glib::Thread::create(sigc::mem_fun(*this, &MIDIengine::midi_main), true);
 }
 
 MIDIengine::~MIDIengine()
 {
-  g_atomic_int_set(&running, 0);
+  running = false;
   midi_thread_p->join();
 }
 
@@ -109,7 +109,7 @@ void MIDIengine::midi_main()
 
   snd_seq_poll_descriptors(m_seq, pfds, nfds, POLLIN);
 
-  while (g_atomic_int_get(&running)) {
+  while (running) {
     poll(pfds, nfds, 1000);
     snd_seq_poll_descriptors_revents(m_seq, pfds, nfds, revents);
 
