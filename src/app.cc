@@ -144,6 +144,7 @@ void MIDIengine::midi_main()
 App::App(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml)
   : Gtk::Window(cobject), m_refXml(refXml)
 {
+  resize(640, 400);
   try {
     std::vector<int> win_size = keyfile.get_integer_list("main", "geometry");
     if (win_size.size() == 2)
@@ -275,24 +276,29 @@ App::App(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml)
   cr->signal_editing_canceled().connect(sigc::mem_fun(*this, &App::enable_hotkeys));
   cr->signal_editing_started().connect(sigc::mem_fun(*this, &App::disable_hotkeys));
   tc = Gtk::manage(new Gtk::TreeViewColumn("Description", *cr));
+  tc->set_expand();
+  tc->set_resizable();
   tc->set_cell_data_func(*cr, sigc::mem_fun(*this, &App::cell_data_func_text));
   mCols.push_back(tc);
 
   // Column 3
   crp = Gtk::manage(new Gtk::CellRendererProgress());
   tc = Gtk::manage(new Gtk::TreeViewColumn("Wait", *crp));
+  tc->set_resizable();
   tc->set_cell_data_func(*crp, sigc::mem_fun(*this, &App::cell_data_func_wait));
   mCols.push_back(tc);
 
   // Column 4
   cr = Gtk::manage(new Gtk::CellRendererText());
   tc = Gtk::manage(new Gtk::TreeViewColumn("Type", *cr));
+  tc->set_resizable(false);
   tc->set_cell_data_func(*cr, sigc::mem_fun(*this, &App::cell_data_func_type));
   mCols.push_back(tc);
 
   // Column 5
   crp = Gtk::manage(new Gtk::CellRendererProgress());
   tc = Gtk::manage(new Gtk::TreeViewColumn("Q Elapsed", *crp));
+  tc->set_resizable();
   tc->set_cell_data_func(*crp, sigc::mem_fun(*this, &App::cell_data_func_elapsed));
   mCols.push_back(tc);
 
@@ -301,15 +307,17 @@ App::App(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml)
   crt->property_activatable() = true;
   crt->signal_toggled().connect(sigc::mem_fun(*this, &App::cell_autoc));
   tc = Gtk::manage(new Gtk::TreeViewColumn("Auto cont", *crt));
+  tc->set_resizable(false);
   tc->set_cell_data_func(*crt, sigc::mem_fun(*this, &App::cell_data_func_autoc));
   mCols.push_back(tc);
 
-  for (size_t i = 1; i < mCols.size(); ++i) {
-    mCols[i]->set_reorderable();
-    mCols[i]->set_resizable();
+  for (auto &column : mCols) {
+    column->set_reorderable();
   }
+  mCols[0]->set_reorderable(false);
+
   {
-    std::string str;
+    std::string str("0 1 4 3 5 6 2 ");
     try {
       str = keyfile.get_string("main", "cueview");
     } catch (...) {
