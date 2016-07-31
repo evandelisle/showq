@@ -15,6 +15,7 @@ def configure(conf):
     conf.check_cfg(package='jack', args='--cflags --libs', uselib_store='JACK')
     conf.check_cfg(package='sndfile', args='--cflags --libs', uselib_store='SNDFILE')
     conf.check_cfg(package='samplerate', args='--cflags --libs', uselib_store='SAMPLERATE')
+    conf.check_cfg(package='uuid', args='--cflags --libs', uselib_store='UUID')
 
 def build(bld):
     t = bld.new_task_gen(
@@ -24,7 +25,7 @@ def build(bld):
         'editgroup.cc', 'renumber.cc', 'utils.cc', 'file.cc', 'patch.cc'],
         target       = 'showq',
         includes     = '.',
-        uselib       = 'GTKMM GTHREAD XMLPP ALSA JACK SNDFILE SAMPLERATE',
+        uselib       = 'GTKMM GTHREAD XMLPP ALSA JACK SNDFILE SAMPLERATE UUID',
         cxxflags      = ['-g','-O2', '-Wall', '-DVERSIONSTRING=\"0.5.0\"',
         '-std=c++11',
         '-DGETTEXT_PACKAGE=\"showq\"',

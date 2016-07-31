@@ -22,6 +22,8 @@ The software requirements for build and runtime are as follows:
         http://www.mega-nerd.com/libsndfile/
     - samplerate
         http://www.mega-nerd.com/SRC/
+    - libuuid
+
 
 Installation
 ------------

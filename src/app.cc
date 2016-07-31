@@ -354,8 +354,6 @@ App::App(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml)
   m_treeview->signal_stop().connect(sigc::mem_fun(*this, &App::on_stop));
   m_treeview->signal_sneak_out().connect(sigc::mem_fun(*this, &App::on_sneak_out));
 
-  next_id = 1;
-
   Pix_play = render_icon(Gtk::Stock::MEDIA_PLAY,
                          Gtk::IconSize(Gtk::ICON_SIZE_MENU));
   Pix_pause = render_icon(Gtk::Stock::MEDIA_PAUSE,
@@ -630,7 +628,6 @@ void App::on_new_activate()
     note.clear();
     set_title("Show Q");
     m_refTreeModel->clear();
-    next_id = 1;
   }
 }
 
@@ -803,8 +800,6 @@ Gtk::TreeModel::iterator App::append_cue(std::shared_ptr<Cue> &q)
   row[m_refTreeModel->Col.delay] = "";
   row[m_refTreeModel->Col.delay_percent] = 0;
 
-  if (q->cue_id_no >= next_id) next_id = q->cue_id_no + 1;
-
   return iter;
 }
 
@@ -816,8 +811,6 @@ Gtk::TreeModel::iterator App::append_cue(std::shared_ptr<Cue> &q, Gtk::TreeModel
   row[m_refTreeModel->Col.cue] = q;
   row[m_refTreeModel->Col.delay] = "";
   row[m_refTreeModel->Col.delay_percent] = 0;
-
-  if (q->cue_id_no >= next_id) next_id = q->cue_id_no + 1;
 
   return iter;
 }
@@ -833,8 +826,6 @@ Gtk::TreeModel::iterator App::insert_cue(std::shared_ptr<Cue> &q)
   row[m_refTreeModel->Col.delay] = "";
   row[m_refTreeModel->Col.delay_percent] = 0;
 
-  if (q->cue_id_no >= next_id) next_id = q->cue_id_no + 1;
-
   return iter;
 }
 
@@ -847,8 +838,6 @@ Gtk::TreeModel::iterator App::insert_cue(Gtk::TreeModel::iterator i, std::shared
   row[m_refTreeModel->Col.cue] = q;
   row[m_refTreeModel->Col.delay] = "";
   row[m_refTreeModel->Col.delay_percent] = 0;
-
-  if (q->cue_id_no >= next_id) next_id = q->cue_id_no + 1;
 
   return iter;
 }
@@ -1420,7 +1409,7 @@ CueTreeStore::CueTreeStore()
   set_column_types(Col);
 }
 
-Gtk::TreeModel::iterator CueTreeStore::get_iter_from_id(long id)
+Gtk::TreeModel::iterator CueTreeStore::get_iter_from_id(uuid::uuid id)
 {
   m_id = id;
   m_id_iter = Gtk::TreeIter();

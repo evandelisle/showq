@@ -41,6 +41,7 @@
 #include "renumber.h"
 #include "editcue.h"
 #include "patch.h"
+#include "uuid_cpp.h"
 
 class MIDIengine {
 public:
@@ -94,7 +95,7 @@ public:
     else return Play;
   }
 
-  long cue_id_no;
+  uuid::uuid cue_id_no;
   Gtk::TreeRowReference r_cue;
   std::shared_ptr<AudioFile> af;
   std::shared_ptr<AudioFile::fade_> fade;
@@ -126,7 +127,7 @@ public:
   Glib::TimeVal start;
   Glib::TimeVal end;
   Glib::TimeVal ptime;
-  long cue_id_no;
+  uuid::uuid cue_id_no;
   Gtk::TreeRowReference w_cue;
   bool done;
   bool active;
@@ -160,14 +161,14 @@ public:
   };
   ModelColumns Col;
 
-  Gtk::TreeModel::iterator get_iter_from_id(long id);
+  Gtk::TreeModel::iterator get_iter_from_id(uuid::uuid id);
 
   static Glib::RefPtr<CueTreeStore> create();
 protected:
   virtual bool row_drop_possible_vfunc(const Gtk::TreeModel::Path &dest, const Gtk::SelectionData &selection_data) const;
 private:
   bool is_id(const TreeModel::iterator &i);
-  long m_id;
+  uuid::uuid m_id;
   Gtk::TreeModel::iterator m_id_iter;
 };
 
@@ -291,7 +292,6 @@ public:
 
   Glib::RefPtr<CueTreeStore> m_refTreeModel;
   Gtk::TreeRowReference m_CurrentCue;
-  long next_id;
 
   std::list<RunningCue> running_cue;
   std::list<WaitingCue> waiting_cue;

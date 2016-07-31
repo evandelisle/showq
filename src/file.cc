@@ -30,6 +30,8 @@
 #include "utils.h"
 #include "audio.h"
 
+#include "uuid_cpp.h"
+
 #include <string>
 
 extern snd_seq_t * oseq;
@@ -125,9 +127,8 @@ void App::do_save_cues(Gtk::TreeModel::Children children, xmlpp::Element * cueli
 
     xmlpp::Element *cel = cuelist->add_child("cue");
 
-    Glib::ustring s = to_ascii_string(cue->cue_id_no);
     cel->set_attribute("type", cue->cue_type_text());
-    cel->set_attribute("id", s);
+    cel->set_attribute("id", cue->cue_id_no.unparse());
 
     if (!cue->cue_id.empty()) {
       xmlpp::Element *c = cel->add_child("cue_id");
@@ -200,8 +201,8 @@ void FadeStop_Cue::serialize(xmlpp::Element *cel)
 {
   xmlpp::Element *p = cel->add_child("Fade");
 
-  if (target) {
-    p->set_attribute("target", to_ascii_string(target));
+  if (!target.is_null()) {
+    p->set_attribute("target", target.unparse());
   }
 
   p->set_attribute("FadeTime", Glib::Ascii::dtostr(fade_time));
@@ -232,28 +233,25 @@ void FadeStop_Cue::serialize(xmlpp::Element *cel)
 
 void Stop_Cue::serialize(xmlpp::Element *cel)
 {
-  long i = target;
-  if (i) {
-    xmlpp::Element *c = cel->add_child("Stop");
-    c->set_attribute("target", to_ascii_string(i));
+  xmlpp::Element *c = cel->add_child("Stop");
+  if (!target.is_null()) {
+    c->set_attribute("target", target.unparse());
   }
 }
 
 void Pause_Cue::serialize(xmlpp::Element *cel)
 {
-  long i = target;
-  if (i) {
-    xmlpp::Element *c = cel->add_child("Pause");
-    c->set_attribute("target", to_ascii_string(i));
+  xmlpp::Element *c = cel->add_child("Pause");
+  if (!target.is_null()) {
+    c->set_attribute("target", target.unparse());
   }
 }
 
 void Start_Cue::serialize(xmlpp::Element *cel)
 {
-  long i = target;
-  if (i) {
-    xmlpp::Element *c = cel->add_child("Start");
-    c->set_attribute("target", to_ascii_string(i));
+  xmlpp::Element *c = cel->add_child("Start");
+  if (!target.is_null()) {
+    c->set_attribute("target", target.unparse());
   }
 }
 
@@ -463,7 +461,7 @@ void Deserialize::fade(const xmlpp::Element *el, std::shared_ptr<FadeStop_Cue> c
   const auto target = el->get_attribute_value("target");
   const auto fade_time = el->get_attribute_value("FadeTime");
   if (!target.empty())
-    cue->target = g_ascii_strtoll(target.c_str(), nullptr, 10);
+    cue->target = uuid::uuid(target);
   if (!fade_time.empty())
     cue->fade_time = Glib::Ascii::strtod(fade_time);
 
@@ -552,7 +550,7 @@ void Deserialize::stop(const xmlpp::Element *el, std::shared_ptr<Stop_Cue> cue)
   const auto element = dynamic_cast<const xmlpp::Element*>(node);
   if (element) {
     const auto text = element->get_attribute_value("target");
-    cue->target = g_ascii_strtoll(text.c_str(), nullptr, 10);
+    cue->target = uuid::uuid(text);
   }
 }
 
@@ -564,7 +562,7 @@ void Deserialize::pause(const xmlpp::Element *el, std::shared_ptr<Pause_Cue> cue
   const auto element = dynamic_cast<const xmlpp::Element*>(node);
   if (element) {
     const auto text = element->get_attribute_value("target");
-    cue->target = g_ascii_strtoll(text.c_str(), nullptr, 10);
+    cue->target = uuid::uuid(text);
   }
 }
 
@@ -576,7 +574,7 @@ void Deserialize::start(const xmlpp::Element *el, std::shared_ptr<Start_Cue> cue
   const auto element = dynamic_cast<const xmlpp::Element*>(node);
   if (element) {
     const auto text = element->get_attribute_value("target");
-    cue->target = g_ascii_strtoll(text.c_str(), nullptr, 10);
+    cue->target = uuid::uuid(text);
   }
 }
 
@@ -628,7 +626,7 @@ void Deserialize::cue_list(const xmlpp::Node *node)
       start(cue_element, std::static_pointer_cast<Start_Cue>(cue));
     }
 
-    cue->cue_id_no = g_ascii_strtoll(id.c_str(), nullptr, 10);
+    cue->cue_id_no = uuid::uuid(id);
     common_cue_items(cue_element, cue);
 
     Gtk::TreeModel::iterator tree_iter;
@@ -686,7 +684,6 @@ void App::do_load(const Glib::ustring & filename)
     title.clear();
     note.clear();
     m_refTreeModel->clear();
-    next_id = 1;
 
     xmlpp::DomParser parser;
     parser.set_throw_messages(true);

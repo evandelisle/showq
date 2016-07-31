@@ -36,7 +36,7 @@ EditCueBase::~EditCueBase()
 }
 
 EditCue::EditCue(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml)
-  : Gtk::Window(cobject), m_refXml(refXml), cue_id_no(0), keyval(0)
+  : Gtk::Window(cobject), m_refXml(refXml), cue_id_no(nullptr), keyval(0)
 {
   m_refXml->get_widget("ed_notebook", m_notebook);
 
@@ -169,25 +169,25 @@ void EditCue::ok_activate()
 
   switch (m_type) {
   case Cue::MIDI:
-    cue = std::shared_ptr<MIDI_Cue>(new MIDI_Cue);
+    cue = std::make_shared<MIDI_Cue>();
     break;
   case Cue::Wave:
-    cue = std::shared_ptr<Wave_Cue>(new Wave_Cue);
+    cue = std::make_shared<Wave_Cue>();
     break;
   case Cue::Stop:
-    cue = std::shared_ptr<Stop_Cue>(new Stop_Cue);
+    cue = std::make_shared<Stop_Cue>();
     break;
   case Cue::Fade:
-    cue = std::shared_ptr<FadeStop_Cue>(new FadeStop_Cue);
+    cue = std::make_shared<FadeStop_Cue>();
     break;
   case Cue::Group:
-    cue = std::shared_ptr<Group_Cue>(new Group_Cue);
+    cue = std::make_shared<Group_Cue>();
     break;
   case Cue::Pause:
-    cue = std::shared_ptr<Pause_Cue>(new Pause_Cue);
+    cue = std::make_shared<Pause_Cue>();
     break;
   case Cue::Start:
-    cue = std::shared_ptr<Start_Cue>(new Start_Cue);
+    cue = std::make_shared<Start_Cue>();
     break;
   default:
     hide();
@@ -203,15 +203,15 @@ void EditCue::ok_activate()
   cue->keyval = keyval;
   cue->state = state;
 
-  target = 0;
+  target = uuid::uuid(nullptr);
   app->m_refTreeModel->foreach_iter(sigc::mem_fun(*this, &EditCue::check_key));
   cue->target = target;
 
   Gtk::TreeModel::iterator iter;
-  if (cue->cue_id_no) {
+  if (!cue->cue_id_no.is_null()) {
     iter = app->replace_cue(cue, m_path);
   } else {
-    cue->cue_id_no = app->next_id;
+    cue->cue_id_no = uuid::uuid();
     iter = app->insert_cue(cue);
   }
   if (iter && iter != app->m_refTreeModel->children().end()) {
