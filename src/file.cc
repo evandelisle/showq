@@ -226,7 +226,7 @@ void FadeStop_Cue::serialize(xmlpp::Element *cel)
       s2 = "-Inf";
     else
       s2 = Glib::Ascii::dtostr(gain_to_db(tvol[j]));
-    c->set_attribute("ch", to_ascii_string(tvol[j]));
+    c->set_attribute("ch", to_ascii_string(j));
     c->set_attribute("gain", s2);
   }
 }
@@ -458,12 +458,12 @@ void Deserialize::fade(const xmlpp::Element *el, std::shared_ptr<FadeStop_Cue> c
   if (!fade_node)
     return;
 
-  const auto target = el->get_attribute_value("target");
-  const auto fade_time = el->get_attribute_value("FadeTime");
-  if (!target.empty())
-    cue->target = uuid::uuid(target);
-  if (!fade_time.empty())
-    cue->fade_time = Glib::Ascii::strtod(fade_time);
+  const auto fade_node_element = dynamic_cast<const xmlpp::Element *>(fade_node);
+  const auto target = fade_node_element->get_attribute_value("target");
+  const auto fade_time = fade_node_element->get_attribute_value("FadeTime");
+
+  cue->target = uuid::uuid(target);
+  cue->fade_time = Glib::Ascii::strtod(fade_time);
 
   for (const auto & child_node : fade_node->get_children()) {
     const auto child_element = dynamic_cast<const xmlpp::Element *>(child_node);

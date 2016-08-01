@@ -17,8 +17,6 @@
  *      MA 02110-1301, USA.
  */
 
-#include <sstream>
-
 #include "app.h"
 #include "editcue.h"
 #include "utils.h"
@@ -36,15 +34,14 @@ EditCueFade::EditCueFade(Gtk::Notebook *p)
   p->append_page(*level_tab, "Levels");
 
   for (int i = 0; i < 8; ++i) {
-    std::ostringstream s1, s3;
-    s1 << "ed_wave_f" << (i + 1);
-    s3 << "ed_wave_" << (i + 1);
+    auto s1 = Glib::ustring::compose("ed_wave_f%1", (i + 1));
+    auto s2 = Glib::ustring::compose("ed_wave_%1", (i + 1));
 
     Fader *vs;
     Gtk::ToggleButton *tb;
 
-    refXML_faders->get_widget_derived(s1.str().c_str(), vs);
-    refXML_faders->get_widget(s3.str().c_str(), tb);
+    refXML_faders->get_widget_derived(s1, vs);
+    refXML_faders->get_widget(s2, tb);
 
     tb->signal_toggled().connect(
       sigc::bind<int>(sigc::mem_fun(*this, &EditCueFade::wave_on_toggle), i));
@@ -67,14 +64,17 @@ EditCueFade::~EditCueFade()
 
 void EditCueFade::get(std::shared_ptr<Cue> &p)
 {
-  std::shared_ptr<FadeStop_Cue> q = std::dynamic_pointer_cast<FadeStop_Cue>(p);
+  auto q = std::dynamic_pointer_cast<FadeStop_Cue>(p);
+  q->tvol.clear();
+  q->on.clear();
 
-  std::vector<Fader *>::const_iterator i = m_wave_faders.begin();
-  std::vector<Gtk::ToggleButton *>::const_iterator j = m_wave_but.begin();
-  for (; i != m_wave_faders.end(); ++i, ++j) {
-    q->tvol.push_back((*i)->get_gain());
-    q->on.push_back((*j)->get_active());
+  for (const auto &i : m_wave_faders) {
+    q->tvol.push_back((*i).get_gain());
   }
+  for (const auto &i : m_wave_but) {
+    q->on.push_back((*i).get_active());
+  }
+
   q->stop_on_complete = m_fade_stopcomplete->get_active();
   q->pause_on_complete = m_fade_pausecomplete->get_active();
   q->fade_time = m_fade_time->get_value();

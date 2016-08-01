@@ -187,8 +187,8 @@ public:
   FadeStop_Cue()
     : stop_on_complete(false), pause_on_complete(false), fade_time(0.0)
   {
-    tvol.resize(8);
-    on.resize(8);
+    tvol.resize(8, 0.0);
+    on.resize(8, false);
   }
 
   virtual std::string cue_type_text()
