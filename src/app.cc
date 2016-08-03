@@ -1373,10 +1373,11 @@ void CueTreeView::on_drag_data_received(
     if (af.get_codec() == NoCodec) continue;
 
     success = true;
-    std::shared_ptr<Cue> cue = std::shared_ptr<Wave_Cue>(new Wave_Cue);
+    std::shared_ptr<Cue> cue = std::make_shared<Wave_Cue>();
     std::shared_ptr<Wave_Cue> q = std::dynamic_pointer_cast<Wave_Cue>(cue);
     q->file = Glib::filename_from_uri(i);
     q->text = Glib::filename_to_utf8(Glib::path_get_basename(q->file));
+    q->cue_id_no = uuid::uuid();
     iter = app->insert_cue(iter, cue);
     ++iter;
   }
