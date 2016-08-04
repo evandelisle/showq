@@ -23,7 +23,6 @@
 #include <alsa/asoundlib.h>
 
 #include <sstream>
-#include <iostream>
 
 #include "app.h"
 #include "editcue.h"
@@ -51,8 +50,7 @@ void About::on_response(int)
 std::unique_ptr<About> About::create()
 {
   About *dialog;
-  Glib::RefPtr <Gtk::Builder> refXml
-    = Gtk::Builder::create_from_file(showq_ui + "about.ui");
+  auto refXml = Gtk::Builder::create_from_file(showq_ui + "about.ui");
   refXml->get_widget_derived("about", dialog);
   return std::unique_ptr<About>(dialog);
 }
@@ -633,7 +631,7 @@ void App::on_new_activate()
 
 void App::on_open_activate()
 {
-  if (title.size() != 0 ||
+  if (!title.empty() ||
       m_refTreeModel->children().begin() != m_refTreeModel->children().end()) {
     Gtk::MessageDialog dialog("You are about to load a show over this one.\nContinue ?",
                               false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK_CANCEL, true);
@@ -651,7 +649,7 @@ void App::on_open_activate()
 
 void App::on_recent_activate()
 {
-  if (title.size() != 0 ||
+  if (!title.empty() ||
       m_refTreeModel->children().begin() != m_refTreeModel->children().end()) {
     Gtk::MessageDialog dialog("You are about to load a show over this one.\nContinue ?",
                               false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK_CANCEL, true);
@@ -665,7 +663,7 @@ void App::on_recent_activate()
 
 void App::on_save_activate()
 {
-  if (file.size() == 0) {
+  if (file.empty()) {
     on_saveas_activate();
     return;
   }
@@ -848,19 +846,19 @@ void App::on_pause()
   if (!iter) return;
   std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
 
-  std::list<WaitingCue>::iterator i = waiting_cue.begin();
-  for (; i != waiting_cue.end(); ++i)
-    if (i->cue_id_no == q->cue_id_no) {
-      i->Pause();
+  for (auto && cue : waiting_cue) {
+    if (cue.cue_id_no == q->cue_id_no) {
+      cue.Pause();
       break;
     }
+  }
 
-  std::list<RunningCue>::iterator j = running_cue.begin();
-  for (; j != running_cue.end(); ++j)
-    if (j->cue_id_no == q->cue_id_no) {
-      j->Pause();
+  for (auto && cue : running_cue) {
+    if (cue.cue_id_no == q->cue_id_no) {
+      cue.Pause();
       break;
     }
+  }
 }
 
 void App::on_stop()
@@ -869,19 +867,19 @@ void App::on_stop()
   if (!iter) return;
   std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
 
-  std::list<WaitingCue>::iterator i = waiting_cue.begin();
-  for (; i != waiting_cue.end(); ++i)
-    if (i->cue_id_no == q->cue_id_no) {
-      i->Stop();
+  for (auto && cue : waiting_cue) {
+    if (cue.cue_id_no == q->cue_id_no) {
+      cue.Stop();
       break;
     }
+  }
 
-  std::list<RunningCue>::iterator j = running_cue.begin();
-  for (; j != running_cue.end(); ++j)
-    if (j->cue_id_no == q->cue_id_no) {
-      j->Stop();
+  for (auto && cue : running_cue) {
+    if (cue.cue_id_no == q->cue_id_no) {
+      cue.Stop();
       break;
     }
+  }
 }
 
 void App::on_sneak_out()
@@ -890,26 +888,25 @@ void App::on_sneak_out()
   if (!iter) return;
   std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
 
-  std::list<WaitingCue>::iterator i = waiting_cue.begin();
-  for (; i != waiting_cue.end(); ++i)
-    if (i->cue_id_no == q->cue_id_no) {
-      i->Stop();
+  for (auto && cue : waiting_cue) {
+    if (cue.cue_id_no == q->cue_id_no) {
+      cue.Stop();
       break;
     }
+  }
 
-  std::list<RunningCue>::iterator j = running_cue.begin();
-  for (; j != running_cue.end(); ++j)
-    if (j->cue_id_no == q->cue_id_no) {
-      std::shared_ptr<AudioFile::fade_> fade =
-        std::shared_ptr<AudioFile::fade_>(new AudioFile::fade_);
+  for (auto && cue : running_cue) {
+    if (cue.cue_id_no == q->cue_id_no) {
+      auto fade = std::make_shared<AudioFile::fade_>();
       fade->vol = std::vector<float>(8, 0.0);
       fade->on = std::vector<bool>(8, true);
       fade->stop_on_complete = true;
       fade->tframes = fade->nframes
                       = long(5 * audio->get_sample_rate());
-      j->af->add_fade(fade);
+      cue.af->add_fade(fade);
       break;
     }
+  }
 }
 
 void App::on_go_activate()
@@ -1028,18 +1025,18 @@ bool App::wait_timeout()
   next_time = curr_time + 60;
 
   std::list<Gtk::TreeRowReference> to_run;
-  std::list<WaitingCue>::iterator i = waiting_cue.begin();
-  for (; i != waiting_cue.end(); ++i) {
-    if (curr_time >= i->end && !i->done) {
-      to_run.push_back(i->w_cue);
-      i->Stop();
-    } else if (!i->done && next_time > i->end) {
-      next_time = i->end;
+
+  for (auto && cue : waiting_cue) {
+    if (curr_time >= cue.end && !cue.done) {
+      to_run.push_back(cue.w_cue);
+      cue.Stop();
+    } else if (!cue.done && next_time > cue.end) {
+      next_time = cue.end;
     }
   }
-  std::list<Gtk::TreeRowReference>::iterator j;
-  for (j = to_run.begin(); j != to_run.end(); ++j) {
-    Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter(j->get_path());
+
+  for (auto && j : to_run) {
+    Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter(j.get_path());
     if (!iter) continue;
 
     std::shared_ptr<Cue> cue = (*iter)[m_refTreeModel->Col.cue];
@@ -1052,8 +1049,10 @@ bool App::wait_timeout()
     }
     cue->run(iter);
   }
-  if (waiting_cue.size() == 0)
+
+  if (waiting_cue.empty())
     return false;
+
   curr_time.assign_current_time();
   Glib::signal_timeout().connect(sigc::mem_fun(*this, &App::wait_timeout),
                                  (unsigned int)((next_time - curr_time).as_double() * 1000));
@@ -1062,16 +1061,18 @@ bool App::wait_timeout()
 
 bool Pause_Cue::run(Gtk::TreeModel::iterator r)
 {
-  std::list<WaitingCue>::iterator i = app->waiting_cue.begin();
-  for (; i != app->waiting_cue.end(); ++i) {
-    if (target == i->cue_id_no)
-      i->Pause();
+  for (auto && i : app->waiting_cue) {
+    if (target == i.cue_id_no) {
+      i.Pause();
+      break;
+    }
   }
 
-  std::list<RunningCue>::iterator j = app->running_cue.begin();
-  for (; j != app->running_cue.end(); ++j) {
-    if (target == j->cue_id_no)
-      j->Pause();
+  for (auto && j : app->running_cue) {
+    if (target == j.cue_id_no) {
+      j.Pause();
+      break;
+    }
   }
   return false;
 }
@@ -1085,16 +1086,18 @@ bool Start_Cue::run(Gtk::TreeModel::iterator r)
 
 bool Stop_Cue::run(Gtk::TreeModel::iterator r)
 {
-  std::list<WaitingCue>::iterator i = app->waiting_cue.begin();
-  for (; i != app->waiting_cue.end(); ++i) {
-    if (target == i->cue_id_no)
-      i->Stop();
+  for (auto && i : app->waiting_cue) {
+    if (target == i.cue_id_no) {
+      i.Stop();
+      break;
+    }
   }
 
-  std::list<RunningCue>::iterator j = app->running_cue.begin();
-  for (; j != app->running_cue.end(); ++j) {
-    if (target == j->cue_id_no)
-      j->Stop();
+  for (auto && j : app->running_cue) {
+    if (target == j.cue_id_no) {
+      j.Stop();
+      break;
+    }
   }
   return false;
 }
@@ -1103,8 +1106,7 @@ bool Wave_Cue::run(Gtk::TreeModel::iterator r)
 {
   RunningCue rq;
 
-  std::shared_ptr<AudioFile> af
-    = std::shared_ptr<AudioFile>(new AudioFile(file.c_str()));
+  auto af = std::make_shared<AudioFile>(file.c_str());
 
   af->play();
   if (start_time > 0.00001)
@@ -1130,12 +1132,12 @@ bool MIDI_Cue::run(Gtk::TreeModel::iterator r)
   snd_seq_ev_set_subs(&ev);
   snd_seq_ev_set_direct(&ev);
 
-  std::vector<MIDI_Cue::msg>::const_iterator i = msgs.begin();
-  for (; i != msgs.end(); ++i) {
-    snd_seq_ev_set_source(&ev, i->port);
+  for (auto && midi_msg : msgs) {
+    snd_seq_ev_set_source(&ev, midi_msg.port);
     snd_midi_event_reset_encode(dev);
-    for (size_t j = 0; j < i->midi_data.size(); ++j)
-      snd_midi_event_encode_byte(dev, i->midi_data[j], &ev);
+    for (const auto data_byte : midi_msg.midi_data) {
+      snd_midi_event_encode_byte(dev, data_byte, &ev);
+    }
 
     snd_seq_event_output(oseq, &ev);
   }
@@ -1150,14 +1152,13 @@ bool FadeStop_Cue::run(Gtk::TreeModel::iterator r)
 {
   RunningCue rq;
 
-  std::list<RunningCue>::iterator j = app->running_cue.begin();
-  for (; j != app->running_cue.end(); ++j) {
-    if (target == j->cue_id_no) {
-      rq.af = j->af;
+  for (auto && j : app->running_cue) {
+    if (target == j.cue_id_no) {
+      rq.af = j.af;
 
       rq.cue_id_no = cue_id_no;
       rq.r_cue = Gtk::TreeRowReference(app->m_refTreeModel, Gtk::TreePath(r));
-      rq.fade = std::shared_ptr<AudioFile::fade_>(new AudioFile::fade_);
+      rq.fade = std::make_shared<AudioFile::fade_>();
       rq.fade->vol = tvol;
       rq.fade->on = on;
       rq.fade->stop_on_complete = stop_on_complete;
@@ -1228,13 +1229,11 @@ void App::on_load_activate()
 
 void App::on_all_stop_activate()
 {
-  for (std::list<WaitingCue>::iterator i = waiting_cue.begin();
-       i != waiting_cue.end(); ++i) {
-    i->Stop();
+  for (auto && cue : waiting_cue) {
+    cue.Stop();
   }
-  for (std::list<RunningCue>::iterator i = running_cue.begin();
-       i != running_cue.end(); ++i) {
-    i->Stop();
+  for (auto && cue : running_cue) {
+    cue.Stop();
   }
 }
 
