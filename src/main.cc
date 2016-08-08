@@ -18,6 +18,8 @@
  *      MA 02110-1301, USA.
  */
 
+#include "../config.h"
+
 #include "app.h"
 #include "audio.h"
 #include <glibmm/i18n.h>
@@ -30,14 +32,6 @@ App *app;
 Glib::KeyFile keyfile;
 
 Audio *audio;
-
-const char *glade_list[] = {
-  "./ui/",
-  "/home/errol/Projects/showq/ui/",
-  "/usr/share/showq/ui/",
-  "/usr/local/share/showq/ui/",
-  0
-};
 
 static void on_activate_url_link(Gtk::AboutDialog &, const Glib::ustring &link)
 {
@@ -56,12 +50,7 @@ int main(int argc, char *argv[])
 
   if (!Glib::thread_supported()) Glib::thread_init();
 
-  for (const char **p = glade_list; *p; ++p) {
-    if (Glib::file_test(*p + std::string("app.ui"), Glib::FILE_TEST_EXISTS)) {
-      showq_ui = *p;
-      break;
-    }
-  }
+  showq_ui = UI_DIR;
 
   try {
     keyfile.load_from_file(Glib::get_home_dir() + "/ShowQ.conf");

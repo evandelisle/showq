@@ -3,17 +3,19 @@
 
 APPNAME='showq'
 VERSION='0.5.0'
-srcdir = '.'
-blddir = 'output'
+top = '.'
+out = 'build'
 
-def set_options(opt):
-    opt.sub_options('src')
-    opt.sub_options('ui')
+def options(opt):
+    opt.load('compiler_cxx')
 
 def configure(conf):
-    conf.sub_config('src')
-    conf.sub_config('ui')
+    conf.recurse('src ui')
+    conf.define('GETTEXT_PACKAGE', 'showq')
+    conf.define('PROGRAMNAME_LOCALEDIR', conf.options.prefix + 'share/showq')
+    conf.define('UI_DIR', conf.options.prefix + 'share/showq/ui')
+    conf.define('VERSIONSTRING', VERSION)
+    conf.write_config_header('config.h')
 
 def build(bld):
-    bld.add_subdirs('src')
-    bld.add_subdirs('ui')
+    bld.recurse('src ui')

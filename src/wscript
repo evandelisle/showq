@@ -3,11 +3,13 @@
 
 VERSION='0.5.0'
 
-def set_options(opt):
-    opt.tool_options('compiler_cxx')
+def options(opt):
+    opt.load('compiler_cxx')
 
 def configure(conf):
-    conf.check_tool('compiler_cxx')
+    conf.load('compiler_cxx')
+
+    conf.check_cfg(atleast_pkgconfig_version='0.0.0')
     conf.check_cfg(package='gtkmm-2.4', args='--cflags --libs', uselib_store='GTKMM')
     conf.check_cfg(package='gthread-2.0', args='--cflags --libs', uselib_store='GTHREAD')
     conf.check_cfg(package='libxml++-2.6', args='--cflags --libs', uselib_store='XMLPP')
@@ -18,7 +20,7 @@ def configure(conf):
     conf.check_cfg(package='uuid', args='--cflags --libs', uselib_store='UUID')
 
 def build(bld):
-    t = bld.new_task_gen(
+    t = bld.program(
         features     = 'cxx cprogram',
         source       = ['app.cc', 'main.cc', 'pref.cc', 'editcue.cc',
         'audio.cc', 'editstop.cc', 'editmidi.cc', 'editwave.cc', 'editfade.cc',
@@ -26,8 +28,5 @@ def build(bld):
         target       = 'showq',
         includes     = '.',
         uselib       = 'GTKMM GTHREAD XMLPP ALSA JACK SNDFILE SAMPLERATE UUID',
-        cxxflags      = ['-g','-O2', '-Wall', '-DVERSIONSTRING=\"0.5.0\"',
-        '-std=c++11',
-        '-DGETTEXT_PACKAGE=\"showq\"',
-        '-DPROGRAMNAME_LOCALEDIR=\"${PREFIX}/share/locale/\"']
+        cxxflags      = ['-g','-O2', '-Wall', '-std=c++11']
     )
