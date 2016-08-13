@@ -61,7 +61,8 @@ int main(int argc, char *argv[])
 
   try {
     audio = new Audio;
-    refXml = Gtk::Builder::create_from_file(showq_ui + "app.ui");
+    refXml = Gtk::Builder::create_from_file(
+      Glib::build_filename(showq_ui, "app.ui"));
     refXml->get_widget_derived("app", app);
     if (app) {
       try {

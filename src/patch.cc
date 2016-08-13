@@ -221,8 +221,8 @@ void Patch::on_response(int r)
 std::unique_ptr<Patch> Patch::create()
 {
   Patch *p;
-  Glib::RefPtr <Gtk::Builder> refXml
-    = Gtk::Builder::create_from_file(showq_ui + "patch.ui");
+  auto refXml = Gtk::Builder::create_from_file(
+    Glib::build_filename(showq_ui, "patch.ui"));
   refXml->get_widget_derived("Patch", p);
   return std::unique_ptr<Patch>(p);
 }

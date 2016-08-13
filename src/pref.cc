@@ -69,8 +69,8 @@ void Properties::on_response(int r)
 std::unique_ptr<Properties> Properties::create()
 {
   Properties *dialog;
-  Glib::RefPtr <Gtk::Builder> refXml
-    = Gtk::Builder::create_from_file(showq_ui + "prop.ui");
+  auto refXml = Gtk::Builder::create_from_file(
+    Glib::build_filename(showq_ui, "prop.ui"));
   refXml->get_widget_derived("Properties", dialog);
 
   return std::unique_ptr<Properties>(dialog);
@@ -94,8 +94,8 @@ Preferences::Preferences(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builde
 std::unique_ptr<Preferences> Preferences::create()
 {
   Preferences *dialog;
-  Glib::RefPtr <Gtk::Builder> refXml
-    = Gtk::Builder::create_from_file(showq_ui + "pref.ui");
+  auto refXml = Gtk::Builder::create_from_file(
+    Glib::build_filename(showq_ui, "pref.ui"));
   refXml->get_widget_derived("Preferences", dialog);
 
   return std::unique_ptr<Preferences>(dialog);

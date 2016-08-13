@@ -133,7 +133,8 @@ const struct msc_cmds {
 
 EditCueMidi::EditCueMidi(Gtk::Notebook *p)
 {
-  m_refXml = Gtk::Builder::create_from_file(showq_ui + "editmidi.ui");
+  m_refXml = Gtk::Builder::create_from_file(
+    Glib::build_filename(showq_ui, "editmidi.ui"));
 
   // Set up MIDI view
   connect_clicked(m_refXml, "ed_midi_delete",

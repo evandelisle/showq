@@ -13,7 +13,7 @@ def configure(conf):
     conf.recurse('src ui')
     conf.define('GETTEXT_PACKAGE', 'showq')
     conf.define('PROGRAMNAME_LOCALEDIR', conf.options.prefix + 'share/showq')
-    conf.define('UI_DIR', conf.options.prefix + 'share/showq/ui')
+    conf.define('UI_DIR', conf.options.prefix + 'share/showq/ui/')
     conf.define('VERSIONSTRING', VERSION)
     conf.write_config_header('config.h')
 

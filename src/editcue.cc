@@ -84,7 +84,8 @@ EditCue *EditCue::show(int type)
   }
   EditCue *p = 0;
   Glib::RefPtr <Gtk::Builder> refXml
-    = Gtk::Builder::create_from_file(showq_ui + "editcue.ui");
+    = Gtk::Builder::create_from_file(
+      Glib::build_filename(showq_ui, "editcue.ui"));
   refXml->get_widget_derived("editcue", p);
 
   app->p_edit.push_back(std::shared_ptr<EditCue>(p));

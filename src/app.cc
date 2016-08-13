@@ -52,7 +52,8 @@ void About::on_response(int)
 std::unique_ptr<About> About::create()
 {
   About *dialog;
-  auto refXml = Gtk::Builder::create_from_file(showq_ui + "about.ui");
+  auto refXml = Gtk::Builder::create_from_file(
+    Glib::build_filename(showq_ui, "about.ui"));
   refXml->get_widget_derived("about", dialog);
   return std::unique_ptr<About>(dialog);
 }
@@ -1307,7 +1308,8 @@ CueTreeView::CueTreeView(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builde
   : Gtk::TreeView(cobject), m_refXml(refXml)
 {
   set_column_drag_function(sigc::mem_fun(*this, &CueTreeView::on_col_drag));
-  refPopupXml = Gtk::Builder::create_from_file(showq_ui + "popupmenu.ui");
+  refPopupXml = Gtk::Builder::create_from_file(
+    Glib::build_filename(showq_ui, "popupmenu.ui"));
   refPopupXml->get_widget("PopupMenu", m_MenuPopup);
 
   Glib::RefPtr<Gtk::Action>::cast_static(refPopupXml->get_object("menuitem1"))

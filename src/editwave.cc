@@ -59,9 +59,12 @@ void Fader::set_gain(double gain)
 
 EditCueWave::EditCueWave(Gtk::Notebook *p)
 {
-  refXML_wave = Gtk::Builder::create_from_file(showq_ui + "editwave.ui");
-  refXML_patch = Gtk::Builder::create_from_file(showq_ui + "epatch.ui");
-  refXML_faders = Gtk::Builder::create_from_file(showq_ui + "efaders.ui");
+  refXML_wave = Gtk::Builder::create_from_file(
+    Glib::build_filename(showq_ui, "editwave.ui"));
+  refXML_patch = Gtk::Builder::create_from_file(
+    Glib::build_filename(showq_ui, "epatch.ui"));
+  refXML_faders = Gtk::Builder::create_from_file(
+    Glib::build_filename(showq_ui, "efaders.ui"));
 
   refXML_wave->get_widget("ed_wave_file", m_wave_fentry);
   m_wave_fentry->signal_selection_changed().
