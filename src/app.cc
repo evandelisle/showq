@@ -720,10 +720,10 @@ void App::on_renumber_hide()
 
 void App::renumber()
 {
-  bool prev_autocont = false;
   double cue_no = p_renumber->cue_no;
   double step = p_renumber->step;
   bool skip_autocont = p_renumber->skip_autocont;
+  bool prev_autocont = false;
 
   Gtk::TreeModel::Children children = m_refTreeModel->children();
   Gtk::TreeModel::iterator iter = children.begin();
@@ -732,11 +732,10 @@ void App::renumber()
     std::shared_ptr<Cue> cue = (*iter)[m_refTreeModel->Col.cue];
 
     if (skip_autocont && prev_autocont) {
-      cue->cue_id = "";
+      cue->cue_id.clear();
     } else {
-      std::ostringstream s;
-      s << cue_no;
-      cue->cue_id = s.str();
+      auto s = Glib::ustring::compose("%1", cue_no);
+      cue->cue_id = s;
 
       cue_no += step;
     }
