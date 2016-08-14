@@ -119,7 +119,7 @@ size_t AudioFile::read_cb()
 
   while (!eof && n > 0) {
     int read_length = std::min(n, max_buffer_frames);
-    int frames_read;
+    sf_count_t frames_read;
 
     if (SRC_state) {
       frames_read = src_callback_read(SRC_state, factor, read_length, input_buffer);
@@ -132,7 +132,7 @@ size_t AudioFile::read_cb()
       break;
     }
     for (int channel = 0; channel < num_channels; ++channel) {
-      for (size_t i = 0, j = channel; i < frames_read; ++i, j += num_channels) {
+      for (sf_count_t i = 0, j = channel; i < frames_read; ++i, j += num_channels) {
         cb_buf[i] = input_buffer[j];
       }
       jack_ringbuffer_write(rbs[channel], (char *)cb_buf,
