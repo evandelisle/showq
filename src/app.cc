@@ -24,6 +24,7 @@
 
 #include <alsa/asoundlib.h>
 
+#include <iomanip>
 #include <sstream>
 
 #include "app.h"
@@ -53,7 +54,7 @@ std::unique_ptr<About> About::create()
 {
   About *dialog;
   auto refXml = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "about.ui"));
+                  Glib::build_filename(showq_ui, "about.ui"));
   refXml->get_widget_derived("about", dialog);
   return std::unique_ptr<About>(dialog);
 }
@@ -163,88 +164,68 @@ App::App(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml)
   connect_clicked(m_refXml, "tb_allstop", sigc::mem_fun(*this, &App::on_all_stop_activate));
 
   // Connect menu items
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_new"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_new_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_open"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_open_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_save"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_save_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_saveas"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_saveas_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_quit"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::hide));
 
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_new_midi_cue"))
-  ->signal_activate().connect(sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::MIDI));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_new_wave_cue"))
-  ->signal_activate().connect(sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::Wave));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_new_stop_cue"))
-  ->signal_activate().connect(sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::Stop));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_new_fade_cue"))
-  ->signal_activate().connect(sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::Fade));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_new_group_cue"))
-  ->signal_activate().connect(sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::Group));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_new_pause_cue"))
-  ->signal_activate().connect(sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::Pause));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_new_start_cue"))
-  ->signal_activate().connect(sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::Start));
+  connect_menu_item(m_refXml, "m_new", sigc::mem_fun(*this, &App::on_new_activate));
+  connect_menu_item(m_refXml, "m_open", sigc::mem_fun(*this, &App::on_open_activate));
+  connect_menu_item(m_refXml, "m_save", sigc::mem_fun(*this, &App::on_save_activate));
+  connect_menu_item(m_refXml, "m_saveas", sigc::mem_fun(*this, &App::on_saveas_activate));
+  connect_menu_item(m_refXml, "m_quit", sigc::mem_fun(*this, &App::hide));
 
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_edit_cue"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_edit_cue_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_renumber"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_renumber_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_cut_cue"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_cut_cue_activate));
-  Glib::RefPtr<Gtk::ToggleAction>::cast_static(m_refXml->get_object("m_lock"))
-  ->signal_toggled().connect(sigc::mem_fun(*this, &App::on_lock_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_properties"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_properties_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_patch"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_patch_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_preferences"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_preferences_activate));
+  connect_menu_item(m_refXml, "m_new_midi_cue",
+                    sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::MIDI));
+  connect_menu_item(m_refXml, "m_new_wave_cue",
+                    sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::Wave));
+  connect_menu_item(m_refXml, "m_new_stop_cue",
+                    sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::Stop));
+  connect_menu_item(m_refXml, "m_new_fade_cue",
+                    sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::Fade));
+  connect_menu_item(m_refXml, "m_new_group_cue",
+                    sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::Group));
+  connect_menu_item(m_refXml, "m_new_pause_cue",
+                    sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::Pause));
+  connect_menu_item(m_refXml, "m_new_start_cue",
+                    sigc::bind<int>(sigc::mem_fun(*this, &App::on_new_cue_activate), Cue::Start));
 
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_go"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_go_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_previous"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_previous_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_next"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_next_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_load"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_load_activate));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_all_stop"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_all_stop_activate));
+  connect_menu_item(m_refXml, "m_edit_cue", sigc::mem_fun(*this, &App::on_edit_cue_activate));
+  connect_menu_item(m_refXml, "m_renumber", sigc::mem_fun(*this, &App::on_renumber_activate));
+  connect_menu_item(m_refXml, "m_cut_cue", sigc::mem_fun(*this, &App::on_cut_cue_activate));
+  connect_menu_item(m_refXml, "m_lock", sigc::mem_fun(*this, &App::on_lock_activate));
+  connect_menu_item(m_refXml, "m_properties", sigc::mem_fun(*this, &App::on_properties_activate));
+  connect_menu_item(m_refXml, "m_patch", sigc::mem_fun(*this, &App::on_patch_activate));
+  connect_menu_item(m_refXml, "m_preferences", sigc::mem_fun(*this, &App::on_preferences_activate));
 
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_view_1"))
-  ->signal_activate().connect(sigc::bind<int, Glib::ustring>(sigc::mem_fun(*this, &App::on_view_item_activate), 1, "m_view_1"));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_view_2"))
-  ->signal_activate().connect(sigc::bind<int, Glib::ustring>(sigc::mem_fun(*this, &App::on_view_item_activate), 2, "m_view_2"));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_view_3"))
-  ->signal_activate().connect(sigc::bind<int, Glib::ustring>(sigc::mem_fun(*this, &App::on_view_item_activate), 3, "m_view_3"));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_view_4"))
-  ->signal_activate().connect(sigc::bind<int, Glib::ustring>(sigc::mem_fun(*this, &App::on_view_item_activate), 4, "m_view_4"));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_view_5"))
-  ->signal_activate().connect(sigc::bind<int, Glib::ustring>(sigc::mem_fun(*this, &App::on_view_item_activate), 5, "m_view_5"));
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_view_6"))
-  ->signal_activate().connect(sigc::bind<int, Glib::ustring>(sigc::mem_fun(*this, &App::on_view_item_activate), 6, "m_view_6"));
+  connect_menu_item(m_refXml, "m_go", sigc::mem_fun(*this, &App::on_go_activate));
+  connect_menu_item(m_refXml, "m_previous", sigc::mem_fun(*this, &App::on_previous_activate));
+  connect_menu_item(m_refXml, "m_next", sigc::mem_fun(*this, &App::on_next_activate));
+  connect_menu_item(m_refXml, "m_load", sigc::mem_fun(*this, &App::on_load_activate));
+  connect_menu_item(m_refXml, "m_all_stop", sigc::mem_fun(*this, &App::on_all_stop_activate));
+  Gtk::MenuItem *esc_menu_item;
+  m_refXml->get_widget("m_all_stop", esc_menu_item);
+  auto win_accel = get_accel_group();
+  esc_menu_item->add_accelerator("activate", win_accel, GDK_KEY_Escape, Gdk::ModifierType(0), Gtk::ACCEL_VISIBLE);
 
-  Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_about"))
-  ->signal_activate().connect(sigc::mem_fun(*this, &App::on_about_activate));
+  connect_menu_item(m_refXml, "m_view_1",
+                    sigc::bind<int, Glib::ustring>(sigc::mem_fun(*this, &App::on_view_item_activate), 1, "m_view_1"));
+  connect_menu_item(m_refXml, "m_view_2",
+                    sigc::bind<int, Glib::ustring>(sigc::mem_fun(*this, &App::on_view_item_activate), 2, "m_view_2"));
+  connect_menu_item(m_refXml, "m_view_3",
+                    sigc::bind<int, Glib::ustring>(sigc::mem_fun(*this, &App::on_view_item_activate), 3, "m_view_3"));
+  connect_menu_item(m_refXml, "m_view_4",
+                    sigc::bind<int, Glib::ustring>(sigc::mem_fun(*this, &App::on_view_item_activate), 4, "m_view_4"));
+  connect_menu_item(m_refXml, "m_view_5",
+                    sigc::bind<int, Glib::ustring>(sigc::mem_fun(*this, &App::on_view_item_activate), 5, "m_view_5"));
+  connect_menu_item(m_refXml, "m_view_6",
+                    sigc::bind<int, Glib::ustring>(sigc::mem_fun(*this, &App::on_view_item_activate), 6, "m_view_6"));
 
+  connect_menu_item(m_refXml, "m_about", sigc::mem_fun(*this, &App::on_about_activate));
 
-  Glib::RefPtr<Gtk::UIManager> uiman =
-    Glib::RefPtr<Gtk::UIManager>::cast_static(m_refXml->get_object("uimanager1"));
 
   recent_filter.add_application(Glib::get_prgname());
-  Glib::RefPtr<Gtk::ActionGroup> m_refActionGroup = Gtk::ActionGroup::create();
-  recent_action = Gtk::RecentAction::create("FileRecentFiles", "_Recent Files");
-  recent_action->add_filter(recent_filter);
-  recent_action->signal_item_activated().connect(sigc::mem_fun(*this, &App::on_recent_activate));
-  m_refActionGroup->add(recent_action);
-  uiman->insert_action_group(m_refActionGroup, 1);
-  uiman->add_ui(uiman->new_merge_id(), "/menubar1/item14/m_open",
-                "", "FileRecentFiles", Gtk::UI_MANAGER_AUTO, false);
-
+  recent_menu_item.add_filter(recent_filter);
+  recent_menu_item.signal_item_activated().connect(sigc::mem_fun(*this, &App::on_recent_activate));
+  Gtk::MenuItem *recent_parent_menu_item;
+  m_refXml->get_widget("m_recent", recent_parent_menu_item);
+  recent_parent_menu_item->set_submenu(recent_menu_item);
 
   // Set up the tree view
   m_refXml->get_widget_derived("ap_treeview", m_treeview);
@@ -331,10 +312,9 @@ App::App(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml)
       if (l[0] == '*') {
         vis = false;
         l[0] = ' ';
-        std::string t = "m_view_";
-        t += l.c_str() + 1;
-        Glib::RefPtr<Gtk::ToggleAction> m =
-          Glib::RefPtr<Gtk::ToggleAction>::cast_static(m_refXml->get_object(t));
+        std::string t = "m_view_" + l.substr(1);
+        Gtk::CheckMenuItem *m;
+        m_refXml->get_widget(t, m);
         m->set_active(false);
       }
       int i = atoi(l.c_str());
@@ -370,6 +350,7 @@ App::App(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml)
   midi_engine = new MIDIengine;
   // Set a timer to update the display
   dis_timer = Glib::signal_timeout().connect(sigc::mem_fun(*this, &App::dis_update), 100);
+  Glib::signal_timeout().connect(sigc::mem_fun(*this, &App::update_status_bar), 1000);
 
   pb_pos_sel = true;
 
@@ -475,16 +456,17 @@ void App::cell_autoc(const Glib::ustring &path)
 
 void App::disable_hotkeys(Gtk::CellEditable *, const Glib::ustring &)
 {
-  Glib::RefPtr<Gtk::Action> m =
-    Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_go"));
-  m->set_sensitive(false);
+  Gtk::Widget *widget;
+  m_refXml->get_widget("m_go", widget);
+
+  widget->set_sensitive(false);
 }
 
 void App::enable_hotkeys()
 {
-  Glib::RefPtr<Gtk::Action> m =
-    Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_go"));
-  m->set_sensitive(true);
+  Gtk::Widget *widget;
+  m_refXml->get_widget("m_go", widget);
+  widget->set_sensitive(true);
 }
 
 
@@ -492,10 +474,10 @@ void App::enable_hotkeys()
 
 bool App::on_key_press_event(GdkEventKey *event)
 {
-  Glib::RefPtr<Gtk::Action> m =
-    Glib::RefPtr<Gtk::Action>::cast_static(m_refXml->get_object("m_go"));
+  Gtk::Widget *widget;
+  m_refXml->get_widget("m_go", widget);
 
-  if (m->get_sensitive() && Gtk::AccelGroup::valid(event->keyval, Gdk::ModifierType(event->state))) {
+  if (widget->get_sensitive() && Gtk::AccelGroup::valid(event->keyval, Gdk::ModifierType(event->state))) {
     keyval = event->keyval;
     state = Gdk::ModifierType(event->state);
     m_refTreeModel->foreach_iter(sigc::mem_fun(*this, &App::check_key));
@@ -515,8 +497,6 @@ bool App::check_key(const Gtk::TreeModel::iterator &iter)
 
 bool App::dis_update()
 {
-  static int count = 0;
-
   {
     std::list<WaitingCue>::iterator i = waiting_cue.begin();
     Glib::TimeVal cur_time;
@@ -593,26 +573,26 @@ bool App::dis_update()
     }
   }
 
-  if (count != 0) {
-    --count;
-    return true;
-  }
-  count = 10;
+  return true;
+}
 
+bool App::update_status_bar()
+{
   float load = audio->get_cpu_load();
-  std::ostringstream str;
-  str.setf(std::ios::fixed, std::ios::floatfield);
-  str.precision(1);
-  str << "DSP load " << load << '%';
+  auto str = Glib::ustring::compose("DSP load %1%%",
+                                    Glib::ustring::format(
+                                      std::setprecision(2),
+                                      load));
   p_appbar->pop();
-  p_appbar->push(str.str());
+  p_appbar->push(str);
+
   return true;
 }
 
 void App::on_view_item_activate(int i, Glib::ustring s)
 {
-  Glib::RefPtr<Gtk::ToggleAction> w =
-    Glib::RefPtr<Gtk::ToggleAction>::cast_static(m_refXml->get_object(s));
+  Gtk::CheckMenuItem *w;
+  m_refXml->get_widget(s, w);
 
   mCols[i]->set_visible(w->get_active());
 }
@@ -660,8 +640,7 @@ void App::on_recent_activate()
       return;
   }
 
-  Glib::RefPtr<const Gtk::RecentInfo> pRInfo = recent_action->get_current_item();
-  do_load(Glib::filename_from_uri(pRInfo->get_uri()));
+  do_load(Glib::filename_from_uri(recent_menu_item.get_current_uri()));
 }
 
 void App::on_save_activate()
@@ -768,10 +747,9 @@ void App::on_cut_cue_activate()
 
   if (iter) {
     // TODO Should have an undo function
-    std::ostringstream s;
     std::shared_ptr<Cue> q = (*iter)[m_refTreeModel->Col.cue];
-    s << "Delete sound cue " << q->cue_id << " ?";
-    Gtk::MessageDialog dialog(s.str(),
+    auto s = Glib::ustring::compose("Delete sound cue %1 ?", q->cue_id);
+    Gtk::MessageDialog dialog(s,
                               false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK_CANCEL, true);
 
     if (dialog.run() == Gtk::RESPONSE_OK)
@@ -1308,7 +1286,7 @@ CueTreeView::CueTreeView(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builde
 {
   set_column_drag_function(sigc::mem_fun(*this, &CueTreeView::on_col_drag));
   refPopupXml = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "popupmenu.ui"));
+                  Glib::build_filename(showq_ui, "popupmenu.ui"));
   refPopupXml->get_widget("PopupMenu", m_MenuPopup);
 
   Glib::RefPtr<Gtk::Action>::cast_static(refPopupXml->get_object("menuitem1"))

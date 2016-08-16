@@ -26,6 +26,8 @@
 
 void connect_clicked(Glib::RefPtr<Gtk::Builder> m_refXml,
     const Glib::ustring& widget_name, const sigc::slot<void>& slot_ );
+void connect_menu_item(Glib::RefPtr<Gtk::Builder> m_refXml,
+    const Glib::ustring& widget_name, const sigc::slot<void>& slot_ );
 std::string dtoasctime(double x);
 
 static inline double gain_to_slider(double g)

@@ -245,6 +245,7 @@ public:
   MIDIengine *midi_engine;
 protected:
   bool dis_update();
+  bool update_status_bar();
 
   void on_view_item_activate(int, Glib::ustring);
   void on_properties_activate();
@@ -327,7 +328,7 @@ private:
   Glib::RefPtr<Gdk::Pixbuf> Pix_PBpos;
 
   Gtk::RecentFilter recent_filter;
-  Glib::RefPtr<Gtk::RecentAction> recent_action;
+  Gtk::RecentChooserMenu recent_menu_item;
 
   std::vector<Gtk::TreeViewColumn * > mCols;
 
