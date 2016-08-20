@@ -418,13 +418,13 @@ void Deserialize::common_cue_items(const xmlpp::Element *el, std::shared_ptr<Cue
       if (child_element->has_child_text()) {
         if (child_element->get_child_text()->get_content() == "true")
           cue->autocont = true;
+      }
     } else if (name == "Trigger") {
-        const auto trigger_node = child_node->get_first_child("Hotkey");
-        const auto trigger_element = dynamic_cast<const xmlpp::Element*>(trigger_node);
-        if (trigger_element && trigger_element->has_child_text()) {
-          const auto text = trigger_element->get_child_text()->get_content();
-          Gtk::AccelGroup::parse(text, cue->keyval, cue->state);
-        }
+      const auto trigger_node = child_node->get_first_child("Hotkey");
+      const auto trigger_element = dynamic_cast<const xmlpp::Element*>(trigger_node);
+      if (trigger_element && trigger_element->has_child_text()) {
+        const auto text = trigger_element->get_child_text()->get_content();
+        Gtk::AccelGroup::parse(text, cue->keyval, cue->state);
       }
     }
   }

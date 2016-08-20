@@ -148,6 +148,11 @@ void EditCue::show(std::shared_ptr<Cue> q, Gtk::TreeRowReference &r)
   p->keyval = q->keyval;
   p->state = q->state;
 
+  if (p->keyval)
+    p->m_key_but->set_label(Gtk::AccelGroup::name(p->keyval, p->state));
+  else
+    p->m_key_but->set_label(_("Disabled"));
+
   p->target = q->target;
   app->m_refTreeModel->foreach_iter(sigc::mem_fun(p, &EditCue::get_target));
 
