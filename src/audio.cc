@@ -34,7 +34,8 @@ AudioFile::AudioFile(const char *f)
   : status(Pause), eof(false), eob(false), fades(new Fades),
     SRC_state(nullptr),
     cur_frame(0), srate(0), do_seek(false), seek_pos(0.0),
-    read_frame(0), num_channels(0)
+    read_frame(0), num_channels(0), SRC_input_buffer(nullptr),
+    SRC_input_buffer_size(0)
 {
   sfinfo.format = 0;
   codec = NoCodec;
@@ -52,8 +53,12 @@ AudioFile::AudioFile(const char *f)
   }
   srate = sfinfo.samplerate;
 
-  for (int i = 0; i < num_channels; ++i)
-    rbs.push_back(jack_ringbuffer_create(samplesize * 192000));
+  // The ring buffer is filled every 100ms by the disc thread. The size needs
+  // to be able to store more that this to avoid it becoming empty.
+  for (int i = 0; i < num_channels; ++i) {
+    rbs.push_back(
+      jack_ringbuffer_create(samplesize * samplerate / 6));
+  }
 
   if (srate != samplerate) {
     int error;
@@ -62,6 +67,13 @@ AudioFile::AudioFile(const char *f)
     if (!SRC_state)
       std::cerr << "Error opening resampler\n";
   }
+
+  if (SRC_state) {
+    SRC_input_buffer = new float[4096];
+    SRC_input_buffer_size =4096;
+  }
+  input_buffer_size = 4096;
+  input_buffer = new float[input_buffer_size * 2];
 }
 
 AudioFile::~AudioFile()
@@ -75,16 +87,18 @@ AudioFile::~AudioFile()
     src_delete(SRC_state);
 
   if (codec == SndFile && sf) sf_close(sf);
+
+  delete[] SRC_input_buffer;
+  delete[] input_buffer;
 }
 
 long AudioFile::src_callback(void *cb_data, float **data)
 {
-  static float input_buffer[4096];
   auto af = static_cast<AudioFile *>(cb_data);
-  *data = input_buffer;
+  *data = af->SRC_input_buffer;
 
-  return sf_readf_float(af->sf, input_buffer,
-                        (sizeof(input_buffer) / sizeof(float)) / af->num_channels);
+  return sf_readf_float(af->sf, af->SRC_input_buffer,
+                        af->SRC_input_buffer_size / af->num_channels);
 }
 
 size_t AudioFile::read_cb()
@@ -107,14 +121,11 @@ size_t AudioFile::read_cb()
     cur_frame = size_t(seek_pos * samplerate);
   }
 
-  static float input_buffer[32000];
-  static float cb_buf[32000];
-
   if (eof) return 0;
   size_t RB_frames_space = jack_ringbuffer_write_space(rbs[0]) / samplesize;
   double factor = double(samplerate) / double(srate);
 
-  size_t max_buffer_frames = (sizeof(input_buffer) / samplesize) / num_channels;
+  size_t max_buffer_frames = input_buffer_size / num_channels;
   size_t n = RB_frames_space;
 
   while (!eof && n > 0) {
@@ -133,9 +144,9 @@ size_t AudioFile::read_cb()
     }
     for (int channel = 0; channel < num_channels; ++channel) {
       for (sf_count_t i = 0, j = channel; i < frames_read; ++i, j += num_channels) {
-        cb_buf[i] = input_buffer[j];
+        input_buffer[i + input_buffer_size] = input_buffer[j];
       }
-      jack_ringbuffer_write(rbs[channel], (char *)cb_buf,
+      jack_ringbuffer_write(rbs[channel], (char *)(& input_buffer[input_buffer_size]),
                             frames_read * samplesize);
     }
   }
@@ -273,7 +284,6 @@ void Audio::add_af(std::shared_ptr<AudioFile> a)
     else
       a->status = Done;
   }
-  do_disc_thread();
 }
 
 void Audio::do_disc_thread()
@@ -325,7 +335,7 @@ void Audio::disc_thread()
 
   while (running) {
     t.assign_current_time();
-    t.add_milliseconds(500);
+    t.add_milliseconds(100);
 
     {
       std::shared_ptr<Afs> pr = afs.reader();

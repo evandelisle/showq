@@ -128,6 +128,11 @@ private:
   double mTotalTime;
   size_t read_frame;
   int num_channels;
+
+  float *SRC_input_buffer;
+  size_t SRC_input_buffer_size;
+  float *input_buffer;
+  size_t input_buffer_size;
 };
 
 class Audio {
