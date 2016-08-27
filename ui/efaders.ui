@@ -1,88 +1,62 @@
-<?xml version="1.0"?>
-<!--Generated with glade3 3.4.5 on Sun Jun 14 11:09:12 2009 -->
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="2.24"/>
+  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkAdjustment" id="adjustment1">
     <property name="upper">1</property>
-    <property name="lower">0</property>
-    <property name="page_increment">0</property>
     <property name="step_increment">0.0010000000475</property>
-    <property name="page_size">0</property>
-    <property name="value">0</property>
   </object>
   <object class="GtkAdjustment" id="adjustment2">
     <property name="upper">1</property>
-    <property name="lower">0</property>
-    <property name="page_increment">0</property>
     <property name="step_increment">0.0010000000475</property>
-    <property name="page_size">0</property>
-    <property name="value">0</property>
   </object>
   <object class="GtkAdjustment" id="adjustment3">
     <property name="upper">1</property>
-    <property name="lower">0</property>
-    <property name="page_increment">0</property>
     <property name="step_increment">0.0010000000475</property>
-    <property name="page_size">0</property>
-    <property name="value">0</property>
   </object>
   <object class="GtkAdjustment" id="adjustment4">
     <property name="upper">1</property>
-    <property name="lower">0</property>
-    <property name="page_increment">0</property>
     <property name="step_increment">0.0010000000475</property>
-    <property name="page_size">0</property>
-    <property name="value">0</property>
   </object>
   <object class="GtkAdjustment" id="adjustment5">
     <property name="upper">1</property>
-    <property name="lower">0</property>
-    <property name="page_increment">0</property>
     <property name="step_increment">0.0010000000475</property>
-    <property name="page_size">0</property>
-    <property name="value">0</property>
   </object>
   <object class="GtkAdjustment" id="adjustment6">
     <property name="upper">1</property>
-    <property name="lower">0</property>
-    <property name="page_increment">0</property>
     <property name="step_increment">0.0010000000475</property>
-    <property name="page_size">0</property>
-    <property name="value">0</property>
   </object>
   <object class="GtkAdjustment" id="adjustment7">
     <property name="upper">1</property>
-    <property name="lower">0</property>
-    <property name="page_increment">0</property>
     <property name="step_increment">0.0010000000475</property>
-    <property name="page_size">0</property>
-    <property name="value">0</property>
   </object>
   <object class="GtkAdjustment" id="adjustment8">
     <property name="upper">1</property>
-    <property name="lower">0</property>
-    <property name="page_increment">0</property>
     <property name="step_increment">0.0010000000475</property>
-    <property name="page_size">0</property>
-    <property name="value">0</property>
   </object>
   <object class="GtkVBox" id="edit_faders_vbox">
     <property name="visible">True</property>
+    <property name="can_focus">False</property>
     <child>
       <object class="GtkLabel" id="label46">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="label" translatable="yes">Output faders</property>
       </object>
       <packing>
         <property name="expand">False</property>
         <property name="fill">False</property>
+        <property name="position">0</property>
       </packing>
     </child>
     <child>
       <object class="GtkHSeparator" id="hseparator7">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
       </object>
       <packing>
         <property name="expand">False</property>
+        <property name="fill">True</property>
         <property name="padding">4</property>
         <property name="position">1</property>
       </packing>
@@ -90,10 +64,12 @@
     <child>
       <object class="GtkHBox" id="hbox15">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkVBox" id="vbox22">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkVScale" id="ed_wave_f1">
                 <property name="visible">True</property>
@@ -102,12 +78,18 @@
                 <property name="inverted">True</property>
                 <property name="digits">5</property>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="ed_wave_1">
+                <property name="label" translatable="yes">1</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">1</property>
+                <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
               </object>
               <packing>
@@ -120,10 +102,16 @@
               <placeholder/>
             </child>
           </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
         </child>
         <child>
           <object class="GtkVBox" id="vbox23">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkVScale" id="ed_wave_f2">
                 <property name="visible">True</property>
@@ -132,12 +120,18 @@
                 <property name="inverted">True</property>
                 <property name="digits">5</property>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="ed_wave_2">
+                <property name="label" translatable="yes">2</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">2</property>
+                <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
               </object>
               <packing>
@@ -151,12 +145,15 @@
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
           <object class="GtkVBox" id="vbox24">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkVScale" id="ed_wave_f3">
                 <property name="visible">True</property>
@@ -165,12 +162,18 @@
                 <property name="inverted">True</property>
                 <property name="digits">5</property>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="ed_wave_3">
+                <property name="label" translatable="yes">3</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">3</property>
+                <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
               </object>
               <packing>
@@ -184,12 +187,15 @@
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
         </child>
         <child>
           <object class="GtkVBox" id="vbox25">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkVScale" id="ed_wave_f4">
                 <property name="visible">True</property>
@@ -198,12 +204,18 @@
                 <property name="inverted">True</property>
                 <property name="digits">5</property>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="ed_wave_4">
+                <property name="label" translatable="yes">4</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">4</property>
+                <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
               </object>
               <packing>
@@ -217,12 +229,15 @@
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">3</property>
           </packing>
         </child>
         <child>
           <object class="GtkVBox" id="vbox26">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkVScale" id="ed_wave_f5">
                 <property name="visible">True</property>
@@ -231,12 +246,18 @@
                 <property name="inverted">True</property>
                 <property name="digits">5</property>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="ed_wave_5">
+                <property name="label" translatable="yes">5</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">5</property>
+                <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
               </object>
               <packing>
@@ -250,12 +271,15 @@
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">4</property>
           </packing>
         </child>
         <child>
           <object class="GtkVBox" id="vbox27">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkVScale" id="ed_wave_f6">
                 <property name="visible">True</property>
@@ -264,12 +288,18 @@
                 <property name="inverted">True</property>
                 <property name="digits">5</property>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="ed_wave_6">
+                <property name="label" translatable="yes">6</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">6</property>
+                <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
               </object>
               <packing>
@@ -283,12 +313,15 @@
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">5</property>
           </packing>
         </child>
         <child>
           <object class="GtkVBox" id="vbox28">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkVScale" id="ed_wave_f7">
                 <property name="visible">True</property>
@@ -297,12 +330,18 @@
                 <property name="inverted">True</property>
                 <property name="digits">5</property>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="ed_wave_7">
+                <property name="label" translatable="yes">7</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">7</property>
+                <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
               </object>
               <packing>
@@ -316,12 +355,15 @@
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">6</property>
           </packing>
         </child>
         <child>
           <object class="GtkVBox" id="vbox29">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkVScale" id="ed_wave_f8">
                 <property name="visible">True</property>
@@ -330,12 +372,18 @@
                 <property name="inverted">True</property>
                 <property name="digits">5</property>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="ed_wave_8">
+                <property name="label" translatable="yes">8</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">8</property>
+                <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
               </object>
               <packing>
@@ -349,11 +397,15 @@
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">7</property>
           </packing>
         </child>
       </object>
       <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
         <property name="position">2</property>
       </packing>
     </child>
