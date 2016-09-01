@@ -1,0 +1,93 @@
+Ante-scriptum :
+this howto was written in French by Klaus Löhmann for a sound technician who was replacing him for a theater show and didn't know nothing about a linux environment and/or showq.
+It's been translated to English by Olivier Humbert to feed back the showq project on the 1st of September 2016.
+
+----
+
+SHOWQ Howto 09.01.2016
+
+Note: Showq is able to start the jackd audio server when launched.
+That said, in most cases, you might want to start the jackd server yourself before launching ShowQ.
+You can use the well-known QjackCtl for that purpose.
+
+
+
+1. Starting a new show :
+File > New 
+showq will ask « Clear the current show? », click OK.
+
+
+
+2. Adding an audio cue :
+Beware that showq only accept .flac or .wav files.
+Edit > New Cue > Wave Cue
+
+2.a Info Tab
+Cue :: give a unique number (this number becomes the « target » in fade/stop/pause-cues).
+Description :: what you want to describe it
+Wait time :: this is the period of time between the launch (with the space bar) and the real start of playing the audio.
+Auto continue :: if the next cue needs to be launched in the same time.
+
+2.b Trigger Tab
+To add a keyboard shortcut to your cue, click in the field and press the key(s).
+
+2.c Wave Tab
+File :: browse to the desired file and choose it.
+
+2.d Patch Tab
+Input represents the wave file. For an usual file, the Left matches to Input 1, and the Right to Input 2.
+Output represents the physical outputs of the soundcard (up to 8 maximum)
+
+2.e Levels Tab
+... to be described...
+
+
+
+3. Adding a cue Fade :
+Edit > New Cue > Fade Cue
+
+3.a Info Tab
+Cue :: give a unique number (this number becomes the « target » in fade/stop/pause-cues).
+Description :: what you want to describe it
+Wait time :: this is the period of time between the launch (with the space bar) and the real start of playing the audio.
+Target :: here, you have to define the cue on which the fade will apply.
+Auto continue :: if the next cue needs to be launched in the same time.
+
+3.b Trigger Tab
+To add a keyboard shortcut to your cue, click in the field and press the key(s).
+
+3.c Fade Tab
+Fade Time :: the period of time of the fade.
+Default :: means that the file will be played until its end (even if it's not audible anymore).
+Stop on fade complete :: stops the wave when the fade is finished.
+Pause on fade complete :: pauses the wave (it'll be able to be continued later).
+
+3.d Levels Tab
+The faders levels represent the level at which the wave will be played when the fade is finished.
+For a fade out, you'll put "-inf", but one can imagine fade in ase well (starting the wave at "-inf" et bring it up with the fade until 0db), or imagine the sound level raising up and/or falling down on each independant outputs.
+To be able to change the level, the faders need not to be greyed out (click on the buttons below each fader).
+
+
+
+4. Removing a cue from the cue sheet
+Select the cue you want to remove :
+Edit > Cut 
+Showq will ask « Delete sound cue Nr x ? ».
+
+
+
+5. Changing the cue sheet order :
+Do a drag'n'drop on the cue title to move a cue around. 
+The cue needs not to be selected before 
+
+
+
+
+###############
+IMPORTANT NOTES
+###############
+
+1. You must think to save the show after having done some change on it. Showq will not ask you to save it while exiting.
+2. If you stop a fade-cue before its end (Escape key, or click on Stop), showq will not be correctly running anymore. (Bug in the dans le sequential). You need then to relaunch it.
+3. Do not use the « Renumber » functionnality. It doesn't work and will set all the cues and targets to 0.
+4. When the cue sheet is ended, it is adviced to un-tick the « auto cont » option in the Menu > View in order to avoid human-made incidents during the performances.
