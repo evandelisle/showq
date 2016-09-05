@@ -256,14 +256,16 @@ Audio::~Audio()
 void Audio::setup_ports()
 {
   const char **oports
-    = jack_get_ports(client, 0, 0, JackPortIsInput);
+    = jack_get_ports(client, nullptr, JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput);
 
   for (int i = 0; i < 8 && oports[i]; ++i) {
-    std::cerr << jack_port_name(ports[i]) << " # " << oports[i] << '\n';
-    jack_connect(client, jack_port_name(ports[i]), oports[i]);
+    if (ports[i]) {
+      std::cerr << jack_port_name(ports[i]) << " # " << oports[i] << '\n';
+      jack_connect(client, jack_port_name(ports[i]), oports[i]);
+    }
   }
 
-  free(oports);
+  jack_free(oports);
 }
 
 void Audio::add_af(std::shared_ptr<AudioFile> a)
@@ -308,13 +310,16 @@ int Audio::port_set_name(int port, const Glib::ustring &name)
 void Audio::disconnect_all()
 {
   for (int i = 0; i < 8; ++i) {
-    jack_port_disconnect(client, ports[i]);
+    if (ports[i]) {
+      jack_port_disconnect(client, ports[i]);
+    }
   }
 }
 
 int Audio::connect(int port, const Glib::ustring &name)
 {
-  if (!ports[port]) return -1;
+  if (!ports[port])
+    return -1;
   return jack_connect(client, jack_port_name(ports[port]), name.c_str());
 }
 
@@ -374,9 +379,13 @@ int Audio::audio_callback0(jack_nframes_t nframes) throw()
 
   // Get and clear output buffers
   for (int i = 0; i < 8; ++i) {
-    buffers[i] = (jack_default_audio_sample_t *)
+    if (ports[i]) {
+      buffers[i] = (jack_default_audio_sample_t *)
                  jack_port_get_buffer(ports[i], nframes);
-    memset(buffers[i], 0, nframes * samplesize);
+      memset(buffers[i], 0, nframes * samplesize);
+    } else {
+      buffers[i] = nullptr;
+    }
   }
 
   std::shared_ptr<Afs> pr = afs.reader();
@@ -436,6 +445,9 @@ int Audio::audio_callback0(jack_nframes_t nframes) throw()
       jack_default_audio_sample_t *s2 =
         (jack_default_audio_sample_t *)(rdata[1].buf);
       jack_default_audio_sample_t *dest = buffers[l->patch[p].dest];
+      if (!dest)
+        continue;
+
       float vol = l->vol[l->patch[p].dest];
       float delta = deltas[l->patch[p].dest];
       size_t len1 = rdata[0].len / samplesize;
