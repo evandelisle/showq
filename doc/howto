@@ -14,17 +14,17 @@ You can use the well-known QjackCtl for that purpose.
 
 1. Starting a new show :
 File > New 
-showq will ask « Clear the current show? », click OK.
+showq will ask « Clear the current show? ». If you click OK, all the changes you made to the current show until your last save will be lost and a blank show will be created.
 
 
 
 2. Adding an audio cue :
-Beware that showq only accept .flac or .wav files.
-Edit > New Cue > Wave Cue
+Beware that showq doesn't accept all audio formats. Ogg-Vorbis, FLAC and - of course - WAV files are a shure bet.
+Use Edit > New Cue > Wave Cue (or drag n drop a supported file in the standard view of showq) and read the following descriptions about every tab to reach your goal.
 
 2.a Info Tab
 Cue :: give a unique number (this number becomes the « target » in fade/stop/pause-cues).
-Description :: what you want to describe it
+Description :: whatever you want to describe it. (If you used drag n drop, the name of the file will be used automatically. YOu can edit this, of course.)
 Wait time :: this is the period of time between the launch (with the space bar) and the real start of playing the audio.
 Auto continue :: if the next cue needs to be launched in the same time.
 
@@ -32,15 +32,18 @@ Auto continue :: if the next cue needs to be launched in the same time.
 To add a keyboard shortcut to your cue, click in the field and press the key(s).
 
 2.c Wave Tab
-File :: browse to the desired file and choose it.
+File :: browse to the desired file and choose it. (Already done if drag n drop is used.) If you've chosen, the next two lines will show some info about your choice.
+Start Time :: Not to be confused with "Wait time" in the Info Tab, the start time sets the part of the sample that is left out. A scenario would be that you have a track that uses a lot of noiseless space in the beginning and you want showq to start with some music, immediately.
+Sample Player :: Beneath the start time is a little sample player to check your configuration. Keep in mind that you will hear nothing until you patched and leveled your sample right. (You can do this in the two following tabs.) This is also the place where you can check the loudness (in comparison to other samples). AND it's the only place where you can jump inside the sample - you can't do this with a ready-to-run cue in the standard view of showq.
 
 2.d Patch Tab
-Input represents the wave file. For an usual file, the Left matches to Input 1, and the Right to Input 2.
-Output represents the physical outputs of the soundcard (up to 8 maximum)
+You can use a maximum of an 8 channel audio file to route them to a maximum of 8 output channels.
+"Input" represents the audio file. For an usual stereo file, Left matches to Input 1, and Right to Input 2.
+"Output" is just the output of showq - it doesn't represent the output of the soundcard, although you can easily route them through with a desired tool, like f.e. qjackctl. Actually, you're totally free to do what your needs are with those 8 channels. Routing to the speakers is one thing. Doing some signal processing before is another approach. You're in the linux-audio-world - use it!
 
 2.e Levels Tab
-... to be described...
-
+Fixme: I have no idea what the buttons beneath the faders are good for.
+You can choose an output level for each channel, individually. Ranges are from -∞ ("-Inf") to +6dB. Keep in mind, that a normalized sample will distort above 0dB.
 
 
 3. Adding a cue Fade :
