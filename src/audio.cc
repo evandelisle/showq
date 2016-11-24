@@ -34,8 +34,9 @@ AudioFile::AudioFile(const char *f)
   : status(Pause), eof(false), eob(false), fades(new Fades),
     SRC_state(nullptr),
     cur_frame(0), srate(0), do_seek(false), seek_pos(0.0),
-    read_frame(0), num_channels(0), SRC_input_buffer(nullptr),
-    SRC_input_buffer_size(0)
+    read_frame(0), num_channels(0),
+    SRC_input_buffer(nullptr), SRC_input_buffer_size(0),
+    input_buffer(nullptr), input_buffer_size(0)
 {
   sfinfo.format = 0;
   codec = NoCodec;
