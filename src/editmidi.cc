@@ -133,8 +133,11 @@ const struct msc_cmds {
 
 EditCueMidi::EditCueMidi(Gtk::Notebook *p)
 {
-  m_refXml = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "editmidi.ui"));
+  gsize r_size;
+  m_refXml = Gtk::Builder::create();
+  m_refXml->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/editmidi.ui")->get_data(r_size)
+      , -1);
 
   // Set up MIDI view
   connect_clicked(m_refXml, "ed_midi_delete",

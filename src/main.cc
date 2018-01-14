@@ -27,7 +27,6 @@
 #include <exception>
 #include <iostream>
 
-Glib::ustring showq_ui;
 App *app;
 Glib::KeyFile keyfile;
 
@@ -42,7 +41,7 @@ static void on_activate_url_link(Gtk::AboutDialog &, const Glib::ustring &link)
 
 int main(int argc, char *argv[])
 {
-  bindtextdomain(GETTEXT_PACKAGE, PROGRAMNAME_LOCALEDIR);
+  bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
   bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
   textdomain(GETTEXT_PACKAGE);
 
@@ -50,19 +49,18 @@ int main(int argc, char *argv[])
 
   if (!Glib::thread_supported()) Glib::thread_init();
 
-  showq_ui = UI_DIR;
-
   try {
     keyfile.load_from_file(Glib::get_home_dir() + "/ShowQ.conf");
   } catch (...) {
   }
 
-  Glib::RefPtr <Gtk::Builder> refXml;
-
   try {
     audio = new Audio;
-    refXml = Gtk::Builder::create_from_file(
-      Glib::build_filename(showq_ui, "app.ui"));
+    gsize r_size;
+    auto refXml = Gtk::Builder::create();
+    refXml->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/app.ui")->get_data(r_size)
+      , -1);
     refXml->get_widget_derived("app", app);
     if (app) {
       try {

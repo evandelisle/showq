@@ -24,8 +24,11 @@
 
 EditCueGroup::EditCueGroup(Gtk::Notebook *p)
 {
-  refXml = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "editgroup.ui"));
+  gsize r_size;
+  refXml = Gtk::Builder::create();
+  refXml->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/editgroup.ui")->get_data(r_size)
+      , -1);
 
   Gtk::Widget *vbox;
   refXml->get_widget("edit_group_box", vbox);

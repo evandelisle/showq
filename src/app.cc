@@ -42,7 +42,7 @@ snd_seq_t *oseq;
 About::About(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml)
   : Gtk::AboutDialog(cobject), m_refXml(refXml)
 {
-  set_version(VERSIONSTRING);
+  set_version(VERSION);
 }
 
 void About::on_response(int)
@@ -52,9 +52,12 @@ void About::on_response(int)
 
 std::unique_ptr<About> About::create()
 {
+  gsize r_size;
   About *dialog;
-  auto refXml = Gtk::Builder::create_from_file(
-                  Glib::build_filename(showq_ui, "about.ui"));
+  auto refXml = Gtk::Builder::create();
+  refXml->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/about.ui")->get_data(r_size)
+      , -1);
   refXml->get_widget_derived("about", dialog);
   return std::unique_ptr<About>(dialog);
 }
@@ -1285,8 +1288,11 @@ CueTreeView::CueTreeView(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builde
   : Gtk::TreeView(cobject), m_refXml(refXml)
 {
   set_column_drag_function(sigc::mem_fun(*this, &CueTreeView::on_col_drag));
-  refPopupXml = Gtk::Builder::create_from_file(
-                  Glib::build_filename(showq_ui, "popupmenu.ui"));
+  gsize r_size;
+  auto refPopupXml = Gtk::Builder::create();
+  refPopupXml->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/popupmenu.ui")->get_data(r_size)
+      , -1);
   refPopupXml->get_widget("PopupMenu", m_MenuPopup);
 
   Glib::RefPtr<Gtk::Action>::cast_static(refPopupXml->get_object("menuitem1"))
@@ -1299,7 +1305,7 @@ CueTreeView::CueTreeView(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builde
   ->signal_activate().connect(sigc::mem_fun(*this, &CueTreeView::on_sneak_out));
 
   //Targets:
-  std::list<Gtk::TargetEntry> listTargets;
+  std::vector<Gtk::TargetEntry> listTargets;
   listTargets.push_back(Gtk::TargetEntry("text/uri-list"));
   listTargets.push_back(Gtk::TargetEntry("GTK_TREE_MODEL_ROW"));
 
@@ -1334,7 +1340,7 @@ void CueTreeView::on_drag_data_received(
 {
   TreeView::on_drag_data_received(context, x, y, selection_data, info, time);
 
-  std::vector<std::string> uris = selection_data.get_uris();
+  std::vector<Glib::ustring> uris = selection_data.get_uris();
 
   if (uris.empty()) return;
 

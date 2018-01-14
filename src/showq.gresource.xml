@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/evandel/showq">
+    <file preprocess="xml-stripblanks">ui/about.ui</file>
+    <file preprocess="xml-stripblanks">ui/app.ui</file>
+    <file preprocess="xml-stripblanks">ui/editcue.ui</file>
+    <file preprocess="xml-stripblanks">ui/editfade.ui</file>
+    <file preprocess="xml-stripblanks">ui/editgroup.ui</file>
+    <file preprocess="xml-stripblanks">ui/editmidi.ui</file>
+    <file preprocess="xml-stripblanks">ui/editwave.ui</file>
+    <file preprocess="xml-stripblanks">ui/efaders.ui</file>
+    <file preprocess="xml-stripblanks">ui/epatch.ui</file>
+    <file preprocess="xml-stripblanks">ui/patch.ui</file>
+    <file preprocess="xml-stripblanks">ui/popupmenu.ui</file>
+    <file preprocess="xml-stripblanks">ui/pref.ui</file>
+    <file preprocess="xml-stripblanks">ui/prop.ui</file>
+    <file preprocess="xml-stripblanks">ui/renumber.ui</file>
+  </gresource>
+</gresources>
+
+

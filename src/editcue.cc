@@ -83,9 +83,11 @@ EditCue *EditCue::show(int type)
       i = app->p_edit.erase(i);
   }
   EditCue *p = 0;
-  Glib::RefPtr <Gtk::Builder> refXml
-    = Gtk::Builder::create_from_file(
-      Glib::build_filename(showq_ui, "editcue.ui"));
+  gsize r_size;
+  auto refXml = Gtk::Builder::create();
+  refXml->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/editcue.ui")->get_data(r_size)
+      , -1);
   refXml->get_widget_derived("editcue", p);
 
   app->p_edit.push_back(std::shared_ptr<EditCue>(p));
@@ -274,7 +276,7 @@ bool EditCue::on_key_release_event(GdkEventKey *event)
     m_key_but->set_active(false);
     keyval = event->keyval;
     state = Gdk::ModifierType(event->state);
-    if (keyval == GDK_BackSpace) keyval = 0;
+    if (keyval == GDK_KEY_BackSpace) keyval = 0;
     if (keyval)
       m_key_but->set_label(Gtk::AccelGroup::name(keyval, state));
     else

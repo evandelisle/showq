@@ -69,8 +69,12 @@ void Properties::on_response(int r)
 std::unique_ptr<Properties> Properties::create()
 {
   Properties *dialog;
-  auto refXml = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "prop.ui"));
+  gsize r_size;
+  auto refXml = Gtk::Builder::create();
+  refXml->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/prop.ui")->get_data(r_size)
+      , -1);
+
   refXml->get_widget_derived("Properties", dialog);
 
   return std::unique_ptr<Properties>(dialog);
@@ -94,8 +98,12 @@ Preferences::Preferences(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builde
 std::unique_ptr<Preferences> Preferences::create()
 {
   Preferences *dialog;
-  auto refXml = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "pref.ui"));
+  gsize r_size;
+  auto refXml = Gtk::Builder::create();
+  refXml->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/pref.ui")->get_data(r_size)
+      , -1);
+
   refXml->get_widget_derived("Preferences", dialog);
 
   return std::unique_ptr<Preferences>(dialog);

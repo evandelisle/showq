@@ -59,12 +59,21 @@ void Fader::set_gain(double gain)
 
 EditCueWave::EditCueWave(Gtk::Notebook *p)
 {
-  refXML_wave = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "editwave.ui"));
-  refXML_patch = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "epatch.ui"));
-  refXML_faders = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "efaders.ui"));
+  gsize r_size;
+  refXML_wave = Gtk::Builder::create();
+  refXML_wave->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/editwave.ui")->get_data(r_size)
+      , -1);
+
+  refXML_patch = Gtk::Builder::create();
+  refXML_patch->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/epatch.ui")->get_data(r_size)
+      , -1);
+
+  refXML_faders = Gtk::Builder::create();
+  refXML_faders->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/efaders.ui")->get_data(r_size)
+      , -1);
 
   refXML_wave->get_widget("ed_wave_file", m_wave_fentry);
   m_wave_fentry->signal_selection_changed().
