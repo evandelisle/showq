@@ -1,12 +1,12 @@
 Ante-scriptum :
-this howto was written in French by Klaus Löhmann for a sound technician who was replacing him for a theater show and didn't know nothing about a linux environment and/or showq.
-It's been translated to English by Olivier Humbert to feed back the showq project on the 1st of September 2016.
+this howto was written in French by Klaus Löhmann for a sound technician who was replacing him for a theater show and didn't know nothing about a linux environment and/or ShowQ.
+It's been translated to English by Olivier Humbert to feed back the ShowQ project on the 1st of September 2016.
 
 ----
 
-SHOWQ Howto 09.01.2016
+ShowQ Howto 09.01.2016
 
-Note: Showq is able to start the jackd audio server when launched.
+Note: ShowQ is able to start the jackd audio server when launched.
 That said, in most cases, you might want to start the jackd server yourself before launching ShowQ.
 You can use the well-known QjackCtl for that purpose.
 
@@ -14,17 +14,17 @@ You can use the well-known QjackCtl for that purpose.
 
 1. Starting a new show :
 File > New 
-showq will ask « Clear the current show? ». If you click OK, all the changes you made to the current show until your last save will be lost and a blank show will be created.
+ShowQ will ask « Clear the current show? ». If you click OK, all the changes you made to the current show until your last save will be lost and a blank show will be created.
 
 
 
 2. Adding an audio cue :
-Beware that showq doesn't accept all audio formats. Ogg-Vorbis, FLAC and - of course - WAV files are a shure bet.
-Use Edit > New Cue > Wave Cue (or drag n drop a supported file in the standard view of showq) and read the following descriptions about every tab to reach your goal.
+Beware that ShowQ doesn't accept all audio formats. Ogg-Vorbis, FLAC and - of course - WAV files are a sure bet.
+Use Edit > New Cue > Wave Cue (or drag & drop a supported file in the standard view of ShowQ) and read the following descriptions about every tab to reach your goal.
 
 2.a Info Tab
 Cue :: give a unique number (this number becomes the « target » in fade/stop/pause-cues).
-Description :: whatever you want to describe it. (If you used drag n drop, the name of the file will be used automatically. YOu can edit this, of course.)
+Description :: whatever you want to describe it (if you used drag & drop, the name of the file will be used automatically, you can edit this of course).
 Wait time :: this is the period of time between the launch (with the space bar) and the real start of playing the audio.
 Auto continue :: if the next cue needs to be launched in the same time.
 
@@ -32,17 +32,17 @@ Auto continue :: if the next cue needs to be launched in the same time.
 To add a keyboard shortcut to your cue, click in the field and press the key(s).
 
 2.c Wave Tab
-File :: browse to the desired file and choose it. (Already done if drag n drop is used.) If you've chosen, the next two lines will show some info about your choice.
-Start Time :: Not to be confused with "Wait time" in the Info Tab, the start time sets the part of the sample that is left out. A scenario would be that you have a track that uses a lot of noiseless space in the beginning and you want showq to start with some music, immediately.
-Sample Player :: Beneath the start time is a little sample player to check your configuration. Keep in mind that you will hear nothing until you patched and leveled your sample right. (You can do this in the two following tabs.) This is also the place where you can check the loudness (in comparison to other samples). AND it's the only place where you can jump inside the sample - you can't do this with a ready-to-run cue in the standard view of showq.
+File :: browse to the desired file and choose it (already done if drag & drop is used). If you've chosen, the next two lines will show some info about your choice.
+Start Time :: Not to be confused with "Wait time" in the Info Tab, the "start time" sets the part of the sample that is left out. A scenario would be that you have a track that uses a lot of noiseless space in the beginning and you want ShowQ to start with some music, immediately.
+Sample Player :: Beneath the "start time" is a little sample player to check your configuration. Keep in mind that you will hear nothing until you patched and leveled your sample right (you can do this in the two following tabs). This is also the place where you can check the loudness (in comparison to other samples). AND it's the only place where you can jump inside the sample - you can't do this with a ready-to-run cue in the standard view of ShowQ.
 
 2.d Patch Tab
-You can use a maximum of an 8 channel audio file to route them to a maximum of 8 output channels.
+You can use a maximum of an 8 channels audio file to route them to a maximum of 8 output channels.
 "Input" represents the audio file. For an usual stereo file, Left matches to Input 1, and Right to Input 2.
-"Output" is just the output of showq - it doesn't represent the output of the soundcard, although you can easily route them through with a desired tool, like f.e. qjackctl. Actually, you're totally free to do what your needs are with those 8 channels. Routing to the speakers is one thing. Doing some signal processing before is another approach. You're in the linux-audio-world - use it!
+"Output" is just the output of ShowQ - it doesn't represent the output of the soundcard, although you can easily route them through with a desired tool, like for example QjackCtl. Actually, you're totally free to do what your needs are with those 8 channels. Routing to the speakers is one thing. Doing some signal processing before is another approach. You're in the linux-audio-world - use it!
 
 2.e Levels Tab
-Fixme: I have no idea what the buttons beneath the faders are good for.
+FIXME: I have no idea what the buttons beneath the faders are good for.
 You can choose an output level for each channel, individually. Ranges are from -∞ ("-Inf") to +6dB. Keep in mind, that a normalized sample will distort above 0dB.
 
 
@@ -75,7 +75,7 @@ To be able to change the level, the faders need not to be greyed out (click on t
 4. Removing a cue from the cue sheet
 Select the cue you want to remove :
 Edit > Cut 
-Showq will ask « Delete sound cue Nr x ? ».
+ShowQ will ask « Delete sound cue Nr x ? ».
 
 
 
@@ -90,7 +90,7 @@ The cue needs not to be selected before
 IMPORTANT NOTES
 ###############
 
-1. You must think to save the show after having done some change on it. Showq will not ask you to save it while exiting.
-2. If you stop a fade-cue before its end (Escape key, or click on Stop), showq will not be correctly running anymore. (Bug in the dans le sequential). You need then to relaunch it.
+1. You must think to save the show after having done some change on it. ShowQ will not ask you to save it while exiting.
+2. If you stop a fade-cue before its end (Escape key, or click on Stop), ShowQ will not be correctly running anymore. (Bug in the dans le sequential). You need then to relaunch it.
 3. Do not use the « Renumber » functionnality. It doesn't work and will set all the cues and targets to 0.
 4. When the cue sheet is ended, it is adviced to un-tick the « auto cont » option in the Menu > View in order to avoid human-made incidents during the performances.
