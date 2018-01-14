@@ -43,8 +43,8 @@ configure_file(
 
 # Dependencies
 
-#gtkmm_dep = dependency('gtkmm-2.4', version : '>= 2.24')
-gtkmm_dep = dependency('gtkmm-3.0', version : '>= 3.0')
+gtkmm_dep = dependency('gtkmm-2.4', version : '>= 2.24')
+#gtkmm_dep = dependency('gtkmm-3.0', version : '>= 3.0')
 glibmm_dep = dependency('glibmm-2.4', version : '>= 2.44')
 giomm_dep = dependency('giomm-2.4', version : '>= 2.44')
 gthread_dep = dependency('gthread-2.0')
