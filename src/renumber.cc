@@ -30,8 +30,12 @@ Renumber::Renumber(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &re
 std::unique_ptr<Renumber> Renumber::create()
 {
   Renumber *dialog;
-  auto refXml = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "renumber.ui"));
+  gsize r_size;
+  auto refXml = Gtk::Builder::create();
+  refXml->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/renumber.ui")->get_data(r_size)
+      , -1);
+
   refXml->get_widget_derived("renumber", dialog);
   return std::unique_ptr<Renumber>(dialog);
 }

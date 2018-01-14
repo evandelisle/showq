@@ -23,8 +23,6 @@
 
 #include <glibmm.h>
 
-extern char * showq_glade;
-extern Glib::ustring showq_ui;
 extern Glib::KeyFile keyfile;
 
 #endif

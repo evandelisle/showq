@@ -24,10 +24,17 @@
 
 EditCueFade::EditCueFade(Gtk::Notebook *p)
 {
-  refXML_fade = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "editfade.ui"));
-  refXML_faders = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "efaders.ui"));
+  gsize r_size;
+  refXML_fade = Gtk::Builder::create();
+  refXML_fade->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/editfade.ui")->get_data(r_size)
+      , -1);
+
+  refXML_faders = Gtk::Builder::create();
+  refXML_faders->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/efaders.ui")->get_data(r_size)
+      , -1);
+
   Gtk::Widget *fade_tab;
   Gtk::Widget *level_tab;
   refXML_fade->get_widget("edit_fade_vbox", fade_tab);

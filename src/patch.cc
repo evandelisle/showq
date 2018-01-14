@@ -221,8 +221,12 @@ void Patch::on_response(int r)
 std::unique_ptr<Patch> Patch::create()
 {
   Patch *p;
-  auto refXml = Gtk::Builder::create_from_file(
-    Glib::build_filename(showq_ui, "patch.ui"));
+  gsize r_size;
+  auto refXml = Gtk::Builder::create();
+  refXml->add_from_string(
+      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/patch.ui")->get_data(r_size)
+      , -1);
+
   refXml->get_widget_derived("Patch", p);
   return std::unique_ptr<Patch>(p);
 }
