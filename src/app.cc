@@ -69,7 +69,7 @@ MIDIengine::MIDIengine()
   snd_seq_port_info_t *port_info;
 
   snd_seq_port_info_alloca(&port_info);
-  snd_seq_port_info_set_name(port_info, "System Announcement Reciever");
+  snd_seq_port_info_set_name(port_info, "System Announcement Receiver");
   snd_seq_port_info_set_capability(port_info,
                                    SND_SEQ_PORT_CAP_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE | SND_SEQ_PORT_CAP_NO_EXPORT);
   snd_seq_port_info_set_port_specified(port_info, 1);
