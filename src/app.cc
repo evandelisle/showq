@@ -1042,7 +1042,7 @@ bool App::wait_timeout()
   return false;
 }
 
-bool Pause_Cue::run(Gtk::TreeModel::iterator r)
+bool Pause_Cue::run(Gtk::TreeModel::iterator )
 {
   for (auto && i : app->waiting_cue) {
     if (target == i.cue_id_no) {
@@ -1060,14 +1060,14 @@ bool Pause_Cue::run(Gtk::TreeModel::iterator r)
   return false;
 }
 
-bool Start_Cue::run(Gtk::TreeModel::iterator r)
+bool Start_Cue::run(Gtk::TreeModel::iterator )
 {
   Gtk::TreeModel::iterator iter = app->m_refTreeModel->get_iter_from_id(target);
   if (iter) app->go_cue(iter);
   return false;
 }
 
-bool Stop_Cue::run(Gtk::TreeModel::iterator r)
+bool Stop_Cue::run(Gtk::TreeModel::iterator )
 {
   for (auto && i : app->waiting_cue) {
     if (target == i.cue_id_no) {
@@ -1105,7 +1105,7 @@ bool Wave_Cue::run(Gtk::TreeModel::iterator r)
   return true;
 }
 
-bool MIDI_Cue::run(Gtk::TreeModel::iterator r)
+bool MIDI_Cue::run(Gtk::TreeModel::iterator )
 {
   snd_midi_event_t *dev;
   snd_midi_event_new(100, &dev);
@@ -1156,7 +1156,7 @@ bool FadeStop_Cue::run(Gtk::TreeModel::iterator r)
   return false;
 }
 
-bool Group_Cue::run(Gtk::TreeModel::iterator r)
+bool Group_Cue::run(Gtk::TreeModel::iterator )
 {
   return true;
 }

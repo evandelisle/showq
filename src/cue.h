@@ -48,7 +48,7 @@ public:
   {
     return Base;
   }
-  virtual bool run(Gtk::TreeModel::iterator r)
+  virtual bool run(Gtk::TreeModel::iterator )
   {
     return true;
   }
