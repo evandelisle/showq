@@ -1,6 +1,6 @@
 project ('showq',
     ['cpp', 'c'],
-    default_options : ['cpp_std=c++11'],
+    default_options : ['cpp_std=c++14'],
     version: '0.5',
     license: 'GPLv3+',
     meson_version: '>= 0.37.1')
