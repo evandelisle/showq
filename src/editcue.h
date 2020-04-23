@@ -18,9 +18,10 @@
  *      MA 02110-1301, USA.
  */
 
-#ifndef EDITCUE_H__
-#define EDITCUE_H__
+#ifndef EDITCUE_H_
+#define EDITCUE_H_
 
+#include <memory>
 #include <gtkmm.h>
 
 #include "cue.h"
@@ -34,16 +35,17 @@ public:
 
   double get_gain();
   void set_gain(double gain);
+
 protected:
   virtual Glib::ustring on_format_value(double v);
-private:
 };
 
 class EditCueBase : public sigc::trackable {
 public:
   EditCueBase();
-  explicit EditCueBase(Gtk::Notebook *) {}
+  explicit EditCueBase(Gtk::Notebook *);
   virtual ~EditCueBase();
+
   virtual void get(std::shared_ptr<Cue> &p) = 0;
   virtual void set(std::shared_ptr<Cue> &p) = 0;
 };
@@ -53,8 +55,10 @@ public:
   EditCueFade();
   explicit EditCueFade(Gtk::Notebook *);
   virtual ~EditCueFade();
-  virtual void get(std::shared_ptr<Cue> &p);
-  virtual void set(std::shared_ptr<Cue> &p);
+
+  void get(std::shared_ptr<Cue> &p) override;
+  void set(std::shared_ptr<Cue> &p) override;
+
 private:
   void wave_on_toggle(int fader);
 
@@ -74,8 +78,10 @@ class EditCueWave : public EditCueBase {
 public:
   explicit EditCueWave(Gtk::Notebook *);
   virtual ~EditCueWave();
-  virtual void get(std::shared_ptr<Cue> &p);
-  virtual void set(std::shared_ptr<Cue> &p);
+
+  void get(std::shared_ptr<Cue> &p) override;
+  void set(std::shared_ptr<Cue> &p) override;
+
 private:
   bool dis_update();
   void wave_on_file_activate();
@@ -108,8 +114,10 @@ class EditCueMidi : public EditCueBase {
 public:
   explicit EditCueMidi(Gtk::Notebook *);
   virtual ~EditCueMidi();
-  virtual void get(std::shared_ptr<Cue> &p);
-  virtual void set(std::shared_ptr<Cue> &p);
+
+  void get(std::shared_ptr<Cue> &p) override;
+  void set(std::shared_ptr<Cue> &p) override;
+
 private:
   void on_add_clicked();
   void on_delete_clicked();
@@ -150,35 +158,37 @@ class EditCueStop : public EditCueBase {
 public:
   explicit EditCueStop(Gtk::Notebook *);
   virtual ~EditCueStop();
-  virtual void get(std::shared_ptr<Cue> &p);
-  virtual void set(std::shared_ptr<Cue> &p);
-private:
+
+  void get(std::shared_ptr<Cue> &p) override;
+  void set(std::shared_ptr<Cue> &p) override;
 };
 
 class EditCuePause : public EditCueBase {
 public:
   explicit EditCuePause(Gtk::Notebook *);
   virtual ~EditCuePause();
-  virtual void get(std::shared_ptr<Cue> &p);
-  virtual void set(std::shared_ptr<Cue> &p);
-private:
+
+  void get(std::shared_ptr<Cue> &p) override;
+  void set(std::shared_ptr<Cue> &p) override;
 };
 
 class EditCueStart : public EditCueBase {
 public:
   explicit EditCueStart(Gtk::Notebook *);
   virtual ~EditCueStart();
-  virtual void get(std::shared_ptr<Cue> &p);
-  virtual void set(std::shared_ptr<Cue> &p);
-private:
+
+  void get(std::shared_ptr<Cue> &p) override;
+  void set(std::shared_ptr<Cue> &p) override;
 };
 
 class EditCueGroup : public EditCueBase {
 public:
   explicit EditCueGroup(Gtk::Notebook *);
   virtual ~EditCueGroup();
-  virtual void get(std::shared_ptr<Cue> &p);
-  virtual void set(std::shared_ptr<Cue> &p);
+
+  void get(std::shared_ptr<Cue> &p) override;
+  void set(std::shared_ptr<Cue> &p) override;
+
 private:
   Glib::RefPtr<Gtk::Builder> refXml;
 };
@@ -195,6 +205,7 @@ public:
 protected:
   virtual bool on_key_press_event(GdkEventKey *);
   virtual bool on_key_release_event(GdkEventKey *event);
+
 private:
   void ok_activate();
   void apply_activate();

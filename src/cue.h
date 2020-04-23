@@ -18,8 +18,8 @@
  *      MA 02110-1301, USA.
  */
 
-#ifndef CUE_H__
-#define CUE_H__
+#ifndef CUE_H_
+#define CUE_H_
 
 #include <string>
 #include <map>
@@ -73,38 +73,39 @@ public:
 // Hot key
   Gdk::ModifierType state;
   guint keyval;
+
 protected:
   std::string v_reason;
 };
 
 class Group_Cue : public Cue {
 public:
-  virtual std::string cue_type_text()
+  std::string cue_type_text() override
   {
     return "Group";
   }
-  virtual int cue_type()
+  int cue_type() override
   {
     return Group;
   }
-  virtual bool run(Gtk::TreeModel::iterator r);
-  virtual void serialize(xmlpp::Element *cel);
+  bool run(Gtk::TreeModel::iterator r) override;
+  void serialize(xmlpp::Element *cel) override;
 
   int mode;
 };
 
 class MIDI_Cue : public Cue {
 public:
-  virtual std::string cue_type_text()
+  std::string cue_type_text() override
   {
     return "MIDI";
   }
-  virtual int cue_type()
+  int cue_type() override
   {
     return MIDI;
   }
-  virtual bool run(Gtk::TreeModel::iterator r);
-  virtual void serialize(xmlpp::Element *cel);
+  bool run(Gtk::TreeModel::iterator r) override;
+  void serialize(xmlpp::Element *cel) override;
 
   class msg {
   public:
@@ -121,16 +122,17 @@ public:
   {
     vol.resize(8);
   }
-  virtual std::string cue_type_text()
+
+  std::string cue_type_text() override
   {
     return "Wave";
   }
-  virtual int cue_type()
+  int cue_type() override
   {
     return Wave;
   }
-  virtual bool run(Gtk::TreeModel::iterator r);
-  virtual void serialize(xmlpp::Element *cel);
+  bool run(Gtk::TreeModel::iterator r) override;
+  void serialize(xmlpp::Element *cel) override;
 
   std::string file;
 
@@ -142,44 +144,44 @@ public:
 
 class Stop_Cue : public Cue {
 public:
-  virtual std::string cue_type_text()
+  std::string cue_type_text() override
   {
     return "Stop";
   }
-  virtual int cue_type()
+  int cue_type() override
   {
     return Stop;
   }
-  virtual bool run(Gtk::TreeModel::iterator r);
-  virtual void serialize(xmlpp::Element *cel);
+  bool run(Gtk::TreeModel::iterator r) override;
+  void serialize(xmlpp::Element *cel) override;
 };
 
 class Pause_Cue : public Cue {
 public:
-  virtual std::string cue_type_text()
+  std::string cue_type_text() override
   {
     return "Pause";
   }
-  virtual int cue_type()
+  int cue_type() override
   {
     return Pause;
   }
-  virtual bool run(Gtk::TreeModel::iterator r);
-  virtual void serialize(xmlpp::Element *cel);
+  bool run(Gtk::TreeModel::iterator r) override;
+  void serialize(xmlpp::Element *cel) override;
 };
 
 class Start_Cue : public Cue {
 public:
-  virtual std::string cue_type_text()
+  std::string cue_type_text() override
   {
     return "Start";
   }
-  virtual int cue_type()
+  int cue_type() override
   {
     return Start;
   }
-  virtual bool run(Gtk::TreeModel::iterator r);
-  virtual void serialize(xmlpp::Element *cel);
+  bool run(Gtk::TreeModel::iterator r) override;
+  void serialize(xmlpp::Element *cel) override;
 };
 
 class FadeStop_Cue : public Cue {
@@ -191,16 +193,16 @@ public:
     on.resize(8, false);
   }
 
-  virtual std::string cue_type_text()
+  std::string cue_type_text() override
   {
     return "Fade";
   }
-  virtual int cue_type()
+  int cue_type() override
   {
     return Fade;
   }
-  virtual bool run(Gtk::TreeModel::iterator r);
-  virtual void serialize(xmlpp::Element *cel);
+  bool run(Gtk::TreeModel::iterator r) override;
+  void serialize(xmlpp::Element *cel) override;
 
   bool stop_on_complete;
   bool pause_on_complete;
@@ -209,4 +211,4 @@ public:
   std::vector<bool> on;
 };
 
-#endif /* CUE_H__ */
+#endif // CUE_H_
