@@ -58,9 +58,9 @@ void Fader::set_gain(double gain)
 // Wave cue editing
 
 EditCueWave::EditCueWave(Gtk::Notebook *p)
+  : refXML_wave(Gtk::Builder::create())
 {
   gsize r_size;
-  refXML_wave = Gtk::Builder::create();
   refXML_wave->add_from_string(
       (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/editwave.ui")->get_data(r_size)
       , -1);
@@ -302,7 +302,7 @@ bool EditCueWave::dis_update()
     update_hs_ok = true;
 
     if (m_af->status == Done) {
-      Gtk::RadioToolButton *pWidget = 0;
+      Gtk::RadioToolButton *pWidget = nullptr;
       refXML_wave->get_widget("ed_wave_stop", pWidget);
       pWidget->set_active();
       m_af.reset();

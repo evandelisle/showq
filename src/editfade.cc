@@ -23,9 +23,9 @@
 #include "main.h"
 
 EditCueFade::EditCueFade(Gtk::Notebook *p)
+  : refXML_fade(Gtk::Builder::create())
 {
   gsize r_size;
-  refXML_fade = Gtk::Builder::create();
   refXML_fade->add_from_string(
       (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/editfade.ui")->get_data(r_size)
       , -1);

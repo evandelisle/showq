@@ -26,6 +26,7 @@
 #include <cctype>
 #include <cstdlib>
 #include <ios>
+#include <memory>
 #include <sstream>
 
 const struct msc_cmd_fmts {
@@ -132,9 +133,9 @@ const struct msc_cmds {
 // MIDI cue editing
 
 EditCueMidi::EditCueMidi(Gtk::Notebook *p)
+  : m_refXml(Gtk::Builder::create())
 {
   gsize r_size;
-  m_refXml = Gtk::Builder::create();
   m_refXml->add_from_string(
       (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/editmidi.ui")->get_data(r_size)
       , -1);
@@ -677,10 +678,10 @@ std::vector<unsigned char> EditCueMidi::get_raw()
     Glib::ustring val;
     size_t i = 0;
     for (; i < s.size(); ++i) {
-      if (isspace(s[i])) continue;
+      if (std::isspace(s[i])) continue;
       val = s[i];
       ++i;
-      if (isspace(s[i])) {
+      if (std::isspace(s[i])) {
         raw.push_back(strtol(val.c_str(), 0, 16));
         continue;
       }
@@ -965,7 +966,7 @@ void EditCueMidi::on_msc_combo_changed()
 void EditCueMidi::validate_qlist(const Glib::ustring &text, int *, Gtk::Entry *e)
 {
   for (Glib::ustring::const_iterator p = text.begin(); p != text.end(); ++p) {
-    if (isdigit(*p) || *p == '.') continue;
+    if (std::isdigit(*p) || *p == '.') continue;
     e->signal_insert_text().emission_stop();
   }
 }
@@ -1007,7 +1008,7 @@ void EditCueMidi::validate_fields()
 void EditCueMidi::validate_sysex_entry(const Glib::ustring &text, int *, Gtk::Entry *e)
 {
   for (Glib::ustring::const_iterator p = text.begin(); p != text.end(); ++p) {
-    if (isxdigit(*p) || isspace(*p)) continue;
+    if (std::isxdigit(*p) || std::isspace(*p)) continue;
     e->signal_insert_text().emission_stop();
   }
 }

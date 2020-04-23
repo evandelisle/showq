@@ -18,14 +18,16 @@
  *      MA 02110-1301, USA.
  */
 
+#include <memory>
+
 #include "editcue.h"
 #include "app.h"
 #include "main.h"
 
 EditCueGroup::EditCueGroup(Gtk::Notebook *p)
+  : refXml(Gtk::Builder::create())
 {
   gsize r_size;
-  refXml = Gtk::Builder::create();
   refXml->add_from_string(
       (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/editgroup.ui")->get_data(r_size)
       , -1);
@@ -44,7 +46,7 @@ void EditCueGroup::set(std::shared_ptr<Cue> &q)
 {
   std::shared_ptr<Group_Cue> pg = std::dynamic_pointer_cast<Group_Cue>(q);
 
-  Gtk::RadioButton *button = 0;
+  Gtk::RadioButton *button = nullptr;
   switch (pg->mode) {
   case 0:
     refXml->get_widget("ed_grp_all", button);
