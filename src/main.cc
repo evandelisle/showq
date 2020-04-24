@@ -51,7 +51,8 @@ int main(int argc, char *argv[])
 
   try {
     keyfile.load_from_file(Glib::get_home_dir() + "/ShowQ.conf");
-  } catch (...) {
+  }
+  catch (...) {
   }
 
   try {
@@ -71,7 +72,8 @@ int main(int argc, char *argv[])
             app->do_load(file);
           }
         }
-      } catch (...) {
+      }
+      catch (...) {
       }
       Gtk::AboutDialog::set_url_hook(sigc::ptr_fun(&on_activate_url_link));
       kit.run(*app);
@@ -82,17 +84,20 @@ int main(int argc, char *argv[])
     }
     delete audio;
     delete app;
-  } catch (Gtk::BuilderError) {
+  }
+  catch (const Gtk::BuilderError &) {
     Gtk::MessageDialog d(_("Show Q could not open the GTK Builder file."), false, Gtk::MESSAGE_ERROR);
     d.set_secondary_text(_("(re)Install the program to fix this file not found error."));
     d.run();
     return 1;
-  } catch (Audio::NoAudio) {
+  }
+  catch (const Audio::NoAudio &) {
     Gtk::MessageDialog d(_("Show Q could not connect to JACK."), false, Gtk::MESSAGE_ERROR);
     d.set_secondary_text(_("(re)start JACK and try again"));
     d.run();
     return 1;
-  } catch (std::exception &e) {
+  }
+  catch (const std::exception &e) {
     std::cerr << e.what();
   }
   /*
@@ -112,7 +117,8 @@ int main(int argc, char *argv[])
     Glib::ustring data = keyfile.to_data();
     std::ofstream fd((Glib::get_home_dir() + "/ShowQ.conf").c_str());
     fd << data;
-  } catch (...) {
+  }
+  catch (...) {
   }
 
   return (0);
