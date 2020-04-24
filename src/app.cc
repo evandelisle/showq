@@ -93,13 +93,13 @@ MIDIengine::MIDIengine()
   snd_seq_create_port(m_seq, info);
 
   running = true;
-  midi_thread_p = Glib::Thread::create(sigc::mem_fun(*this, &MIDIengine::midi_main), true);
+  midi_thread_p = std::thread(&MIDIengine::midi_main, this);
 }
 
 MIDIengine::~MIDIengine()
 {
   running = false;
-  midi_thread_p->join();
+  midi_thread_p.join();
 }
 
 void MIDIengine::midi_main()

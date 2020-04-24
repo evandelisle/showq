@@ -18,10 +18,8 @@
  *      MA 02110-1301, USA.
  */
 
-#ifndef APP_H__
-#define APP_H__
-
-#include <memory>
+#ifndef APP_H_
+#define APP_H_
 
 #include <gtkmm.h>
 
@@ -32,6 +30,8 @@
 
 #include <atomic>
 #include <map>
+#include <memory>
+#include <thread>
 #include <vector>
 #include <alsa/asoundlib.h>
 
@@ -50,6 +50,7 @@ public:
 
   Glib::Dispatcher signal_port_change;
   Glib::Dispatcher signal_go;
+
 private:
   void midi_main();
 
@@ -61,7 +62,7 @@ private:
   bool use_msc;
   int msc_id;
 
-  Glib::Thread *midi_thread_p;
+  std::thread midi_thread_p;
 };
 
 //
@@ -341,4 +342,4 @@ private:
 
 extern App *app;
 
-#endif /* APP_H__ */
+#endif // APP_H_

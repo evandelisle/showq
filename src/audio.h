@@ -18,28 +18,32 @@
  *      MA 02110-1301, USA.
  */
 
-#ifndef AUDIO_H__
-#define AUDIO_H__
+#ifndef AUDIO_H_
+#define AUDIO_H_
 
-#include "rcu.h"
+#include <stddef.h>
 
 #include <atomic>
+#include <condition_variable>
 #include <list>
 #include <memory>
+#include <mutex>
+#include <string>
+#include <thread>
+#include <vector>
 
 #include <alsa/asoundlib.h>
-#include <jack/jack.h>
 #include <jack/ringbuffer.h>
+#include <jack/types.h>
 
 #include <sndfile.h>
 
-#include <glibmm.h>
+#include <glibmm/dispatcher.h>
+#include <glibmm/ustring.h>
 
 #include <samplerate.h>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#include <libxml++/libxml++.h>
-#pragma GCC diagnostic pop
+#include "rcu.h"
+namespace xmlpp { class Element; }
 
 enum {
   Play, Pause, Stop, Done
@@ -54,7 +58,10 @@ struct patch_ {
 class AudioFile {
 public:
   explicit AudioFile(const char *);
+  AudioFile(const AudioFile &) = delete;
+  AudioFile & operator=(const AudioFile &) = delete;
   ~AudioFile();
+
   class fade_ {
   public:
     fade_() : nframes(0), tframes(0), status(Play),
@@ -100,7 +107,7 @@ public:
   int get_codec()
   {
     return codec;
-  };
+  }
 
   int status;
   bool eof;
@@ -109,7 +116,7 @@ public:
   typedef std::list<std::shared_ptr<fade_> > Fades;
   SerializedRCUManager<Fades> fades;
   SRC_STATE * SRC_state;
-  Glib::Mutex buffer_lock;
+  std::mutex buffer_lock;
   std::vector<jack_ringbuffer_t *> rbs;
   std::vector<float> vol;
   std::vector<patch_> patch;
@@ -117,6 +124,7 @@ public:
   size_t cur_frame;
 
   static long src_callback(void *cb_data, float **data);
+
 private:
   int srate;
   int codec;
@@ -157,19 +165,19 @@ public:
   Glib::Dispatcher signal_jack_disconnect;
 
   long m_samplerate;
-protected:
+
 private:
   void setup_ports();
-  static void sdown_callback(void *arg) throw();
-  static int srate_callback(jack_nframes_t nframes, void *arg) throw();
-  static int audio_callback(jack_nframes_t nframes, void *ar) throw();
-  int audio_callback0(jack_nframes_t nframes) throw();
+  static void sdown_callback(void *arg) noexcept;
+  static int srate_callback(jack_nframes_t nframes, void *arg) noexcept;
+  static int audio_callback(jack_nframes_t nframes, void *ar) noexcept;
+  int audio_callback0(jack_nframes_t nframes) noexcept;
   void disc_thread();
 
-  Glib::Mutex disc_thread_lock;
-  Glib::Cond disc_thread_cond;
+  std::mutex disc_thread_lock;
+  std::condition_variable disc_thread_cond;
 
-  Glib::Thread *disc_thread_p;
+  std::thread disc_thread_p;
   std::atomic<bool> running;
 
   jack_client_t *client;

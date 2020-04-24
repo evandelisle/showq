@@ -20,11 +20,15 @@
 
 #include "audio.h"
 
+#include <jack/jack.h>
+
+#include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <vector>
 
-#include <cmath>
 #include <cstdio>
+#include <string.h>
 
 const int samplesize = sizeof(jack_default_audio_sample_t);
 
@@ -71,7 +75,7 @@ AudioFile::AudioFile(const char *f)
 
   if (SRC_state) {
     SRC_input_buffer = new float[4096];
-    SRC_input_buffer_size =4096;
+    SRC_input_buffer_size = 4096;
   }
   input_buffer_size = 4096;
   input_buffer = new float[input_buffer_size * 2];
@@ -116,7 +120,7 @@ size_t AudioFile::read_cb()
     do_seek = false;
     eof = false;
 
-    Glib::Mutex::Lock lock(buffer_lock);
+    std::lock_guard<std::mutex> lock(buffer_lock);
     for (size_t i = 0; i < rbs.size(); ++i)
       jack_ringbuffer_reset(rbs[i]);
     cur_frame = size_t(seek_pos * samplerate);
@@ -238,7 +242,7 @@ Audio::Audio()
   jack_set_sample_rate_callback(client, srate_callback, this);
 
   running = true;
-  disc_thread_p = Glib::Thread::create(sigc::mem_fun(*this, &Audio::disc_thread), true);
+  disc_thread_p = std::thread(&Audio::disc_thread, this);
 
   jack_activate(client);
 
@@ -251,7 +255,7 @@ Audio::~Audio()
   jack_client_close(client);
 
   running = false;
-  disc_thread_p->join();
+  disc_thread_p.join();
 }
 
 void Audio::setup_ports()
@@ -291,8 +295,8 @@ void Audio::add_af(std::shared_ptr<AudioFile> a)
 
 void Audio::do_disc_thread()
 {
-  if (disc_thread_lock.trylock()) {	// Kick the disc thread
-    disc_thread_cond.signal();
+  if (disc_thread_lock.try_lock()) {	// Kick the disc thread
+    disc_thread_cond.notify_all();
     disc_thread_lock.unlock();
   }
 }
@@ -336,13 +340,11 @@ long Audio::get_sample_rate()
 
 void Audio::disc_thread()
 {
-  Glib::Mutex::Lock lock(disc_thread_lock);
-  Glib::TimeVal t;
+  using namespace std::chrono_literals;
+
+  std::unique_lock<std::mutex> lock(disc_thread_lock);
 
   while (running) {
-    t.assign_current_time();
-    t.add_milliseconds(100);
-
     {
       std::shared_ptr<Afs> pr = afs.reader();
       Afs::iterator i = pr->begin();
@@ -351,28 +353,28 @@ void Audio::disc_thread()
         if (l->status != Done) l->read_cb();
       }
     }
-    disc_thread_cond.timed_wait(disc_thread_lock, t);
+    disc_thread_cond.wait_for(lock, 100ms);
   }
 }
 
-void Audio::sdown_callback(void *arg) throw()
+void Audio::sdown_callback(void *arg) noexcept
 {
   static_cast<Audio *>(arg)->signal_jack_disconnect.emit();
 }
 
-int Audio::srate_callback(jack_nframes_t nframes, void *arg) throw()
+int Audio::srate_callback(jack_nframes_t nframes, void *arg) noexcept
 {
   static_cast<Audio *>(arg)->m_samplerate = nframes;
   samplerate = nframes;
   return 0;
 }
 
-int Audio::audio_callback(jack_nframes_t nframes, void *arg) throw()
+int Audio::audio_callback(jack_nframes_t nframes, void *arg) noexcept
 {
   return static_cast<Audio *>(arg)->audio_callback0(nframes);
 }
 
-int Audio::audio_callback0(jack_nframes_t nframes) throw()
+int Audio::audio_callback0(jack_nframes_t nframes) noexcept
 {
   jack_default_audio_sample_t *buffers[8];
   float deltas[8];
@@ -395,9 +397,13 @@ int Audio::audio_callback0(jack_nframes_t nframes) throw()
   for (; i != pr->end(); ++i) {
     AudioFile *l = i->get();
 
-    if (l->status != Play || l->eob) continue;
-    Glib::Mutex::Lock lock(l->buffer_lock, Glib::TRY_LOCK);
-    if (!lock.locked()) continue;
+    if (l->status != Play || l->eob)
+      continue;
+
+    std::unique_lock<std::mutex> lock(l->buffer_lock, std::try_to_lock);
+
+    if (!lock.owns_lock())
+      continue;
 
     size_t n = jack_ringbuffer_read_space(l->rbs[l->rbs.size() - 1]) / samplesize;
     if (n == 0) {

@@ -26,13 +26,20 @@
 #include <alsa/asoundlib.h>
 
 #include "app.h"
+#include "audio.h"
 #include "cue.h"
 #include "utils.h"
-#include "audio.h"
-
 #include "uuid_cpp.h"
 
+#include <jack/jack.h>
+#include <jack/types.h>
+#include <stdlib.h>
+#include <algorithm>
+#include <exception>
+#include <istream>
+#include <memory>
 #include <string>
+#include <vector>
 
 extern snd_seq_t * oseq;
 
