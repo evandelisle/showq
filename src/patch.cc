@@ -84,7 +84,7 @@ Patch::~Patch()
   }
 }
 
-void Patch::row_change1(const Gtk::TreeModel::Path &path, const Gtk::TreeModel::iterator &iter)
+void Patch::row_change1(const Gtk::TreeModel::Path & , const Gtk::TreeModel::iterator &iter)
 {
   if (in_refresh) return;
 
@@ -118,7 +118,7 @@ void Patch::row_change1(const Gtk::TreeModel::Path &path, const Gtk::TreeModel::
   }
 }
 
-void Patch::row_change2(const Gtk::TreeModel::Path &path, const Gtk::TreeModel::iterator &iter)
+void Patch::row_change2(const Gtk::TreeModel::Path & , const Gtk::TreeModel::iterator &iter)
 {
   if (in_refresh) return;
 
