@@ -17,149 +17,139 @@
 
 */
 
-#ifndef __pbd_rcu_h__
-#define __pbd_rcu_h__
+#ifndef pbd_rcu_h_
+#define pbd_rcu_h_
 
-#include "memory"
-#include "glibmm/thread.h"
- 
-#include <list> 
+#include <atomic>
+#include <list>
+#include <memory>
+#include <mutex>
 
 template<class T>
 class RCUManager
 {
-  public:
- 
-	RCUManager (T* new_rcu_value) {
-		x.m_rcu_value = new std::shared_ptr<T> (new_rcu_value);
-	}
- 
-	virtual ~RCUManager() { delete x.m_rcu_value; }
- 
-        std::shared_ptr<T> reader () const { return *((std::shared_ptr<T> *) g_atomic_pointer_get (&x.gptr)); }
- 
-	virtual std::shared_ptr<T> write_copy () = 0;
-	virtual bool update (std::shared_ptr<T> new_value) = 0;
+public:
+  RCUManager(T *new_rcu_value)
+    : m_rcu_value(new std::shared_ptr<T>(new_rcu_value))
+  {
+  }
 
-  protected:
-	union {
-	    std::shared_ptr<T>* m_rcu_value;
-	    mutable volatile gpointer gptr;
-	} x;
+  virtual ~RCUManager() { delete m_rcu_value; }
+
+  std::shared_ptr<T> reader() const { return *m_rcu_value.load(); }
+
+  virtual std::shared_ptr<T> write_copy() = 0;
+  virtual bool update(std::shared_ptr<T> new_value) = 0;
+
+protected:
+  std::atomic<std::shared_ptr<T> *> m_rcu_value;
 };
- 
- 
+
 template<class T>
 class SerializedRCUManager : public RCUManager<T>
 {
 public:
- 
-	SerializedRCUManager(T* new_rcu_value)
-		: RCUManager<T>(new_rcu_value)
-	{
- 
-	}
- 
-	std::shared_ptr<T> write_copy ()
-	{
-		m_lock.lock();
+  SerializedRCUManager(T* new_rcu_value)
+    : RCUManager<T>(new_rcu_value)
+  {
+  }
 
-		// clean out any dead wood
+  std::shared_ptr<T> write_copy() override
+  {
+    m_lock.lock();
 
-		typename std::list<std::shared_ptr<T> >::iterator i;
+    // clean out any dead wood
 
-		for (i = m_dead_wood.begin(); i != m_dead_wood.end(); ) {
-			if ((*i).use_count() == 1) {
-				i = m_dead_wood.erase (i);
-			} else {
-				++i;
-			}
-		}
+    typename std::list<std::shared_ptr<T> >::iterator i;
 
-		// store the current 
+    for (i = m_dead_wood.begin(); i != m_dead_wood.end(); ) {
+      if ((*i).use_count() == 1) {
+        i = m_dead_wood.erase (i);
+      } else {
+        ++i;
+      }
+    }
 
-		current_write_old = RCUManager<T>::x.m_rcu_value;
-		
-		std::shared_ptr<T> new_copy (new T(**current_write_old));
+    // store the current
 
-		return new_copy;
-	}
- 
-	bool update (std::shared_ptr<T> new_value)
-	{
-		// we hold the lock at this point effectively blocking
-		// other writers.
+    current_write_old = RCUManager<T>::m_rcu_value;
 
-		std::shared_ptr<T>* new_spp = new std::shared_ptr<T> (new_value);
+    std::shared_ptr<T> new_copy(new T(**current_write_old));
 
-		// update, checking that nobody beat us to it
+    return new_copy;
+  }
 
-		bool ret = g_atomic_pointer_compare_and_exchange (&RCUManager<T>::x.gptr,
-								  (gpointer) current_write_old,
-								  (gpointer) new_spp);
-		
-		if (ret) {
+  bool update(std::shared_ptr<T> new_value) override
+  {
+    // we hold the lock at this point effectively blocking
+    // other writers.
 
-			// successful update : put the old value into dead_wood,
+    std::shared_ptr<T> *new_spp = new std::shared_ptr<T>(new_value);
 
-			m_dead_wood.push_back (*current_write_old);
+    // update, checking that nobody beat us to it
 
-			// now delete it - this gets rid of the shared_ptr<T> but
-			// because dead_wood contains another shared_ptr<T> that
-			// references the same T, the underlying object lives on
+    bool ret = RCUManager<T>::m_rcu_value.compare_exchange_strong(current_write_old, new_spp);
 
-			delete current_write_old;
-		}
+    if (ret) {
 
-		m_lock.unlock();
+      // successful update : put the old value into dead_wood,
 
-		return ret;
-	}
+      m_dead_wood.push_back(*current_write_old);
 
-	void flush () {
-		Glib::Mutex::Lock lm (m_lock);
-		m_dead_wood.clear ();
-	}
- 
+      // now delete it - this gets rid of the shared_ptr<T> but
+      // because dead_wood contains another shared_ptr<T> that
+      // references the same T, the underlying object lives on
+
+      delete current_write_old;
+    }
+
+    m_lock.unlock();
+
+    return ret;
+  }
+
+  void flush()
+  {
+    std::lock_guard<std::mutex> lm(m_lock);
+    m_dead_wood.clear();
+  }
+
 private:
-	Glib::Mutex			 m_lock;
-	std::shared_ptr<T>*            current_write_old;
-	std::list<std::shared_ptr<T> > m_dead_wood;
+  std::mutex m_lock;
+  std::shared_ptr<T> *current_write_old = nullptr;
+  std::list<std::shared_ptr<T>> m_dead_wood;
 };
- 
+
 template<class T>
 class RCUWriter
 {
 public:
- 
-	RCUWriter(RCUManager<T>& manager)
-		: m_manager(manager)
-	{
-		m_copy = m_manager.write_copy();	
-	}
- 
-	~RCUWriter()
-	{
-		// we can check here that the refcount of m_copy is 1
- 
-		if(m_copy.use_count() == 1) {
-			m_manager.update(m_copy);
-		} else {
- 
-			// critical error.
-		}
- 
-	}
- 
-	// or operator std::shared_ptr<T> ();
-	std::shared_ptr<T> get_copy() { return m_copy; }
- 
+  RCUWriter(RCUManager<T>& manager)
+    : m_manager(manager)
+  {
+    m_copy = m_manager.write_copy();
+  }
+
+  ~RCUWriter()
+  {
+    // we can check here that the refcount of m_copy is 1
+
+    if (m_copy.use_count() == 1) {
+      m_manager.update(m_copy);
+    } else {
+      // critical error.
+    }
+  }
+
+  // or operator std::shared_ptr<T> ();
+  std::shared_ptr<T> get_copy() { return m_copy; }
+
 private:
- 
-	RCUManager<T>& m_manager;
- 
-	// preferably this holds a pointer to T
-	std::shared_ptr<T> m_copy;
+  RCUManager<T>& m_manager;
+
+  // preferably this holds a pointer to T
+  std::shared_ptr<T> m_copy;
 };
 
-#endif /* __pbd_rcu_h__ */
+#endif // pbd_rcu_h_
+
