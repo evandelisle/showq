@@ -18,35 +18,38 @@
  *      MA 02110-1301, USA.
  */
 
-#ifndef _PREF_H
-#define _PREF_H
+#ifndef PREF_H
+#define PREF_H
 
-#include <memory>
 #include <gtkmm.h>
+#include <memory>
 
 class Properties : public Gtk::Dialog {
 public:
-  Properties(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml);
-  virtual ~Properties() {}
+    Properties(BaseObjectType *c_object, const Glib::RefPtr<Gtk::Builder> &refXml);
+    ~Properties() override = default;
 
-  static std::unique_ptr<Properties> create();
+    static std::unique_ptr<Properties> create();
+
 protected:
-  virtual void on_response(int);
+    void on_response(int) override;
+
 private:
-  Glib::ustring old_name;
-  Glib::ustring old_note;
-  Glib::RefPtr<Gtk::Builder> m_refXml;
+    Glib::ustring old_name;
+    Glib::ustring old_note;
+    Glib::RefPtr<Gtk::Builder> m_refXml;
 };
 
 class Preferences : public Gtk::Dialog {
 public:
-  Preferences(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml);
-  virtual ~Preferences() {}
+    Preferences(BaseObjectType *c_object, const Glib::RefPtr<Gtk::Builder> &refXml);
+    ~Preferences() override = default;
 
-  static std::unique_ptr<Preferences> create();
+    static std::unique_ptr<Preferences> create();
+
 protected:
-  virtual void on_response(int);
-  Glib::RefPtr<Gtk::Builder> m_refXml;
+    void on_response(int) override;
+    Glib::RefPtr<Gtk::Builder> m_refXml;
 };
 
-#endif /* _PREF_H */
+#endif // PREF_H

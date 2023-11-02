@@ -21,51 +21,48 @@
 #include "utils.h"
 #include <gtkmm.h>
 
-#include <iostream>
-#include <sstream>
+#include <iomanip>
 
-void connect_clicked(Glib::RefPtr<Gtk::Builder> m_refXml,
-                     const Glib::ustring &widget_name, const sigc::slot<void> &slot_)
+void connect_clicked(const Glib::RefPtr<Gtk::Builder> &m_refXml, const Glib::ustring &widget_name,
+                     const sigc::slot<void> &slot_)
 {
-  Gtk::Widget *pWidget = 0;
-  m_refXml->get_widget(widget_name, pWidget);
+    Gtk::Widget *pWidget = nullptr;
+    m_refXml->get_widget(widget_name, pWidget);
 
-  Gtk::ToolButton *pToolButton = dynamic_cast<Gtk::ToolButton *>(pWidget);
-  Gtk::Button *pButton = dynamic_cast<Gtk::Button *>(pWidget);
+    auto *pToolButton = dynamic_cast<Gtk::ToolButton *>(pWidget);
 
-  if (pToolButton)
-    pToolButton->signal_clicked().connect(slot_);
-  if (pButton)
-    pButton->signal_clicked().connect(slot_);
+    if (pToolButton) {
+        pToolButton->signal_clicked().connect(slot_);
+        return;
+    }
+
+    auto *pButton = dynamic_cast<Gtk::Button *>(pWidget);
+    if (pButton)
+        pButton->signal_clicked().connect(slot_);
 }
 
-void connect_menu_item(Glib::RefPtr<Gtk::Builder> m_refXml,
-                       const Glib::ustring &widget_name, const sigc::slot<void> &slot_)
+void connect_menu_item(const Glib::RefPtr<Gtk::Builder> &m_refXml, const Glib::ustring &widget_name,
+                       const sigc::slot<void> &slot_)
 {
-  Gtk::Widget *widget;
-  m_refXml->get_widget(widget_name, widget);
+    Gtk::Widget *widget;
+    m_refXml->get_widget(widget_name, widget);
 
-  Gtk::MenuItem *pMenuItem = dynamic_cast<Gtk::MenuItem *>(widget);
+    auto *pMenuItem = dynamic_cast<Gtk::MenuItem *>(widget);
 
-  if (pMenuItem)
-    pMenuItem->signal_activate().connect(slot_);
+    if (pMenuItem)
+        pMenuItem->signal_activate().connect(slot_);
 }
 
-std::string dtoasctime(double x)
+Glib::ustring dtoasctime(double x)
 {
-  std::stringstream s;
+    const int hours = int(x / (60 * 60));
+    const int minutes = int(x / 60) - (hours * 60);
+    const double seconds = x - (minutes * 60) - (hours * 60 * 60);
 
-  int hours = int(x / (60 * 60));
-  int minutes = int(x / 60) - (hours * 60);
-  double seconds = x - (minutes * 60) - (hours * 60 * 60);
-
-  s.setf(std::ios::fixed, std::ios::floatfield);
-  s.precision(1);
-  s.width(2);
-  if (seconds < 10.0)
-    s << hours << ':' << minutes << ":0" << seconds;
-  else
-    s << hours << ':' << minutes << ':' << seconds;
-
-  return s.str();
+    return Glib::ustring::compose(
+        "%1:%2:%3",
+        hours,
+        Glib::ustring::format(std::setw(2), std::setfill(L'0'), minutes),
+        Glib::ustring::format(
+            std::setw(4), std::setfill(L'0'), std::setprecision(1), std::fixed, seconds));
 }

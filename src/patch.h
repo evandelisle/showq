@@ -18,56 +18,57 @@
  *      MA 02110-1301, USA.
  */
 
-#ifndef PATCH_H__
-#define PATCH_H__
+#ifndef PATCH_H_
+#define PATCH_H_
 
-#include <gtkmm.h>
 #include <alsa/asoundlib.h>
+#include <gtkmm.h>
 
 #include <memory>
 #include <vector>
 
 class Patch : public Gtk::Dialog {
 public:
-  Patch(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml);
-  virtual ~Patch();
+    Patch(BaseObjectType *c_object, const Glib::RefPtr<Gtk::Builder> &refXml);
+    ~Patch() override;
 
-  static std::unique_ptr<Patch> create();
+    static std::unique_ptr<Patch> create();
+
 private:
-  virtual void on_response(int);
-  void refresh();
-  void row_change1(const Gtk::TreeModel::Path &, const Gtk::TreeModel::iterator &);
-  void row_change2(const Gtk::TreeModel::Path &, const Gtk::TreeModel::iterator &);
+    void on_response(int) override;
+    void refresh();
+    void row_change1(const Gtk::TreeModel::Path &, const Gtk::TreeModel::iterator &);
+    void row_change2(const Gtk::TreeModel::Path &, const Gtk::TreeModel::iterator &);
 
-  class ModelColumns : public Gtk::TreeModel::ColumnRecord {
-  public:
-    ModelColumns()
-    {
-      add(m_col_text);
-      add(m_col_enable);
-      add(m_col_port);
-      add(m_col_client);
-    }
+    class ModelColumns : public Gtk::TreeModel::ColumnRecord {
+    public:
+        ModelColumns()
+        {
+            add(m_col_text);
+            add(m_col_enable);
+            add(m_col_port);
+            add(m_col_client);
+        }
 
-    Gtk::TreeModelColumn<Glib::ustring> m_col_text;
-    Gtk::TreeModelColumn<bool> m_col_enable;
-    Gtk::TreeModelColumn<int> m_col_port;
-    Gtk::TreeModelColumn<int> m_col_client;
-  };
+        Gtk::TreeModelColumn<Glib::ustring> m_col_text;
+        Gtk::TreeModelColumn<bool> m_col_enable;
+        Gtk::TreeModelColumn<int> m_col_port;
+        Gtk::TreeModelColumn<int> m_col_client;
+    };
 
-  Gtk::ComboBox *p_func;
+    Gtk::ComboBox *p_func;
 
-  Gtk::TreeView *m_treeview;
-  ModelColumns m_Columns;
-  Glib::RefPtr<Gtk::ListStore> m_refTreeModel;
+    Gtk::TreeView *m_treeview;
+    ModelColumns m_Columns;
+    Glib::RefPtr<Gtk::ListStore> m_refTreeModel;
 
-  Gtk::TreeView *m_oports;
-  Glib::RefPtr<Gtk::ListStore> m_refOports;
-  std::vector<snd_seq_addr> m_oconnections[8];
+    Gtk::TreeView *m_oports;
+    Glib::RefPtr<Gtk::ListStore> m_refOports;
+    std::vector<snd_seq_addr> m_oconnections[8];
 
-  bool in_refresh;
+    bool in_refresh;
 
-  Glib::RefPtr<Gtk::Builder> m_refXml;
+    Glib::RefPtr<Gtk::Builder> m_refXml;
 };
 
 #endif

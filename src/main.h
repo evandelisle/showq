@@ -18,8 +18,8 @@
  *      MA 02110-1301, USA.
  */
 
-#ifndef MAIN_H__
-#define MAIN_H__
+#ifndef MAIN_H_
+#define MAIN_H_
 
 #include <glibmm.h>
 

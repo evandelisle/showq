@@ -22,104 +22,85 @@
 
 #include "app.h"
 #include "audio.h"
-#include <glibmm/i18n.h>
-#include <fstream>
+
+#include <glib/gi18n.h>
+#include <gtkmm.h>
+
 #include <exception>
 #include <iostream>
+#include <string>
 
 App *app;
 Glib::KeyFile keyfile;
 
 Audio *audio;
 
-static void on_activate_url_link(Gtk::AboutDialog &, const Glib::ustring &link)
-{
-  std::string command = "xdg-open ";
-  command += link;
-  Glib::spawn_command_line_async(command);
-}
-
 int main(int argc, char *argv[])
 {
-  bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
-  bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-  textdomain(GETTEXT_PACKAGE);
+    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+    textdomain(GETTEXT_PACKAGE);
 
-  Gtk::Main kit(argc, argv);
+    const Gtk::Main kit(argc, argv);
 
-  if (!Glib::thread_supported()) Glib::thread_init();
-
-  try {
-    keyfile.load_from_file(Glib::get_home_dir() + "/ShowQ.conf");
-  }
-  catch (...) {
-  }
-
-  try {
-    audio = new Audio;
-    gsize r_size;
-    auto refXml = Gtk::Builder::create();
-    refXml->add_from_string(
-      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/app.ui")->get_data(r_size)
-      , -1);
-    refXml->get_widget_derived("app", app);
-    if (app) {
-      try {
-        bool load_last = keyfile.get_boolean("main", "LoadLast");
-        if (load_last) {
-          Glib::ustring file = keyfile.get_string("main", "LastFile");
-          if (file != "") {
-            app->do_load(file);
-          }
-        }
-      }
-      catch (...) {
-      }
-      Gtk::AboutDialog::set_url_hook(sigc::ptr_fun(&on_activate_url_link));
-      kit.run(*app);
-    } else {
-      Gtk::MessageDialog d(_("Show Q could not find `app` in app.ui XML file."), false, Gtk::MESSAGE_ERROR);
-      d.set_secondary_text(_("(re)installing may fix this issue"));
-      d.run();
+    try {
+        keyfile.load_from_file(Glib::build_filename(Glib::get_home_dir(), "ShowQ.conf"));
     }
-    delete audio;
-    delete app;
-  }
-  catch (const Gtk::BuilderError &) {
-    Gtk::MessageDialog d(_("Show Q could not open the GTK Builder file."), false, Gtk::MESSAGE_ERROR);
-    d.set_secondary_text(_("(re)Install the program to fix this file not found error."));
-    d.run();
-    return 1;
-  }
-  catch (const Audio::NoAudio &) {
-    Gtk::MessageDialog d(_("Show Q could not connect to JACK."), false, Gtk::MESSAGE_ERROR);
-    d.set_secondary_text(_("(re)start JACK and try again"));
-    d.run();
-    return 1;
-  }
-  catch (const std::exception &e) {
-    std::cerr << e.what();
-  }
-  /*
-  catch ( Jack::JackTemporaryException &e )
-  {
-    // Jack2 can throw errors, which we don't want to show the
-    // catch all handler for
-  }*/
-  catch (...) {
-    Gtk::MessageDialog d(_("Show Q encountered an unknown-error."), false, Gtk::MESSAGE_ERROR);
-    d.set_secondary_text(_("Please report this error to the developers of the program."));
-    d.run();
-    return 1;
-  }
+    catch (...) {
+    }
 
-  try {
-    Glib::ustring data = keyfile.to_data();
-    std::ofstream fd((Glib::get_home_dir() + "/ShowQ.conf").c_str());
-    fd << data;
-  }
-  catch (...) {
-  }
+    try {
+        audio = new Audio;
+        auto refXml = Gtk::Builder::create_from_resource("/org/evandel/showq/ui/app.ui");
+        refXml->get_widget_derived("app", app);
+        if (app) {
+            try {
+                const bool load_last = keyfile.get_boolean("main", "LoadLast");
+                if (load_last) {
+                    const Glib::ustring file = keyfile.get_string("main", "LastFile");
+                    if (!file.empty()) {
+                        app->do_load(file);
+                    }
+                }
+            }
+            catch (...) {
+            }
+            kit.run(*app);
+        } else {
+            Gtk::MessageDialog d(
+                _("Show Q could not find `app` in app.ui XML file."), false, Gtk::MESSAGE_ERROR);
+            d.set_secondary_text(_("(re)installing may fix this issue"));
+            d.run();
+        }
+        delete audio;
+        delete app;
+    }
+    catch (const Gtk::BuilderError &) {
+        Gtk::MessageDialog d(
+            _("Show Q could not open the GTK Builder file."), false, Gtk::MESSAGE_ERROR);
+        d.set_secondary_text(_("(re)Install the program to fix this file not found error."));
+        d.run();
+        return 1;
+    }
+    catch (const Audio::NoAudio &) {
+        Gtk::MessageDialog d(_("Show Q could not connect to JACK."), false, Gtk::MESSAGE_ERROR);
+        d.set_secondary_text(_("(re)start JACK and try again"));
+        d.run();
+        return 1;
+    }
+    catch (const std::exception &e) {
+        std::cerr << e.what();
+    }
+    catch (...) {
+        Gtk::MessageDialog d(_("Show Q encountered an unknown-error."), false, Gtk::MESSAGE_ERROR);
+        d.set_secondary_text(_("Please report this error to the developers of the program."));
+        d.run();
+        return 1;
+    }
 
-  return (0);
+    try {
+        keyfile.save_to_file(Glib::build_filename(Glib::get_home_dir(), "ShowQ.conf"));
+    }
+    catch (...) {
+    }
 }

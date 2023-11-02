@@ -19,49 +19,45 @@
  */
 
 #include "renumber.h"
-#include "main.h"
 
-Renumber::Renumber(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml)
-  : Gtk::Dialog(cobject), step(0.0), cue_no(0.0), skip_autocont(false),
-    m_refXml(refXml)
+#include <gtkmm.h>
+
+Renumber::Renumber(BaseObjectType *c_object, const Glib::RefPtr<Gtk::Builder> &refXml)
+    : Gtk::Dialog(c_object),
+      m_refXml(refXml)
 {
 }
 
 std::unique_ptr<Renumber> Renumber::create()
 {
-  Renumber *dialog;
-  gsize r_size;
-  auto refXml = Gtk::Builder::create();
-  refXml->add_from_string(
-      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/renumber.ui")->get_data(r_size)
-      , -1);
+    Renumber *dialog;
+    auto refXml = Gtk::Builder::create_from_resource("/org/evandel/showq/ui/renumber.ui");
+    refXml->get_widget_derived("renumber", dialog);
 
-  refXml->get_widget_derived("renumber", dialog);
-  return std::unique_ptr<Renumber>(dialog);
+    return std::unique_ptr<Renumber>(dialog);
 }
 
 void Renumber::on_response(int r)
 {
-  switch (r) {
-  case 0:
-    return;
-  case Gtk::RESPONSE_OK:
-    Gtk::SpinButton *p_start;
-    m_refXml->get_widget("re_start", p_start);
-    cue_no = p_start->get_value();
+    switch (r) {
+    case 0:
+        return;
+    case Gtk::RESPONSE_OK:
+        Gtk::SpinButton *p_start;
+        m_refXml->get_widget("re_start", p_start);
+        cue_no = p_start->get_value();
 
-    Gtk::SpinButton *p_step;
-    m_refXml->get_widget("re_step", p_step);
-    step = p_step->get_value();
+        Gtk::SpinButton *p_step;
+        m_refXml->get_widget("re_step", p_step);
+        step = p_step->get_value();
 
-    Gtk::CheckButton *p_skipac;
-    m_refXml->get_widget("re_skip_acont", p_skipac);
-    skip_autocont = p_skipac->get_active();
-    m_signal_ok.emit();
-    break;
-  default:
-    break;
-  }
-  hide();
+        Gtk::CheckButton *p_skip_ac;
+        m_refXml->get_widget("re_skip_acont", p_skip_ac);
+        skip_autocont = p_skip_ac->get_active();
+        m_signal_ok.emit();
+        break;
+    default:
+        break;
+    }
+    hide();
 }
-

@@ -18,9 +18,12 @@
  *      MA 02110-1301, USA.
  */
 
+#include "cue.h"
 #include "editcue.h"
-#include "app.h"
-#include "main.h"
+
+#include <gtkmm.h>
+
+#include <memory>
 
 // Stop cue editing
 
@@ -28,9 +31,7 @@ EditCueStop::EditCueStop(Gtk::Notebook *)
 {
 }
 
-EditCueStop::~EditCueStop()
-{
-}
+EditCueStop::~EditCueStop() = default;
 
 void EditCueStop::set(std::shared_ptr<Cue> &)
 {
@@ -46,9 +47,7 @@ EditCuePause::EditCuePause(Gtk::Notebook *)
 {
 }
 
-EditCuePause::~EditCuePause()
-{
-}
+EditCuePause::~EditCuePause() = default;
 
 void EditCuePause::set(std::shared_ptr<Cue> &)
 {
@@ -64,9 +63,7 @@ EditCueStart::EditCueStart(Gtk::Notebook *)
 {
 }
 
-EditCueStart::~EditCueStart()
-{
-}
+EditCueStart::~EditCueStart() = default;
 
 void EditCueStart::set(std::shared_ptr<Cue> &)
 {

@@ -1,6 +1,6 @@
 project ('showq',
     ['cpp', 'c'],
-    default_options : ['cpp_std=c++14'],
+    default_options : ['cpp_std=c++17'],
     version: '0.5',
     license: 'GPLv3+',
     meson_version: '>= 0.37.1')
@@ -40,14 +40,13 @@ configure_file(
   configuration : conf
 )
 
-
 # Dependencies
 
-gtkmm_dep = dependency('gtkmm-2.4', version : '>= 2.24')
-#gtkmm_dep = dependency('gtkmm-3.0', version : '>= 3.0')
-glibmm_dep = dependency('glibmm-2.4', version : '>= 2.44')
+thread_dep = dependency('threads')
+
+gtkmm_dep = dependency('gtkmm-3.0', version : '>= 3.24')
+glibmm_dep = dependency('glibmm-2.4', version : '>= 2.66')
 giomm_dep = dependency('giomm-2.4', version : '>= 2.44')
-gthread_dep = dependency('gthread-2.0')
 libxmlmm_dep = dependency('libxml++-2.6')
 alsa_dep = dependency('alsa')
 jack_dep = dependency('jack')
@@ -56,4 +55,3 @@ samplerate_dep = dependency('samplerate')
 uuid_dep = dependency('uuid')
 
 subdir('src')
-

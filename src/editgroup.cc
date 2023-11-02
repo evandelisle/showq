@@ -18,53 +18,50 @@
  *      MA 02110-1301, USA.
  */
 
+#include "cue.h"
+#include "editcue.h"
+
+#include <gtkmm.h>
+
 #include <memory>
 
-#include "editcue.h"
-#include "app.h"
-#include "main.h"
-
 EditCueGroup::EditCueGroup(Gtk::Notebook *p)
-  : refXml(Gtk::Builder::create())
+    : refXml(Gtk::Builder::create_from_resource("/org/evandel/showq/ui/editgroup.ui"))
 {
-  gsize r_size;
-  refXml->add_from_string(
-      (const char *) Gio::Resource::lookup_data_global("/org/evandel/showq/ui/editgroup.ui")->get_data(r_size)
-      , -1);
+    Gtk::Widget *vbox;
+    refXml->get_widget("edit_group_box", vbox);
 
-  Gtk::Widget *vbox;
-  refXml->get_widget("edit_group_box", vbox);
-
-  p->append_page(*vbox, "Group mode");
+    p->append_page(*vbox, "Group mode");
 }
 
-EditCueGroup::~EditCueGroup()
-{
-}
+EditCueGroup::~EditCueGroup() = default;
 
 void EditCueGroup::set(std::shared_ptr<Cue> &q)
 {
-  std::shared_ptr<Group_Cue> pg = std::dynamic_pointer_cast<Group_Cue>(q);
+    const std::shared_ptr<Group_Cue> pg = std::dynamic_pointer_cast<Group_Cue>(q);
 
-  Gtk::RadioButton *button = nullptr;
-  switch (pg->mode) {
-  case 0:
-    refXml->get_widget("ed_grp_all", button);
-    break;
-  case 1:
-    refXml->get_widget("ed_grp_first", button);
-    break;
-  }
-  if (button) button->set_active();
+    Gtk::RadioButton *button = nullptr;
+    switch (pg->mode) {
+    case 0:
+        refXml->get_widget("ed_grp_all", button);
+        break;
+    case 1:
+        refXml->get_widget("ed_grp_first", button);
+        break;
+    }
+    if (button)
+        button->set_active();
 }
 
 void EditCueGroup::get(std::shared_ptr<Cue> &q)
 {
-  std::shared_ptr<Group_Cue> pg = std::dynamic_pointer_cast<Group_Cue>(q);
+    const std::shared_ptr<Group_Cue> pg = std::dynamic_pointer_cast<Group_Cue>(q);
 
-  Gtk::RadioButton *button;
-  refXml->get_widget("ed_grp_all", button);
-  if (button->get_active()) pg->mode = 0;
-  refXml->get_widget("ed_grp_first", button);
-  if (button->get_active()) pg->mode = 1;
+    Gtk::RadioButton *button;
+    refXml->get_widget("ed_grp_all", button);
+    if (button->get_active())
+        pg->mode = 0;
+    refXml->get_widget("ed_grp_first", button);
+    if (button->get_active())
+        pg->mode = 1;
 }

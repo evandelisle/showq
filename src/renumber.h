@@ -18,32 +18,30 @@
  *      MA 02110-1301, USA.
  */
 
-#ifndef RENUMBER_H__
-#define RENUMBER_H__
+#ifndef RENUMBER_H_
+#define RENUMBER_H_
 
-#include <memory>
 #include <gtkmm.h>
+#include <memory>
 
 class Renumber : public Gtk::Dialog {
 public:
-  Renumber(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refXml);
-  virtual ~Renumber() {}
+    Renumber(BaseObjectType *c_object, const Glib::RefPtr<Gtk::Builder> &refXml);
+    ~Renumber() override = default;
 
-  static std::unique_ptr<Renumber> create();
+    static std::unique_ptr<Renumber> create();
 
-  double step;
-  double cue_no;
-  bool skip_autocont;
+    double step{0.0};
+    double cue_no{0.0};
+    bool skip_autocont{false};
 
-  sigc::signal<void> signal_ok()
-  {
-    return m_signal_ok;
-  }
+    sigc::signal<void> signal_ok() { return m_signal_ok; }
+
 private:
-  virtual void on_response(int);
+    void on_response(int) override;
 
-  sigc::signal<void> m_signal_ok;
-  Glib::RefPtr<Gtk::Builder> m_refXml;
+    sigc::signal<void> m_signal_ok;
+    Glib::RefPtr<Gtk::Builder> m_refXml;
 };
 
-#endif /* RENUMBER_H__ */
+#endif // RENUMBER_H_

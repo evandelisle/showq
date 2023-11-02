@@ -8,8 +8,10 @@ showq = executable('showq',
         'editgroup.cc', 'renumber.cc', 'utils.cc', 'file.cc', 'patch.cc'
     ] + resources,
     dependencies: [
+        thread_dep,
         gtkmm_dep,
-        gthread_dep,
+        glibmm_dep,
+        giomm_dep,
         libxmlmm_dep,
         alsa_dep,
         jack_dep,
@@ -17,5 +19,3 @@ showq = executable('showq',
         samplerate_dep,
         uuid_dep],
     install: true)
-
-

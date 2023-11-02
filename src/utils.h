@@ -18,38 +18,40 @@
  *      MA 02110-1301, USA.
  */
 
-#ifndef UTILS_H__
-#define UTILS_H__
+#ifndef UTILS_H_
+#define UTILS_H_
 
 #include <cmath>
 #include <gtkmm.h>
 
-void connect_clicked(Glib::RefPtr<Gtk::Builder> m_refXml,
-    const Glib::ustring& widget_name, const sigc::slot<void>& slot_ );
-void connect_menu_item(Glib::RefPtr<Gtk::Builder> m_refXml,
-    const Glib::ustring& widget_name, const sigc::slot<void>& slot_ );
-std::string dtoasctime(double x);
+void connect_clicked(const Glib::RefPtr<Gtk::Builder> &m_refXml, const Glib::ustring &widget_name,
+                     const sigc::slot<void> &slot_);
+void connect_menu_item(const Glib::RefPtr<Gtk::Builder> &m_refXml, const Glib::ustring &widget_name,
+                       const sigc::slot<void> &slot_);
+Glib::ustring dtoasctime(double x);
 
 static inline double gain_to_slider(double g)
 {
-    if (g == 0.0) return 0.0;
-    return pow((6.0*log(g)/log(2.0)+192.0)/198.0, 8.0);
+    if (g == 0.0)
+        return 0.0;
+    return std::pow((6.0 * std::log(g) / std::log(2.0) + 192.0) / 198.0, 8.0);
 }
 
 static inline double slider_to_gain(double pos)
 {
-    if (pos == 0.0) return 0.0;
-    return pow(2.0, (sqrt(sqrt(sqrt(pos)))*198.0-192.0)/6.0);
+    if (pos == 0.0)
+        return 0.0;
+    return std::pow(2.0, (std::sqrt(std::sqrt(std::sqrt(pos))) * 198.0 - 192.0) / 6.0);
 }
 
 static inline double db_to_gain(double db)
 {
-    return db > -318.8 ? pow(10.0, db * 0.05) : 0.0;
+    return db > -318.8 ? std::pow(10.0, db * 0.05) : 0.0;
 }
 
 static inline double gain_to_db(double g)
 {
-    return 20.0 * log10(g);
+    return 20.0 * std::log10(g);
 }
 
-#endif /* UTILS_H__ */
+#endif // UTILS_H_
