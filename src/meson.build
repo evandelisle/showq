@@ -3,7 +3,7 @@ resources = gnome.compile_resources('resources', 'showq.gresource.xml',
                                      c_name: 'resources')
 
 showq = executable('showq',
-    [   'app.cc', 'main.cc', 'pref.cc', 'editcue.cc',
+    [   'about.cc', 'app.cc', 'main.cc', 'pref.cc', 'editcue.cc',
         'audio.cc', 'editstop.cc', 'editmidi.cc', 'editwave.cc', 'editfade.cc',
         'editgroup.cc', 'renumber.cc', 'utils.cc', 'file.cc', 'patch.cc'
     ] + resources,

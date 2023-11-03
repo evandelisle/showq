@@ -46,6 +46,8 @@
 #include <thread>
 #include <vector>
 
+class About;
+
 class MIDIengine {
 public:
     MIDIengine();
@@ -221,17 +223,6 @@ private:
     sigc::signal<void> m_signal_stop;
     sigc::signal<void> m_signal_pause;
     sigc::signal<void> m_signal_sneak_out;
-};
-
-class About : public Gtk::AboutDialog {
-public:
-    About(BaseObjectType *c_object, const Glib::RefPtr<Gtk::Builder> &refXml);
-    ~About() override = default;
-    static std::unique_ptr<About> create();
-
-protected:
-    void on_response(int) override;
-    Glib::RefPtr<Gtk::Builder> m_refXml;
 };
 
 class App : public Gtk::Window {

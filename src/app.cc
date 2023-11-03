@@ -18,9 +18,8 @@
  *      MA 02110-1301, USA.
  */
 
-#include "../config.h"
-
 #include "app.h"
+#include "about.h"
 #include "audio.h"
 #include "cue.h"
 #include "editcue.h"
@@ -40,27 +39,6 @@
 #include <sstream>
 
 snd_seq_t *oseq;
-
-About::About(BaseObjectType *c_object, const Glib::RefPtr<Gtk::Builder> &refXml)
-    : Gtk::AboutDialog(c_object),
-      m_refXml(refXml)
-{
-    set_version(VERSION);
-}
-
-void About::on_response(int)
-{
-    hide();
-}
-
-std::unique_ptr<About> About::create()
-{
-    About *dialog;
-    auto refXml = Gtk::Builder::create_from_resource("/org/evandel/showq/ui/about.ui");
-    refXml->get_widget_derived("about", dialog);
-
-    return std::unique_ptr<About>(dialog);
-}
 
 MIDIengine::MIDIengine()
 {
@@ -1270,10 +1248,11 @@ void App::on_patch_activate()
 void App::on_about_activate()
 {
     if (!p_about) {
-        p_about = About::create();
+        p_about = std::make_unique<About>();
         p_about->signal_hide().connect([this]() { p_about.reset(); });
-    } else
-        p_about->present();
+        p_about->set_transient_for(*this);
+    }
+    p_about->present();
 }
 
 CueTreeView::CueTreeView(BaseObjectType *c_object, const Glib::RefPtr<Gtk::Builder> &refXml)
